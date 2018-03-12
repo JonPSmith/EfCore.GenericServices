@@ -8,10 +8,8 @@
  * Written by Jon Smith : GitHub JonPSmith, www.thereformedprogrammer.net
  **********************************************************************/
 
-var BookList = (function($, loggingDisplay) {
+var BookList = (function($) {
     'use strict';
-
-    var filterApiUrl = null;
 
     function enableDisableFilterDropdown($fsearch, enable) {
         var $fvGroup = $('#filter-value-group');
@@ -24,41 +22,40 @@ var BookList = (function($, loggingDisplay) {
         }
     }
 
-    function loadFilterValueDropdown(filterByValue, filterValue, ignoreTrace) {
+    function loadFilterValueDropdown(filterByValue, filterValue) {
         filterValue = filterValue || '';
         var $fsearch = $('#filter-value-dropdown');
         enableDisableFilterDropdown($fsearch, false);
         if (filterByValue !== 'NoFilter') {
             //it is a proper filter val, so get the filter
             $.ajax({
-                url: filterApiUrl,
-                data: { FilterBy: filterByValue }
+                url: '/',
+                data: {
+                    Handler: 'FilterSearchContent',
+                    FilterBy: filterByValue
+                }
             })
-                .done(function(indentAndResult) {
-                    if (!ignoreTrace) {
-                        //Only update the looging if not the main load
-                        loggingDisplay.newTrace(indentAndResult.traceIdentifier, indentAndResult.numLogs);
-                    }
-                    //This removes the existing dropdownlist options
-                    $fsearch
-                        .find('option')
-                        .remove()
-                        .end()
-                        .append($('<option></option>')
-                            .attr('value', '')
-                            .text('Select filter...'));
+            .done(function(result) {
+                //This removes the existing dropdownlist options
+                $fsearch
+                    .find('option')
+                    .remove()
+                    .end()
+                    .append($('<option></option>')
+                        .attr('value', '')
+                        .text('Select filter...'));
 
-                    indentAndResult.result.forEach(function (arrayElem) {
-                        $fsearch.append($("<option></option>")
-                            .attr("value", arrayElem.value)
-                            .text(arrayElem.text));
-                    });
-                    $fsearch.val(filterValue);
-                    enableDisableFilterDropdown($fsearch, true);
-                })
-                .fail(function() {
-                    alert("error");
+                result.forEach(function (arrayElem) {
+                    $fsearch.append($("<option></option>")
+                        .attr("value", arrayElem.value)
+                        .text(arrayElem.text));
                 });
+                $fsearch.val(filterValue);
+                enableDisableFilterDropdown($fsearch, true);
+            })
+            .fail(function() {
+                alert("error");
+            });
         }
     }
 
@@ -69,9 +66,8 @@ var BookList = (function($, loggingDisplay) {
 
     //public parts
     return {
-        initialise: function(filterByValue, filterValue, exFilterApiUrl) {
-            filterApiUrl = exFilterApiUrl;
-            loadFilterValueDropdown(filterByValue, filterValue, true);
+        initialise: function(filterByValue, filterValue) {
+            loadFilterValueDropdown(filterByValue, filterValue);
         },
 
         sendForm: function(inputElem) {
@@ -91,4 +87,4 @@ var BookList = (function($, loggingDisplay) {
         }
     };
 
-}(window.jQuery, LoggingDisplay));
+}(window.jQuery));

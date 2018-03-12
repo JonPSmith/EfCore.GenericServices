@@ -9,7 +9,7 @@ using ServiceLayer.HomeController.QueryObjects;
 
 namespace ServiceLayer.HomeController.Services
 {
-    public class BookFilterDropdownService
+    public class BookFilterDropdownService : IBookFilterDropdownService
     {
         private readonly EfCoreContext _db;
 
@@ -54,13 +54,6 @@ namespace ServiceLayer.HomeController.Services
                         });
 
                     return result;
-                /*****************************************************************
-                #A This returns true if there is a book in the list that is not yet published
-                #B This gets next year so we can filter out all future publications
-                #C This long command gets the year of publication, uses distinct to only have one of each year, filters out the future books and orders with newest year at the top
-                #D I finally use two client/server evaluations to turn the values into strings
-                #E Finally I add a "coming soon" filter for all the future books
-                 * ***************************************************************/
                 default:
                     throw new ArgumentOutOfRangeException(nameof(filterBy), filterBy, null);
             }

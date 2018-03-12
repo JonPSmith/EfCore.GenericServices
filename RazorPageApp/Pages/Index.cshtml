@@ -9,7 +9,7 @@
     <div class="form-group">
         <div class="col-sm-3">
             <label class="control-label">Sort By</label>
-            <select asp-for="Data.SortFilterPageData.OrderByOptions" name="OrderByOptions"
+            <select asp-for="SortFilterPageData.OrderByOptions" name="OrderByOptions"
                     asp-items="Html.GetEnumSelectList<ServiceLayer.HomeController.QueryObjects.OrderByOptions>()"
                     class="form-control sort-filter-width"
                     onchange="BookList.sendForm(this)"></select>
@@ -17,7 +17,7 @@
 
         <div class="col-sm-3">
             <label class="control-label">Filter Type</label>
-            <select asp-for="Data.SortFilterPageData.FilterBy" name="FilterBy"
+            <select asp-for="SortFilterPageData.FilterBy" name="FilterBy"
                     asp-items="Html.GetEnumSelectList<ServiceLayer.HomeController.QueryObjects.BooksFilterBy>()"
                     class="form-control sort-filter-width"
                     onchange="BookList.filterByHasChanged(this)"></select>
@@ -25,7 +25,7 @@
 
         <div class="col-sm-3 dim-filter-value" id="filter-value-group">
             <label class="control-label">Filter By</label>
-            <select asp-for="Data.SortFilterPageData.FilterValue" name="FilterValue"
+            <select asp-for="SortFilterPageData.FilterValue" name="FilterValue"
                     id="filter-value-dropdown"
                     class="form-control sort-filter-width"
                     disabled
@@ -37,29 +37,29 @@
         <div class="col-sm-2">
             <label class="control-label">Page</label>
             <div>
-                <input asp-for="Data.SortFilterPageData.PageNum" name="PageNum"
+                <input asp-for="SortFilterPageData.PageNum" name="PageNum"
                        class="form-control page-control-width page-num-input"
                        onchange="BookList.sendForm(this)">
-                @*<span class="num-pages-text">of @Model.SortFilterPageData.NumPages</span>*@
+                <span class="num-pages-text">of @Model.SortFilterPageData.NumPages</span>
             </div>
         </div>
 
         <div class="col-sm-1">
             <label class="control-label">Page&nbsp;Size</label>
-            <select asp-for="Data.SortFilterPageData.PageSize" name="PageSize"
-                    @*asp-items="Model.SortFilterPageData.PageSizes.Select(x => new SelectListItem {Text = x.ToString(), Value = x.ToString()})"*@
+            <select asp-for="SortFilterPageData.PageSize" name="PageSize"
+                    asp-items="Model.SortFilterPageData.PageSizes.Select(x => new SelectListItem {Text = x.ToString(), Value = x.ToString()})"
                     class="form-control page-control-width"
                     onchange="BookList.sendForm(this)"></select>
         </div>
     </div>
 
-    @*<input id="PrevCheckState" name="PrevCheckState" type="hidden" value=@Model.SortFilterPageData.PrevCheckState>*@
+    <input id="PrevCheckState" name="PrevCheckState" type="hidden" value=@Model.SortFilterPageData.PrevCheckState>
     @*@Html.Hidden("PrevCheckState", @Model.SortFilterPageData.PrevCheckState) -- this didn't work for some reason*@
 </form>
 <br />
 
 <table class="table">
-    @foreach (var item in Model.Data.BooksList)
+    @foreach (var item in Model.BooksList)
     {
         <tr>
             <td>
@@ -116,11 +116,10 @@
 
 @section Scripts{
 
-    @*<script type='text/javascript'>
+    <script type='text/javascript'>
         document.addEventListener("DOMContentLoaded",
             function(event) {
-                BookList.initialise('@Model.SortFilterPageData.FilterBy', '@Model.SortFilterPageData.FilterValue',
-                    '@Url.Action("GetFilterSearchContent")');
+                BookList.initialise('@Model.SortFilterPageData.FilterBy', '@Model.SortFilterPageData.FilterValue');
             });
-    </script>*@
+    </script>
 }

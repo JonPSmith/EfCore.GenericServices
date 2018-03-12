@@ -12,22 +12,30 @@ namespace RazorPageApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IListBooksService _service;
+        private readonly IListBooksService _listService;
+        private readonly IBookFilterDropdownService _filterDropDownService;
 
-        public IndexModel(IListBooksService service)
+        public IndexModel(IListBooksService listService, IBookFilterDropdownService filterDropDownService)
         {
-            _service = service;
+            _listService = listService;
+            _filterDropDownService = filterDropDownService;
         }
 
-        public BookListCombinedDto Data { get; set; }
+        public SortFilterPageOptions SortFilterPageData { get; private set; }
+        public IEnumerable<BookListDto> BooksList { get; private set; }
 
         public void OnGet(SortFilterPageOptions options)
         {
-            var bookList = _service
+            BooksList = _listService
                 .SortFilterPage(options)
                 .ToList();
 
-            Data = new BookListCombinedDto(options, bookList);
+            SortFilterPageData = options;
+        }
+
+        public JsonResult OnGetFilterSearchContent(SortFilterPageOptions options)
+        {
+            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(options.FilterBy));
         }
     }
 }
