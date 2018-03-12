@@ -15,7 +15,7 @@ namespace RazorPageApp.Pages
 {
     public class ChangePubDateModel : PageModel
     {
-        private IChangePubDateService _service;
+        private readonly IChangePubDateService _service;
 
         public ChangePubDateModel(IChangePubDateService service)
         {
@@ -25,14 +25,12 @@ namespace RazorPageApp.Pages
         [BindProperty]
         public ChangePubDateDto Dto { get; set; }
 
-        public IStatusGeneric Status => _service;
-
         public IActionResult OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
             if (_service.HasErrors)
             {
-                Status.CopyErrorsToModelState(ModelState, Dto);
+                _service.CopyErrorsToModelState(ModelState, Dto);
             }
             return Page();
         }
@@ -45,13 +43,13 @@ namespace RazorPageApp.Pages
                 return Page();
             }
             _service.UpdateBook(id, Dto);
-            if (_service.HasErrors)
-            {
-                Status.CopyErrorsToModelState(ModelState, Dto);
-                return Page();
-            }
+            if (!_service.HasErrors)
+                return RedirectToPage("BookUpdated", new {message = "Successfully changed publication date."});
 
-            return RedirectToPage("BookUpdated", new { message = "Successfully changed publication date."});
+            //Error state
+            _service.CopyErrorsToModelState(ModelState, Dto);
+            return Page();
+
         }
     }
 }
