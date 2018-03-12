@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPageApp", "RazorPageApp\RazorPageApp.csproj", "{6C03A244-3D06-457E-A730-34F8EAAD0451}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPageApp", "RazorPageApp\RazorPageApp.csproj", "{6C03A244-3D06-457E-A730-34F8EAAD0451}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66C17B12-61D2-4CCE-B021-BE03A2406E70}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{272949B3-4A1F-4A98-9E24-DAED1F115AB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericLibsBase", "GenericLibsBase\GenericLibsBase.csproj", "{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{0B6C08D4-D744-4E46-AFA0-692E35885BA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{6C03A244-3D06-457E-A730-34F8EAAD0451}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C03A244-3D06-457E-A730-34F8EAAD0451}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C03A244-3D06-457E-A730-34F8EAAD0451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
