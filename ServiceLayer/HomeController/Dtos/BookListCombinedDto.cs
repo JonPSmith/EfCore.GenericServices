@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace ServiceLayer.HomeServices.Dtos
+namespace ServiceLayer.HomeController.Dtos
 {
     public class BookListCombinedDto
     {

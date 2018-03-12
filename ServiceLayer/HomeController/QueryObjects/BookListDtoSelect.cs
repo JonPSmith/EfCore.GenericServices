@@ -3,9 +3,9 @@
 
 using System.Linq;
 using DataLayer.EfClasses;
-using ServiceLayer.HomeServices.Dtos;
+using ServiceLayer.HomeController.Dtos;
 
-namespace ServiceLayer.HomeServices.QueryObjects
+namespace ServiceLayer.HomeController.QueryObjects
 {
     public static class BookListDtoSelect
     {

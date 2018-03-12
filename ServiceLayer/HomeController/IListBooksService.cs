@@ -2,9 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
-using ServiceLayer.HomeServices.Dtos;
+using ServiceLayer.HomeController.Dtos;
 
-namespace ServiceLayer.HomeServices
+namespace ServiceLayer.HomeController
 {
     public interface IListBooksService
     {

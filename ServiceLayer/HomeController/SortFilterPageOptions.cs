@@ -3,9 +3,9 @@
 
 using System;
 using System.Linq;
-using ServiceLayer.HomeServices.QueryObjects;
+using ServiceLayer.HomeController.QueryObjects;
 
-namespace ServiceLayer.HomeServices
+namespace ServiceLayer.HomeController
 {
     public class SortFilterPageOptions
     {

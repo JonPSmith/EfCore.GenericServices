@@ -3,9 +3,9 @@
 
 using DataLayer.EfClasses;
 using GenericLibsBase;
-using ServiceLayer.HomeServices.Dtos;
+using ServiceLayer.HomeController.Dtos;
 
-namespace ServiceLayer.HomeServices
+namespace ServiceLayer.HomeController
 {
     public interface IAddRemovePromotionService
     {

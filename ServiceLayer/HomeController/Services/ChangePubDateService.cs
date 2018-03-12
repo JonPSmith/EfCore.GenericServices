@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using ServiceLayer.HomeServices.Dtos;
+using ServiceLayer.HomeController.Dtos;
 
-namespace ServiceLayer.HomeServices.Services
+namespace ServiceLayer.HomeController.Services
 {
     public class ChangePubDateService : IChangePubDateService
     {

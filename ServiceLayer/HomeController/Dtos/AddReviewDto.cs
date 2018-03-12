@@ -4,7 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 using DataLayer.EfClasses;
 
-namespace ServiceLayer.HomeServices.Dtos
+namespace ServiceLayer.HomeController.Dtos
 {
     public class AddReviewDto
     {

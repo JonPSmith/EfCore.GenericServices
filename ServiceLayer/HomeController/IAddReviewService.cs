@@ -2,9 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using DataLayer.EfClasses;
-using ServiceLayer.HomeServices.Dtos;
+using ServiceLayer.HomeController.Dtos;
 
-namespace ServiceLayer.HomeServices
+namespace ServiceLayer.HomeController
 {
     public interface IAddReviewService
     {
