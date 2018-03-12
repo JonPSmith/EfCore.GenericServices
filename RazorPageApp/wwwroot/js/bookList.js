@@ -29,10 +29,9 @@ var BookList = (function($) {
             //it is a proper filter val, so get the filter
             $.ajax({
                 //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method>
-                //In this case it's '/?Handler=FilterSearchContent&FilterBy=??', so I make the handler part of the data
-                url: '/',
+                //In this case it's '/?Handler=FilterSearchContent'
+                url: '/?handler=FilterSearchContent',
                 data: {
-                    Handler: 'FilterSearchContent',
                     FilterBy: filterByValue
                 }
             })
