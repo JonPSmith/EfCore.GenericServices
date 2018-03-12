@@ -9,6 +9,6 @@ namespace ServiceLayer.HomeController
     public interface IChangePubDateService
     {
         ChangePubDateDto GetOriginal(int id);
-        Book UpdateBook(ChangePubDateDto dto);
+        Book UpdateBook(int id, ChangePubDateDto dto);
     }
 }

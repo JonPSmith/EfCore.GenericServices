@@ -33,9 +33,9 @@ namespace ServiceLayer.HomeController.Services
             return dto;
         }
 
-        public Book UpdateBook(ChangePubDateDto dto)   
+        public Book UpdateBook(int id, ChangePubDateDto dto)   
         {
-            var book = _context.Find<Book>(dto.BookId);
+            var book = _context.Find<Book>(id);
             book.UpdatePublishedOn(dto.PublishedOn);        
             _context.SaveChanges();                    
             return book;                               

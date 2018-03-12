@@ -87,7 +87,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <li>@Html.ActionLink("Change Pub Date", "ChangePubDate", "Home", new { id = item.BookId })</li>
+                        <li><a asp-page="./ChangePubDate" asp-route-id="@item.BookId">Change Pub Date</a></li>
                         <li>@Html.ActionLink("Add Price Promotion", "AddPromotion", "Home", new { id = item.BookId })</li>
                         <li>@Html.ActionLink("Remove Price Promotion", "RemovePromotion", "Home", new { id = item.BookId })</li>
                         <li>@Html.ActionLink("Add Review", "AddReview", "Home", new { id = item.BookId })</li>
