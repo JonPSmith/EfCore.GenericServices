@@ -23,6 +23,11 @@ namespace RazorPageApp.Helpers
         public static void CopyErrorsToModelState<T>(this IStatusGeneric status, ModelStateDictionary modelState, T displayDto) 
         {
             if (!status.HasErrors) return;
+            if (displayDto == null)
+            {
+                status.CopyErrorsToModelState(modelState);
+                return;
+            }
 
             var namesThatWeShouldInclude = PropertyNamesInDto(displayDto);
             foreach (var error in status.Errors)

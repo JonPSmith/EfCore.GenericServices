@@ -5,11 +5,12 @@ using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericLibsBase;
 using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController.Services
 {
-    public class ChangePubDateService : IChangePubDateService
+    public class ChangePubDateService : StatusGenericHandler, IChangePubDateService
     {
         private readonly EfCoreContext _context;
 
@@ -29,13 +30,20 @@ namespace ServiceLayer.HomeController.Services
                 })                                     
                 .SingleOrDefault(k => k.BookId == id); 
             if (dto == null)
-                throw new InvalidOperationException($"Could not find the book with Id of {id}.");
+                AddError("Sorry, I could not find the book you were looking for.");
             return dto;
         }
 
         public Book UpdateBook(int id, ChangePubDateDto dto)   
         {
+            //Should return error message on not found
             var book = _context.Find<Book>(id);
+            if (book == null)
+            {
+                AddError("Sorry, I could not find the book you were looking for.");
+                return null;
+            }
+            
             book.UpdatePublishedOn(dto.PublishedOn);        
             _context.SaveChanges();                    
             return book;                               

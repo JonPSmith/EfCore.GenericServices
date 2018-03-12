@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericLibsBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorPageApp.Helpers;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
 
@@ -21,33 +25,33 @@ namespace RazorPageApp.Pages
         [BindProperty]
         public ChangePubDateDto Dto { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public IStatusGeneric Status => _service;
+
+        public IActionResult OnGet(int id)
         {
-            if (id == null)
+            Dto = _service.GetOriginal(id);
+            if (_service.HasErrors)
             {
-                return NotFound();
-            }
-            Dto = _service.GetOriginal((int)id);
-            if (Dto == null)
-            {
-                return NotFound();
+                Status.CopyErrorsToModelState(ModelState, Dto);
             }
             return Page();
         }
 
-        public IActionResult OnPost(int? id)
-        {
+        //There are two ways to get data. This takes the id as a parameter and picks up the other information from the [BindProperty]
+        public IActionResult OnPost(int id)
+        { 
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            if (id == null)
+            _service.UpdateBook(id, Dto);
+            if (_service.HasErrors)
             {
-                return NotFound();
+                Status.CopyErrorsToModelState(ModelState, Dto);
+                return Page();
             }
-            _service.UpdateBook((int)id, Dto);
 
-            return RedirectToPage("BookUpdated", new { message = "Successfully changed publication date"});
+            return RedirectToPage("BookUpdated", new { message = "Successfully changed publication date."});
         }
     }
 }

@@ -9,16 +9,16 @@
     <form method="post">
         @Html.ValidationSummary(false, null, new { @class = "text-danger h4" })
         <!-- Input and Submit elements -->
-        <input name="Dto.BookId" type="hidden" value="@Model.Dto.BookId" />
+        <input name="Dto.BookId" type="hidden" value="@Model.Dto?.BookId" />
         @*We need these in case where there is an error and we need to reshow the data again*@
-        <input name="Dto.Title" type="hidden" value="@Model.Dto.Title" />
+        <input name="Dto.Title" type="hidden" value="@Model.Dto?.Title" />
 
         <div class="form-group">
             <div class="col-sm-2">
                 <label class="control-label">Book Title</label>
             </div>
             <div class="col-sm-10">
-                @Model.Dto.Title
+                @Model.Dto?.Title
             </div>
         </div>
 
