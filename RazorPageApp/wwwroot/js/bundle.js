@@ -24,17 +24,27 @@ var BookList = (function($) {
     function loadFilterValueDropdown(filterByValue, filterValue) {
         filterValue = filterValue || '';
         var $fsearch = $('#filter-value-dropdown');
+        var ajaxSettings = {
+            //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method>
+            //In this case it's '/?Handler=FilterSearchContent'
+            url: '/?handler=FilterSearchContent',
+            data: {
+                FilterBy: filterByValue
+            }
+        };
+        if (false) {
+            //this make it into a POST - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
+            ajaxSettings.type = 'POST';
+            ajaxSettings.beforeSend = function(xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            };
+        }
+
         enableDisableFilterDropdown($fsearch, false);
         if (filterByValue !== 'NoFilter') {
             //it is a proper filter val, so get the filter
-            $.ajax({
-                //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method>
-                //In this case it's '/?Handler=FilterSearchContent'
-                url: '/?handler=FilterSearchContent',
-                data: {
-                    FilterBy: filterByValue
-                }
-            })
+            $.ajax(ajaxSettings)
             .done(function(result) {
                 //This removes the existing dropdownlist options
                 $fsearch

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
+using ServiceLayer.HomeController.QueryObjects;
 
 namespace RazorPageApp.Pages
 {
@@ -34,6 +35,15 @@ namespace RazorPageApp.Pages
         }
 
         public JsonResult OnGetFilterSearchContent(SortFilterPageOptions options)
+        {
+            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(options.FilterBy));
+        }
+
+        //You can use this to catch the data, or have items in the paremeters of the action method
+        [BindProperty]
+        public BooksFilterBy FilterBy { get; set; }
+
+        public JsonResult OnPostFilterSearchContent(SortFilterPageOptions options)
         {
             return new JsonResult(_filterDropDownService.GetFilterDropDownValues(options.FilterBy));
         }
