@@ -1,10 +1,9 @@
 ﻿/**********************************************************************
  * BookList handles the book list, especially the 'filter by' part
- * 
- * First created: 2016/09/22
- * 
+ * FOR RAZOR PAGES
+ * See http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
+ * First created: 2018/3/12
  * Under the MIT License (MIT)
- *
  * Written by Jon Smith : GitHub JonPSmith, www.thereformedprogrammer.net
  **********************************************************************/
 
@@ -29,6 +28,8 @@ var BookList = (function($) {
         if (filterByValue !== 'NoFilter') {
             //it is a proper filter val, so get the filter
             $.ajax({
+                //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method>
+                //In this case it's '/?Handler=FilterSearchContent&FilterBy=??', so I make the handler part of the data
                 url: '/',
                 data: {
                     Handler: 'FilterSearchContent',
