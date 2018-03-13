@@ -28,15 +28,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-page="/Index" class="navbar-brand">RazorPageApp</a>
+                <a asp-page="/Home/Index" class="navbar-brand">RazorPageApp</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">All books</a></li>
-                    <li><a asp-area="" asp-controller="Checkout" asp-action="Index">Checkout</a></li>
-                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
-                    <li><a href="#" id="show-logs" class="hidden">Logs&nbsp;<span class="badge"></span></a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-page="/Home/Index">All books</a></li>
+                    @*<li><a asp-area="" asp-controller="Checkout" asp-action="Index">Checkout</a></li>
+                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>*@
+                    <li><a  asp-page="/Home/About">About</a></li>
                 </ul>
             </div>
         </div>

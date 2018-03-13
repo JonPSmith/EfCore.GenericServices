@@ -27,7 +27,11 @@ namespace RazorPageApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            // thanks to https://exceptionnotfound.net/setting-a-custom-default-page-in-asp-net-core-razor-pages/
+            services.AddMvc().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AddPageRoute("/Home/Index", "");
+            });
             //Used for Ajax Post - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
