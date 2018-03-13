@@ -22,17 +22,16 @@ namespace RazorPageApp.Pages
         [BindProperty]
         public AddRemovePromotionDto Dto { get; set; }
 
-        public IActionResult OnGet(int id)
+        public void OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
             if (_service.HasErrors)
             {
                 _service.CopyErrorsToModelState(ModelState, Dto, nameof(Dto));
             }
-            return Page();
         }
 
-        //There are two ways to get data. This has the dto as an parameter (rather than have [BindProperty] of the public Dto)
+        //There are two ways to get data. This uses the [BindProperty] because it preserves the original data if there is an error
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)

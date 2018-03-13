@@ -25,14 +25,13 @@ namespace RazorPageApp.Pages
         [BindProperty]
         public ChangePubDateDto Dto { get; set; }
 
-        public IActionResult OnGet(int id)
+        public void OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
             if (_service.HasErrors)
             {
                 _service.CopyErrorsToModelState(ModelState, Dto);
             }
-            return Page();
         }
 
         //There are two ways to get data. This takes the id as a parameter and picks up the other information from the [BindProperty]
