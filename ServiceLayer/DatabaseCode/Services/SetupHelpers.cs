@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
@@ -22,6 +22,17 @@ namespace ServiceLayer.DatabaseCode.Services
         public const string SeedDataSearchName = "Apress books*.json";
         public const string SeedFileSubDirectory = "seedData";
         private const decimal DefaultBookPrice = 40;    //Any book without a price is set to this value
+
+        //------------------------------------------------------
+        //private methods
+
+
+        private static readonly string[] DummyUsersIds = new[]
+        {
+            DefaultUserId,
+            "albert@einstein.com",
+            "ada@lovelace.co.uk"
+        };
 
         public static void DevelopmentEnsureDeleted(this EfCoreContext db)
         {
@@ -66,17 +77,6 @@ namespace ServiceLayer.DatabaseCode.Services
             context.SaveChanges();
         }
 
-        //------------------------------------------------------
-        //private methods
-
-
-        private static readonly string[] DummyUsersIds = new[]
-        {
-            DefaultUserId,
-            "albert@einstein.com",
-            "ada@lovelace.co.uk"
-        };
-    
         private static void AddDummyOrders(this EfCoreContext context, List<Book> books = null)
         {
             if (books == null)
