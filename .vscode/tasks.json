@@ -10,6 +10,20 @@
                 "${workspaceFolder}/RazorPageApp/RazorPageApp.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        // thanks to https://stackoverflow.com/questions/47066356/how-does-one-debug-an-mstest-in-vscode
+        {
+            "label": "Run tests",
+            "command": "dotnet test ${workspaceFolder}/Tests/Tests.csproj",
+            "type": "shell",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
         }
     ]
 }
