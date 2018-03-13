@@ -25,7 +25,7 @@ var BookList = (function($) {
         filterValue = filterValue || '';
         var $fsearch = $('#filter-value-dropdown');
         var ajaxSettings = {
-            //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method>
+            //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method name>
             //In this case it's '/?Handler=FilterSearchContent'
             url: '/?handler=FilterSearchContent',
             data: {
@@ -34,6 +34,7 @@ var BookList = (function($) {
         };
         if (false) {
             //this make it into a POST - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
+            //see also https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery#javascript-ajax-and-spas
             ajaxSettings.type = 'POST';
             ajaxSettings.beforeSend = function(xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
