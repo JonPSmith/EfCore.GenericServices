@@ -14,11 +14,6 @@ namespace DataLayer.EfClasses
 
         public Author() { }
 
-        public Author(string name)
-        {
-            Name = name;
-        }
-
         public int AuthorId { get;  set; }
 
         [Required]

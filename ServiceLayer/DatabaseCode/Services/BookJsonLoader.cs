@@ -26,7 +26,7 @@ namespace ServiceLayer.DatabaseCode.Services
                 foreach (var author in bookInfoJson.authors)
                 {
                     if (!authorDict.ContainsKey(author))
-                        authorDict[author] = new Author(author);
+                        authorDict[author] = new Author{ Name = author};
                 }
             }
 

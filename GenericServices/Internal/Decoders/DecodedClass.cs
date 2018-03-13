@@ -17,13 +17,14 @@ namespace GenericServices.Internal.Decoders
 
         public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
+        public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
 
         public DecodedClass(Type classType)
         {
             PublicCtors = classType.GetConstructors();
             var allPublicProperties = classType.GetProperties();
-            var methodNamesToIgnore = allPublicProperties.Where(pp => pp.GetMethod.IsPublic).Select(x => x.GetMethod.Name)
-                .Union(allPublicProperties.Where(pp => pp.SetMethod.IsPublic).Select(x => x.SetMethod.Name)).ToArray();
+            var methodNamesToIgnore = allPublicProperties.Where(pp => pp.GetMethod?.IsPublic ?? false).Select(x => x.GetMethod.Name)
+                .Union(allPublicProperties.Where(pp => pp.SetMethod?.IsPublic ?? false).Select(x => x.SetMethod.Name)).ToArray();
             var methodsToInspect = classType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                     .Where(pm => !methodNamesToIgnore.Contains(pm.Name)).ToArray();
             PublicSetterMethods = methodsToInspect
@@ -40,7 +41,7 @@ namespace GenericServices.Internal.Decoders
                           method.ReturnType.GetInterface(nameof(IStatusGeneric)) != null
                     select method).ToArray();
             }
-            PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod.IsPublic).ToArray();
+            PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod?.IsPublic ?? false).ToArray();
         }
     }
 }

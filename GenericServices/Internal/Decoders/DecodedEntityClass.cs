@@ -9,7 +9,6 @@ using GenericLibsBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Remotion.Linq.Parsing;
 
 namespace GenericServices.Internal.Decoders
 {
@@ -18,18 +17,18 @@ namespace GenericServices.Internal.Decoders
 
         public Type EntityType { get; private set; }
 
-        public ImmutableList<IKey> PrimaryKeys { get; private set; }
+        public IReadOnlyList<IProperty> PrimaryKeyProperties { get; private set; }
 
         public DecodedClass EntityClassInfo { get; private set; }
 
-        private DecodedEntityClass(Type entityType, IEnumerable<IKey> primaryKeys, DecodedClass entityClassInfo)
+        private DecodedEntityClass(Type entityType, IReadOnlyList<IProperty> primaryKeyProperties, DecodedClass entityClassInfo)
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
-            PrimaryKeys = primaryKeys?.ToImmutableList() ?? throw new ArgumentNullException(nameof(primaryKeys));
+            PrimaryKeyProperties = primaryKeyProperties;
             EntityClassInfo = entityClassInfo ?? throw new ArgumentNullException(nameof(entityClassInfo));
         }
 
-        static IStatusGeneric<DecodedEntityClass> CreateFactory( Type entityType, DbContext context)
+        public static IStatusGeneric<DecodedEntityClass> CreateFactory( Type entityType, DbContext context)
         {
             var status = new StatusGenericHandler<DecodedEntityClass>();
             var efType = context.Model.FindEntityType(entityType.FullName);
@@ -39,8 +38,15 @@ namespace GenericServices.Internal.Decoders
                 return status;
             }
 
-            status.Result = new DecodedEntityClass(entityType, 
-                efType.GetKeys().Where(x => x.IsPrimaryKey()),
+            var primaryKeys = efType.GetKeys().Where(x => x.IsPrimaryKey()).ToList();
+            if (primaryKeys.Count != 1)
+            {
+                status.AddError($"The class {entityType.Name} has {primaryKeys.Count} primary keys. I can't handle that.");
+                return status;
+            }
+
+            status.Result = new DecodedEntityClass(entityType,
+                primaryKeys.Single().Properties,
                 new DecodedClass(entityType));
             return status;
         }

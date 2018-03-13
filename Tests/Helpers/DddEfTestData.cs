@@ -32,7 +32,7 @@ namespace Tests.Helpers
                 "Book Publisher",
                 123,
                 null,
-                new[] { new Author ("Test Author") }
+                new[] { new Author { Name = "Test Author"} }
             );
 
             return book;
@@ -41,7 +41,7 @@ namespace Tests.Helpers
         public static List<Book> CreateDummyBooks(int numBooks = 10, bool stepByYears = false)
         {
             var result = new List<Book>();
-            var commonAuthor = new Author("CommonAuthor");
+            var commonAuthor = new Author { Name = "CommonAuthor"};
             for (int i = 0; i < numBooks; i++)
             {
                 var book = new Book
@@ -52,7 +52,7 @@ namespace Tests.Helpers
                     "Publisher",
                     (short)(i + 1),
                     $"Image{i:D4}",
-                    new[] { new Author( $"Author{i:D4}"), commonAuthor}
+                    new[] { new Author { Name = $"Author{i:D4}"}, commonAuthor}
                 );
                 for (int j = 0; j < i; j++)
                 {
@@ -73,7 +73,7 @@ namespace Tests.Helpers
 
         public static List<Book> CreateFourBooks()
         {
-            var martinFowler = new Author("Martin Fowler");
+            var martinFowler = new Author { Name = "Martin Fowler"};
 
             var books = new List<Book>();
 
@@ -109,7 +109,7 @@ namespace Tests.Helpers
                  null,
                 56,
                 null,
-                new[] { new Author("Eric Evans") }
+                new[] { new Author { Name = "Eric Evans"}}
             );
             books.Add(book3);
 
@@ -121,7 +121,7 @@ namespace Tests.Helpers
                 "Future Published",
                 220,
                 null,
-                new[] { new Author("Future Person") }
+                new[] { new Author { Name = "Future Person"} }
             );
             book4.AddReview(5,
                 "I look forward to reading this book, if I am still alive!", "Jon P Smith");

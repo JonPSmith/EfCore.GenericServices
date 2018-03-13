@@ -92,6 +92,7 @@ namespace Tests.UnitTests.GenericServices
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
             decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+            decoded.CanBeCreated.ShouldBeTrue();
             decoded.PublicCtors.Length.ShouldEqual(1);
             decoded.PublicSetterMethods.Length.ShouldEqual(0);
             decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
@@ -108,6 +109,7 @@ namespace Tests.UnitTests.GenericServices
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
             decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+            decoded.CanBeCreated.ShouldBeTrue();
             decoded.PublicCtors.Length.ShouldEqual(1);
             decoded.PublicSetterMethods.Length.ShouldEqual(2);
             decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
@@ -124,6 +126,7 @@ namespace Tests.UnitTests.GenericServices
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
             decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+            decoded.CanBeCreated.ShouldBeTrue();
             decoded.PublicCtors.Length.ShouldEqual(0);
             decoded.PublicSetterMethods.Length.ShouldEqual(2);
             decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
