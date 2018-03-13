@@ -29,7 +29,7 @@ namespace GenericServices.Internal.Decoders
             publicSetterMethods = methodsToInspect
                 .Where(x => x.ReturnType == typeof(void) || 
                             x.ReturnType == typeof(IStatusGeneric)).ToArray();
-            var staticMethods = methodsToInspect.Where(x => x.IsStatic).ToArray();
+            var staticMethods = classType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
             if (staticMethods.Any())
             {
                 publicStaticFactoryMethods = (from method in staticMethods
@@ -37,7 +37,7 @@ namespace GenericServices.Internal.Decoders
                         ? method.ReturnType.GetGenericArguments()
                         : new Type[0])
                     where genericArgs.Length == 1 && genericArgs[0] == classType &&
-                          method.ReturnType == typeof(IStatusGeneric<>)
+                          method.ReturnType.GetInterface(nameof(IStatusGeneric)) != null
                     select method).ToArray();
             }
             propertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod.IsPublic).ToArray();

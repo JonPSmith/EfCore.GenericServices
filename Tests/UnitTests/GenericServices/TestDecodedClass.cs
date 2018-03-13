@@ -114,6 +114,20 @@ namespace Tests.UnitTests.GenericServices
             decoded.propertiesWithPublicSetter.Length.ShouldEqual(0);
         }
 
+        [Fact]
+        public void LockedClassStaticFactoryDecode()
+        {
+            //SETUP 
+            //ATTEMPT
+            var decoded = new DecodedClass(typeof(LockedClassStaticFactory));
 
+            //VERIFY
+            decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+            decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+            decoded.PublicCtors.Length.ShouldEqual(0);
+            decoded.publicSetterMethods.Length.ShouldEqual(2);
+            decoded.publicStaticFactoryMethods.Length.ShouldEqual(1);
+            decoded.propertiesWithPublicSetter.Length.ShouldEqual(0);
+        }
     }
 }
