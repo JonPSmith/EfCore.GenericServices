@@ -6,30 +6,32 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
+    //I have made the Author entity class "normal", i.e. not locked down in the DDD-style way
     public class Author
     {
         public const int NameLength = 100;
+        public const int EmailLength = 100;
 
-        //used by EF Core
-        private Author() { }
+        public Author() { }
 
         public Author(string name)
         {
             Name = name;
         }
 
-        public int AuthorId { get; private set; }
+        public int AuthorId { get;  set; }
 
         [Required]
         [MaxLength(NameLength)]
-        public string Name { get; private set; }
+        public string Name { get;  set; }
+
+        [MaxLength(EmailLength)]
+        public string Email { get; set; }
 
         //------------------------------
         //Relationships
 
-        public ICollection<BookAuthor>
-            BooksLink
-        { get; set; }
+        public ICollection<BookAuthor> BooksLink { get; set; }
     }
 
 }
