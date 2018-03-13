@@ -93,9 +93,9 @@ namespace Tests.UnitTests.GenericServices
             decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
             decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
             decoded.PublicCtors.Length.ShouldEqual(1);
-            decoded.publicSetterMethods.Length.ShouldEqual(0);
-            decoded.publicStaticFactoryMethods.Length.ShouldEqual(0);
-            decoded.propertiesWithPublicSetter.Length.ShouldEqual(2);
+            decoded.PublicSetterMethods.Length.ShouldEqual(0);
+            decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+            decoded.PropertiesWithPublicSetter.Length.ShouldEqual(2);
         }
 
         [Fact]
@@ -109,9 +109,9 @@ namespace Tests.UnitTests.GenericServices
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
             decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
             decoded.PublicCtors.Length.ShouldEqual(1);
-            decoded.publicSetterMethods.Length.ShouldEqual(2);
-            decoded.publicStaticFactoryMethods.Length.ShouldEqual(0);
-            decoded.propertiesWithPublicSetter.Length.ShouldEqual(0);
+            decoded.PublicSetterMethods.Length.ShouldEqual(2);
+            decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+            decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
         }
 
         [Fact]
@@ -125,9 +125,9 @@ namespace Tests.UnitTests.GenericServices
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
             decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
             decoded.PublicCtors.Length.ShouldEqual(0);
-            decoded.publicSetterMethods.Length.ShouldEqual(2);
-            decoded.publicStaticFactoryMethods.Length.ShouldEqual(1);
-            decoded.propertiesWithPublicSetter.Length.ShouldEqual(0);
+            decoded.PublicSetterMethods.Length.ShouldEqual(2);
+            decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+            decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
         }
     }
 }

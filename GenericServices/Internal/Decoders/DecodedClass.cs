@@ -10,13 +10,13 @@ namespace GenericServices.Internal.Decoders
 {
     internal class DecodedClass
     {
-        public ConstructorInfo[] PublicCtors { get; private set; }
-        public MethodInfo [] publicStaticFactoryMethods { get; private set; } = new MethodInfo[0];
-        public MethodInfo[] publicSetterMethods { get; private set; }
-        public PropertyInfo[] propertiesWithPublicSetter { get; private set; }
+        public ConstructorInfo[] PublicCtors { get; }
+        public MethodInfo [] PublicStaticFactoryMethods { get; } = new MethodInfo[0];
+        public MethodInfo[] PublicSetterMethods { get; }
+        public PropertyInfo[] PropertiesWithPublicSetter { get; }
 
-        public bool CanBeUpdatedViaProperties => propertiesWithPublicSetter.Any();
-        public bool CanBeUpdatedViaMethods => publicSetterMethods.Any();
+        public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
+        public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
 
         public DecodedClass(Type classType)
         {
@@ -26,13 +26,13 @@ namespace GenericServices.Internal.Decoders
                 .Union(allPublicProperties.Where(pp => pp.SetMethod.IsPublic).Select(x => x.SetMethod.Name)).ToArray();
             var methodsToInspect = classType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                     .Where(pm => !methodNamesToIgnore.Contains(pm.Name)).ToArray();
-            publicSetterMethods = methodsToInspect
+            PublicSetterMethods = methodsToInspect
                 .Where(x => x.ReturnType == typeof(void) || 
                             x.ReturnType == typeof(IStatusGeneric)).ToArray();
             var staticMethods = classType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
             if (staticMethods.Any())
             {
-                publicStaticFactoryMethods = (from method in staticMethods
+                PublicStaticFactoryMethods = (from method in staticMethods
                     let genericArgs = (method.ReturnType.IsGenericType
                         ? method.ReturnType.GetGenericArguments()
                         : new Type[0])
@@ -40,7 +40,7 @@ namespace GenericServices.Internal.Decoders
                           method.ReturnType.GetInterface(nameof(IStatusGeneric)) != null
                     select method).ToArray();
             }
-            propertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod.IsPublic).ToArray();
+            PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod.IsPublic).ToArray();
         }
     }
 }
