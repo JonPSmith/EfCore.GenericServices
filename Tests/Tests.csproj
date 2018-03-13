@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\GenericLibsBase\GenericLibsBase.csproj" />
+    <ProjectReference Include="..\GenericServices\GenericServices.csproj" />
     <ProjectReference Include="..\RazorPageApp\RazorPageApp.csproj" />
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
   </ItemGroup>
