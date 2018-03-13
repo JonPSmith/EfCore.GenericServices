@@ -7,12 +7,9 @@ using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController
 {
-    public interface IAddRemovePromotionService
+    public interface IAddRemovePromotionService : IStatusGeneric
     {
-        IStatusGeneric Status { get; }
-
         AddRemovePromotionDto GetOriginal(int id);
-
         Book AddPromotion(AddRemovePromotionDto dto);
         Book RemovePromotion(int id);
     }

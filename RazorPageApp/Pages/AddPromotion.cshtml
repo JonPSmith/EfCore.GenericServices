@@ -1,0 +1,57 @@
+﻿@page
+@using System.Globalization
+@model RazorPageApp.Pages.AddPromotionModel
+@{
+    ViewData["Title"] = "AddPromotion";
+}
+
+<h2>Add price promotion</h2>
+<div class="form-horizontal">
+    <form method="post">
+        @Html.ValidationSummary(true, null, new { @class = "text-danger h4" })
+        <!-- Input and Submit elements -->
+        <input name="Dto.BookId" type="hidden" value="@Model.Dto?.BookId" />
+        @*We need these in case where there is an error and we need to reshow the data again*@
+        <input name="Dto.Title" type="hidden" value="@Model.Dto?.Title" />
+        <input name="Dto.OrgPrice" type="hidden" value="@Model.Dto?.OrgPrice" />
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Book Title</label>
+            </div>
+            <div class="col-sm-10">
+                @Model.Dto?.Title
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Org Price</label>
+            </div>
+            <div class="col-sm-10">
+                @(Model.Dto?.OrgPrice < 0 ? "Not for sale" : Model.Dto?.OrgPrice.ToString("c", new CultureInfo("en-US")))
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">New Price</label>
+            </div>
+            <input asp-for="Dto.ActualPrice" class="form-control col-sm-10" />
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Promotional Text</label>
+            </div>
+            <input asp-for="Dto.PromotionalText" class="form-control col-sm-10" />
+            <span asp-validation-for="Dto.PromotionalText" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit">Add</button>
+            </div>
+        </div>
+
+    </form>
+</div>

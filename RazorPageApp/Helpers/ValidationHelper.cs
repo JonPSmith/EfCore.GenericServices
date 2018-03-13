@@ -20,7 +20,8 @@ namespace RazorPageApp.Helpers
         /// <param name="status">The status that came back from the BizRunner</param>
         /// <param name="modelState">The MVC modelState to add errors to</param>
         /// <param name="displayDto">This is the Dto that will be used to display the error messages</param>
-        public static void CopyErrorsToModelState<T>(this IStatusGeneric status, ModelStateDictionary modelState, T displayDto) 
+        /// <param name="modelName">When using razor pages with a DTO you need to prefix the member name by the name of the model's property</param>
+        public static void CopyErrorsToModelState<T>(this IStatusGeneric status, ModelStateDictionary modelState, T displayDto, string modelName = null) 
         {
             if (!status.HasErrors) return;
             if (displayDto == null)
@@ -37,7 +38,9 @@ namespace RazorPageApp.Helpers
                 else
                     foreach (var errorKeyName in error.MemberNames)
                         modelState.AddModelError(
-                            (namesThatWeShouldInclude.Any(x => x == errorKeyName) ? errorKeyName : ""),
+                            (namesThatWeShouldInclude.Any(x => x == errorKeyName) 
+                                ? (modelName == null ? errorKeyName : modelName + "." + errorKeyName)
+                                : ""),
                             error.ErrorMessage);
             }
         }

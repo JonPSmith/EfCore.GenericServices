@@ -108,7 +108,10 @@ namespace DataLayer.EfClasses
             }
 
             ActualPrice = newPrice;  
-            PromotionalText = promotionalText; 
+            PromotionalText = promotionalText;
+
+            status.Message = $"The book's new price is ${newPrice:F}.";
+
             return status; 
         }
 

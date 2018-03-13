@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using GenericLibsBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageApp.Helpers;
@@ -13,41 +10,41 @@ using ServiceLayer.HomeController.Dtos;
 
 namespace RazorPageApp.Pages
 {
-    public class ChangePubDateModel : PageModel
+    public class AddPromotionModel : PageModel
     {
-        private readonly IChangePubDateService _service;
+        private readonly IAddRemovePromotionService _service;
 
-        public ChangePubDateModel(IChangePubDateService service)
+        public AddPromotionModel(IAddRemovePromotionService service)
         {
             _service = service;
         }
 
         [BindProperty]
-        public ChangePubDateDto Dto { get; set; }
+        public AddRemovePromotionDto Dto { get; set; }
 
         public IActionResult OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
             if (_service.HasErrors)
             {
-                _service.CopyErrorsToModelState(ModelState, Dto);
+                _service.CopyErrorsToModelState(ModelState, Dto, nameof(Dto));
             }
             return Page();
         }
 
-        //There are two ways to get data. This takes the id as a parameter and picks up the other information from the [BindProperty]
-        public IActionResult OnPost(int id)
-        { 
+        //There are two ways to get data. This has the dto as an parameter (rather than have [BindProperty] of the public Dto)
+        public IActionResult OnPost()
+        {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            _service.UpdateBook(id, Dto);
+            _service.AddPromotion(Dto);
             if (!_service.HasErrors)
-                return RedirectToPage("BookUpdated", new {message = "Successfully changed publication date."});
+                return RedirectToPage("BookUpdated", new { message = _service.Message });
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Dto);
+            _service.CopyErrorsToModelState(ModelState, Dto, nameof(Dto));
             return Page();
         }
     }

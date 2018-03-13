@@ -10,7 +10,7 @@ using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController.Services
 {
-    public class AddRemovePromotionService : IAddRemovePromotionService
+    public class AddRemovePromotionService : StatusGenericHandler, IAddRemovePromotionService
     {
         private readonly EfCoreContext _context;
 
@@ -18,8 +18,6 @@ namespace ServiceLayer.HomeController.Services
         {
             _context = context;
         }
-
-        public IStatusGeneric Status { get; private set; } = new StatusGenericHandler();
 
         public AddRemovePromotionDto GetOriginal(int id)      
         {
@@ -34,7 +32,7 @@ namespace ServiceLayer.HomeController.Services
                 })
                 .SingleOrDefault(k => k.BookId == id);
             if (dto == null)
-                throw new InvalidOperationException($"Could not find the book with Id of {id}.");
+                AddError("Sorry, I could not find the book you were looking for.");
             return dto;
         }
 
@@ -42,9 +40,12 @@ namespace ServiceLayer.HomeController.Services
         {
             var book = _context.Find<Book>(dto.BookId);
             if (book == null)
-                throw new InvalidOperationException($"Could not find the book with Id of {dto.BookId}.");
-            Status = book.AddPromotion(dto.ActualPrice, dto.PromotionalText);
-            if (Status.HasErrors) return null;
+            {
+                AddError("Sorry, I could not find the book you were looking for.");
+                return null;
+            }
+            CombineErrors( book.AddPromotion(dto.ActualPrice, dto.PromotionalText));
+            if (HasErrors) return null;
 
             _context.SaveChanges();                 
             return book;
@@ -54,7 +55,10 @@ namespace ServiceLayer.HomeController.Services
         {
             var book = _context.Find<Book>(id);
             if (book == null)
-                throw new InvalidOperationException($"Could not find the book with Id of {id}.");
+            {
+                AddError("Sorry, I could not find the book you were looking for.");
+                return null;
+            }
             book.RemovePromotion();
             _context.SaveChanges();
             return book;
