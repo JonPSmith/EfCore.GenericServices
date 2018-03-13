@@ -2,13 +2,18 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceLayer.HomeController.Dtos
 {
     public class ChangePubDateDto
     {
+        [HiddenInput]
         public int BookId { get; set; }
+
+        [ReadOnly(true)]
         public string Title { get; set; }
 
         [DataType(DataType.Date)]               
