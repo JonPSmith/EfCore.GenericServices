@@ -8,7 +8,7 @@ using GenericLibsBase;
 
 namespace GenericServices.Internal.Decoders
 {
-    internal class DecodedClass
+    internal class DecodedTargetClass
     {
         public ConstructorInfo[] PublicCtors { get; }
         public MethodInfo [] PublicStaticFactoryMethods { get; } = new MethodInfo[0];
@@ -19,7 +19,7 @@ namespace GenericServices.Internal.Decoders
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
         public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
 
-        public DecodedClass(Type classType)
+        public DecodedTargetClass(Type classType)
         {
             PublicCtors = classType.GetConstructors();
             var allPublicProperties = classType.GetProperties();

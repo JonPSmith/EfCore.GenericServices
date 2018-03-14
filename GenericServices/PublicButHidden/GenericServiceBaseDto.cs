@@ -10,18 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
 {
-    public class GenericServiceBaseDto<TEntity, TDto, TContext>
+    /// <summary>
+    /// This class is simply used as a marker to find if the prvided type is a GenericServiceDto
+    /// </summary>
+    public abstract class GenericServiceBaseDto { }
+
+
+    public class GenericServiceBaseDto<TEntity, TDto> : GenericServiceBaseDto
         where TEntity : class
-        where TDto : GenericServiceBaseDto<TEntity, TDto, TContext>
-        where TContext : DbContext
+        where TDto : GenericServiceBaseDto<TEntity, TDto>
     {
 
-        internal IStatusGeneric Setup(TContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected internal virtual IQueryable<TDto> ProjectionQuery(TContext context, IMapper mapper)
+        protected internal virtual IQueryable<TDto> ProjectionQuery(DbContext context, IMapper mapper)
         {
             return context.Set<TEntity>().AsNoTracking().ProjectTo<TDto>(mapper);
         }

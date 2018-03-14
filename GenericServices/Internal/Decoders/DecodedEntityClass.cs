@@ -14,41 +14,30 @@ namespace GenericServices.Internal.Decoders
 {
     internal class DecodedEntityClass
     {
-
         public Type EntityType { get; private set; }
 
-        public IReadOnlyList<IProperty> PrimaryKeyProperties { get; private set; }
+        public ImmutableList<IProperty> PrimaryKeyProperties { get; private set; }
 
-        public DecodedClass EntityClassInfo { get; private set; }
+        public DecodedTargetClass EntityClassInfo { get; private set; }
 
-        private DecodedEntityClass(Type entityType, IReadOnlyList<IProperty> primaryKeyProperties, DecodedClass entityClassInfo)
+        public DecodedEntityClass(Type entityType, DbContext context)
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
-            PrimaryKeyProperties = primaryKeyProperties;
-            EntityClassInfo = entityClassInfo ?? throw new ArgumentNullException(nameof(entityClassInfo));
-        }
-
-        public static IStatusGeneric<DecodedEntityClass> CreateFactory( Type entityType, DbContext context)
-        {
-            var status = new StatusGenericHandler<DecodedEntityClass>();
             var efType = context.Model.FindEntityType(entityType.FullName);
             if (efType == null)
             {
-                status.AddError($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext.");
-                return status;
+                throw new InvalidOperationException($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext."+
+                                                    " The class must be either be an entity class derived from the GenericServiceDto/Async class.");
             }
 
-            var primaryKeys = efType.GetKeys().Where(x => x.IsPrimaryKey()).ToList();
+            var primaryKeys = efType.GetKeys().Where(x => x.IsPrimaryKey()).ToImmutableList();
             if (primaryKeys.Count != 1)
             {
-                status.AddError($"The class {entityType.Name} has {primaryKeys.Count} primary keys. I can't handle that.");
-                return status;
+                throw new InvalidOperationException($"The class {entityType.Name} has {primaryKeys.Count} primary keys. I can't handle that.");
             }
 
-            status.Result = new DecodedEntityClass(entityType,
-                primaryKeys.Single().Properties,
-                new DecodedClass(entityType));
-            return status;
+            PrimaryKeyProperties = primaryKeys.Single().Properties.ToImmutableList();
+            EntityClassInfo = new DecodedTargetClass(entityType);
         }
     }
 }
