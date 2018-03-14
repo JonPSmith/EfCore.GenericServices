@@ -3,12 +3,11 @@
 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using AutoMapper;
 using GenericLibsBase;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
-using GenericServices.Internal.LinqBuilders;
+using GenericServices.Internal.MappingCode;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
@@ -59,17 +58,27 @@ namespace GenericServices.PublicButHidden
             return (IQueryable<T>)projector.Accessor.GetManyProjectedNoTracking();
         }
 
-        public T Create<T>(T entityOrDto) where T : class
+        public void Create<T>(T entityOrDto) where T : class
         {
             var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
                 _context.SaveChanges();
-                return entityOrDto;
             }
-
-            throw new NotImplementedException();
+            else
+            {
+                var parameterlessCtor =
+                    entityInfo.EntityClassInfo.PublicCtors.SingleOrDefault(x => !x.GetParameters().Any());
+                if (parameterlessCtor == null)
+                    throw new NotImplementedException();
+                var entityInstance = Activator.CreateInstance(entityInfo.EntityType);
+                var copier = new CreateCopier(_context, _mapper, typeof(T), entityInfo);
+                copier.Accessor.MapDtoToEntity(entityOrDto, entityInstance);
+                _context.Add(entityInstance);
+                _context.SaveChanges();
+                //Needs to copy back keys afterwards
+            }
         }
 
         public T Update<T>(T entityOrDto) where T : class
@@ -82,8 +91,13 @@ namespace GenericServices.PublicButHidden
                 _context.SaveChanges();
                 return entityOrDto;
             }
-
-            throw new NotImplementedException();
+            else
+            { 
+                var copier = new CreateCopier(_context, _mapper, typeof(T), entityInfo);
+                var entity = copier.Accessor.LoadExistingAndMap(entityOrDto);
+                _context.SaveChanges();
+                throw new NotImplementedException("Needs to get keys");
+            }
         }
 
         public void Delete<T>(params object[] keys) where T : class

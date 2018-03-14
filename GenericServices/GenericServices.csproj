@@ -13,8 +13,4 @@
     <ProjectReference Include="..\GenericLibsBase\GenericLibsBase.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Internal\LinqQueries\" />
-  </ItemGroup>
-
 </Project>

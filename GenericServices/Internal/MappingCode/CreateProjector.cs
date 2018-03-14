@@ -3,13 +3,13 @@
 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal.Decoders;
+using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
 
-namespace GenericServices.Internal.LinqBuilders
+namespace GenericServices.Internal.MappingCode
 {
     internal class CreateProjector
     {
