@@ -4,7 +4,7 @@ using Xunit;
 using GenericServices.Internal;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Tests.UnitTests.GenericServices
+namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestExtractDisplayHelpers
     {

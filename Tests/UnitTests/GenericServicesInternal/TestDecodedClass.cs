@@ -4,7 +4,7 @@ using Xunit;
 using GenericServices.Internal.Decoders;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Tests.UnitTests.GenericServices
+namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestDecodedClass
     {
@@ -87,7 +87,7 @@ namespace Tests.UnitTests.GenericServices
         {
             //SETUP 
             //ATTEMPT
-            var decoded = new DecodedClass(typeof(NormalClass));
+            var decoded = new DecodedTargetClass(typeof(NormalClass));
 
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
@@ -104,7 +104,7 @@ namespace Tests.UnitTests.GenericServices
         {
             //SETUP 
             //ATTEMPT
-            var decoded = new DecodedClass(typeof(LockedClass));
+            var decoded = new DecodedTargetClass(typeof(LockedClass));
 
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
@@ -121,7 +121,7 @@ namespace Tests.UnitTests.GenericServices
         {
             //SETUP 
             //ATTEMPT
-            var decoded = new DecodedClass(typeof(LockedClassStaticFactory));
+            var decoded = new DecodedTargetClass(typeof(LockedClassStaticFactory));
 
             //VERIFY
             decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
