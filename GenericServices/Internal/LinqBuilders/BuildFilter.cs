@@ -10,10 +10,10 @@ using System.Reflection;
 
 namespace GenericServices.Internal.LinqBuilders
 {
-    public class BuildFilter
+    internal static class BuildFilter
     {
 
-        public static Expression<Func<T, bool>> CreateFilter<T>(ImmutableList<PropertyInfo> keyProperties, object[] keyValues)
+        public static Expression<Func<T, bool>> CreateFilter<T>(this ImmutableList<PropertyInfo> keyProperties, object[] keyValues)
         {
             if (keyProperties.Count != keyValues.Length)
                 throw new ArgumentException("The number of keys values provided does not match the number of keys in the entity class.");

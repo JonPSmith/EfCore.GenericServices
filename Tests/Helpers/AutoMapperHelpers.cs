@@ -7,6 +7,17 @@ namespace Tests.Helpers
 {
     public static class AutoMapperHelpers
     {
+
+        public static IMapper CreateMap<TIn, TOut>()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TIn, TOut>();
+            });
+            var mapper = config.CreateMapper();
+            return mapper;
+        }
+
         public static IMapper CreateMapper<T>() where T : Profile, new()
         {
             var config = new MapperConfiguration(cfg =>

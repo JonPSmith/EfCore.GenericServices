@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using GenericLibsBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -16,7 +17,7 @@ namespace GenericServices.Internal.Decoders
     {
         public Type EntityType { get; private set; }
 
-        public ImmutableList<IProperty> PrimaryKeyProperties { get; private set; }
+        public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
 
         public DecodedTargetClass EntityClassInfo { get; private set; }
 
@@ -36,7 +37,7 @@ namespace GenericServices.Internal.Decoders
                 throw new InvalidOperationException($"The class {entityType.Name} has {primaryKeys.Count} primary keys. I can't handle that.");
             }
 
-            PrimaryKeyProperties = primaryKeys.Single().Properties.ToImmutableList();
+            PrimaryKeyProperties = primaryKeys.Single().Properties.Select(x => x.PropertyInfo).ToImmutableList();
             EntityClassInfo = new DecodedTargetClass(entityType);
         }
     }

@@ -27,7 +27,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 var book = service.GetSingle<Book>(1);
@@ -49,7 +49,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 var book = service.GetSingle<Book>(99);
@@ -72,7 +72,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 var books = service.GetManyNoTracked<Book>();
@@ -96,7 +96,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -124,7 +124,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 var author = service.GetSingle<Author>(1);
@@ -152,7 +152,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -180,7 +180,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context);
+                var service = new GenericService<EfCoreContext>(context, null);
 
                 //ATTEMPT
                 service.Delete<Book>(1);
