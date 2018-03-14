@@ -69,7 +69,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var parameterlessCtor =
-                    entityInfo.EntityClassInfo.PublicCtors.SingleOrDefault(x => !x.GetParameters().Any());
+                    entityInfo.PublicCtors.SingleOrDefault(x => !x.GetParameters().Any());
                 if (parameterlessCtor == null)
                     throw new NotImplementedException();
                 var entityInstance = Activator.CreateInstance(entityInfo.EntityType);

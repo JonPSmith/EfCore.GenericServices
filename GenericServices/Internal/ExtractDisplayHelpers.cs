@@ -22,8 +22,13 @@ namespace GenericServices.Internal
 
         public static string GetNameForClass<T>() where T : class
         {
-            var displayNameAttr = typeof(T).GetCustomAttribute<DisplayNameAttribute>();
-            return displayNameAttr?.DisplayName ?? typeof(T).Name.SplitCamelCase();
+            return GetNameForClass(typeof(T));
+        }
+
+        public static string GetNameForClass(this Type type)
+        {
+            var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
+            return displayNameAttr?.DisplayName ?? type.Name.SplitCamelCase();
         }
 
         //public static string GetShortName<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class

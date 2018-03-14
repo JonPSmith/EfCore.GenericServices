@@ -26,10 +26,13 @@ namespace Tests.UnitTests.GenericServicesInternal
 
                 //VERIFY
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Author.AuthorId));
-                decoded.EntityClassInfo.CanBeUpdatedViaMethods.ShouldBeFalse();
-                decoded.EntityClassInfo.CanBeUpdatedViaProperties.ShouldBeTrue();
-                decoded.EntityClassInfo.CanBeCreated.ShouldBeTrue();
-                decoded.EntityClassInfo.PropertiesWithPublicSetter.Select(x => x.Name)
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(0);
+                decoded.PropertiesWithPublicSetter.Select(x => x.Name)
                     .ShouldEqual(new []{nameof(Author.AuthorId), nameof(Author.Name), nameof(Author.Email), nameof(Author.BooksLink) });
             }
         }
@@ -46,10 +49,13 @@ namespace Tests.UnitTests.GenericServicesInternal
 
                 //VERIFY
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Review.ReviewId));
-                decoded.EntityClassInfo.CanBeUpdatedViaMethods.ShouldBeFalse();
-                decoded.EntityClassInfo.CanBeUpdatedViaProperties.ShouldBeFalse();
-                decoded.EntityClassInfo.CanBeCreated.ShouldBeFalse();
-                decoded.EntityClassInfo.PublicCtors.Length.ShouldEqual(0);
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeFalse();
+                decoded.PublicCtors.Length.ShouldEqual(0);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(0);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
             }
         }
 
@@ -65,12 +71,13 @@ namespace Tests.UnitTests.GenericServicesInternal
 
                 //VERIFY
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Book.BookId));
-                decoded.EntityClassInfo.CanBeUpdatedViaMethods.ShouldBeTrue();
-                decoded.EntityClassInfo.CanBeUpdatedViaProperties.ShouldBeFalse();
-                decoded.EntityClassInfo.CanBeCreated.ShouldBeTrue();
-                decoded.EntityClassInfo.PublicCtors.Length.ShouldEqual(1);
-                decoded.EntityClassInfo.PublicStaticFactoryMethods.Length.ShouldEqual(0);
-                decoded.EntityClassInfo.PublicSetterMethods.Length.ShouldEqual(5);
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(5);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
             }
         }
 
@@ -86,12 +93,13 @@ namespace Tests.UnitTests.GenericServicesInternal
 
                 //VERIFY
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Order.OrderId));
-                decoded.EntityClassInfo.CanBeUpdatedViaMethods.ShouldBeTrue();
-                decoded.EntityClassInfo.CanBeUpdatedViaProperties.ShouldBeFalse();
-                decoded.EntityClassInfo.CanBeCreated.ShouldBeTrue();
-                decoded.EntityClassInfo.PublicCtors.Length.ShouldEqual(0);
-                decoded.EntityClassInfo.PublicStaticFactoryMethods.Length.ShouldEqual(1);
-                decoded.EntityClassInfo.PublicSetterMethods.Length.ShouldEqual(1);
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(0);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+                decoded.PublicSetterMethods.Length.ShouldEqual(1);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
             }
         }
 

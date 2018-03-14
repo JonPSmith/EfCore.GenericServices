@@ -19,7 +19,14 @@ namespace GenericServices.Internal.Decoders
 
         public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
 
-        public DecodedTargetClass EntityClassInfo { get; private set; }
+        public ConstructorInfo[] PublicCtors { get; }
+        public MethodInfo[] PublicStaticFactoryMethods { get; } = new MethodInfo[0];
+        public MethodInfo[] PublicSetterMethods { get; }
+        public PropertyInfo[] PropertiesWithPublicSetter { get; }
+
+        public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
+        public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
+        public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
@@ -38,7 +45,28 @@ namespace GenericServices.Internal.Decoders
             }
 
             PrimaryKeyProperties = primaryKeys.Single().Properties.Select(x => x.PropertyInfo).ToImmutableList();
-            EntityClassInfo = new DecodedTargetClass(entityType);
+
+            PublicCtors = entityType.GetConstructors();
+            var allPublicProperties = entityType.GetProperties();
+            var methodNamesToIgnore = allPublicProperties.Where(pp => pp.GetMethod?.IsPublic ?? false).Select(x => x.GetMethod.Name)
+                .Union(allPublicProperties.Where(pp => pp.SetMethod?.IsPublic ?? false).Select(x => x.SetMethod.Name)).ToArray();
+            var methodsToInspect = entityType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(pm => !methodNamesToIgnore.Contains(pm.Name)).ToArray();
+            PublicSetterMethods = methodsToInspect
+                .Where(x => x.ReturnType == typeof(void) ||
+                            x.ReturnType == typeof(IStatusGeneric)).ToArray();
+            var staticMethods = entityType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            if (staticMethods.Any())
+            {
+                PublicStaticFactoryMethods = (from method in staticMethods
+                    let genericArgs = (method.ReturnType.IsGenericType
+                        ? method.ReturnType.GetGenericArguments()
+                        : new Type[0])
+                    where genericArgs.Length == 1 && genericArgs[0] == entityType &&
+                          method.ReturnType.GetInterface(nameof(IStatusGeneric)) != null
+                    select method).ToArray();
+            }
+            PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod?.IsPublic ?? false).ToArray();
         }
     }
 }
