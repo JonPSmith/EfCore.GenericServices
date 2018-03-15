@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,24 +12,30 @@ namespace GenericServices.Internal.Decoders
 {
     internal static class DecodedDataCache
     {
-        private static readonly ConcurrentDictionary<Type, ImmutableList<PropertyInfo>> KeyCache = new ConcurrentDictionary<Type, ImmutableList<PropertyInfo>>();
-
-        /// <summary>
-        /// This is used to find the properties in the DTO
-        /// </summary>
-        /// <returns></returns>
-        public static ImmutableList<PropertyInfo> GetPublicProperties(this Type classType)
+        public static DecodedEntityClass GetUnderlyingEntityInfo(this Type entityOrDto, DbContext context)
         {
-            return KeyCache.GetOrAdd(classType, type => classType.GetProperties().ToImmutableList());
+            if (EntityInfoCache.ContainsKey(entityOrDto)) return EntityInfoCache[entityOrDto];
+
+            var linkInterface = entityOrDto.GetInterface(DecodedDto.NameILinkToEntity); ;
+            var entityType = linkInterface == null
+                ? entityOrDto //Its not a class marked with the ILinkToEntity<T> interface, so it must be an entity class
+                : linkInterface.GetGenericArguments().Single();
+            return entityType.GetEntityClassInfo(context);
+        }
+
+        private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
+
+        public static DecodedDto GetDtoInfo(this Type classType)
+        {
+            return DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType));
         }
 
         private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();
 
-        public static DecodedEntityClass GetEntityClassInfo(this Type classType, DbContext context) 
+        private static DecodedEntityClass GetEntityClassInfo(this Type classType, DbContext context) 
         {
             return EntityInfoCache.GetOrAdd(classType, type => new DecodedEntityClass(classType, context));
         }
-
 
     }
 }

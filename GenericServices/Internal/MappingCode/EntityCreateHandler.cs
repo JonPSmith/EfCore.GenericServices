@@ -2,6 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
 using AutoMapper;
 using GenericLibsBase;
 using GenericServices.Internal.Decoders;
@@ -9,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Internal.MappingCode
 {
-    internal class EntityCreateHandler
+    internal class EntityCreateHandler<TDto> where TDto : class
     {
         private readonly DbContext _context;
         private readonly IMapper _mapper;
@@ -22,7 +25,7 @@ namespace GenericServices.Internal.MappingCode
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
         }
 
-        public IStatusGeneric CreateEntityAndFillFromDto(object dto)
+        public IStatusGeneric CreateEntityAndFillFromDto(TDto dto)
         {
             var status = new StatusGenericHandler();
             if (!_entityInfo.CanBeCreated)
@@ -33,10 +36,31 @@ namespace GenericServices.Internal.MappingCode
             //2. A public parameterised constructor (chosing the one with the most parameters that the DTO has too)
             //3. By creating via parameterless ctor and then using AutoMapper to set the properties
 
-            //var dtoPropertiesToConsider = 
-            //var chosenStaticMethod = FindBestParameterMatch( _entityInfo.EntityClassInfo.PublicStaticFactoryMethods);
+            var dtoInfo = typeof(TDto).GetDtoInfo();
+            var bestMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfo.Select(x => x.PropertyInfo).ToImmutableList(), 
+                _entityInfo.PublicStaticFactoryMethods);
+            if (bestMatch == null || bestMatch.Score < 1)
+            {
+                var bestCtorMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfo.Select(x => x.PropertyInfo).ToImmutableList(),
+                    _entityInfo.PublicCtors);
+                if (bestCtorMatch != null && bestCtorMatch.Score > bestMatch.Score)
+                    bestMatch = bestCtorMatch;
+            }
 
-            throw new NotImplementedException();
+            if (bestMatch?.Score >= 0.999999)
+            {
+                //Build call to the method/ctor
+            }
+            else if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
+            {
+                //set up AutoMapper mappings
+            }
+
+
+            return status;
+
         }
+
+
     }
 }

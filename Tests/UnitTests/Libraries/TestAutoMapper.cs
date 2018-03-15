@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
 using Tests.Dtos;
@@ -68,6 +69,19 @@ namespace Tests.UnitTests.Libraries
             //VERIFY
             list.Last().Title.ShouldEqual("Quantum Networking");
             list.Last().ReviewsCount.ShouldEqual(2);
+        }
+
+        [Fact]
+        public void TestPacalNamingConvention()
+        {
+            //SETUP
+            var pascal = new PascalCaseNamingConvention();
+
+            //ATTEMPT
+            var result = pascal.SplittingExpression.Replace("ThisIsPascal", "$1 ");
+
+            //VERIFY
+            result.ShouldEqual("This Is Pascal ");
         }
     }
 }

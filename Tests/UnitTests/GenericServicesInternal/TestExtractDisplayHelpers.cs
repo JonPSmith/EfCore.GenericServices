@@ -18,7 +18,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             [Display(Name = "OneName")]
             public int J { get; set; }
             [Display(ShortName = "Short Name")]
-            public int CamelName { get; set; }
+            public int PascalName { get; set; }
             public int Longwordnotcamel { get; set; }
         }
 
@@ -37,7 +37,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //VERIFY
             _test.GetNameForProperty(x => x.I).ShouldEqual("Display Name");
             _test.GetNameForProperty(x => x.J).ShouldEqual("OneName");
-            _test.GetNameForProperty(x => x.CamelName).ShouldEqual("Camel Name");
+            _test.GetNameForProperty(x => x.PascalName).ShouldEqual("Pascal Name");
             _test.GetNameForProperty(x => x.Longwordnotcamel).ShouldEqual("Longwordnotcamel");
         }
 
@@ -61,7 +61,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         //    //VERIFY
         //    _test.GetShortName(x => x.I).ShouldEqual("Short Name");
         //    _test.GetShortName(x => x.J).ShouldEqual("J");
-        //    _test.GetShortName(x => x.CamelName).ShouldEqual("Short Name");
+        //    _test.GetShortName(x => x.PascalName).ShouldEqual("Short Name");
         //    _test.GetShortName(x => x.L).ShouldEqual("L");
         //}
     }

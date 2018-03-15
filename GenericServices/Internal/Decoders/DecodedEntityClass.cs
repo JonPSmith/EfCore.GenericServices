@@ -27,6 +27,7 @@ namespace GenericServices.Internal.Decoders
         public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
         public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
+        public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
