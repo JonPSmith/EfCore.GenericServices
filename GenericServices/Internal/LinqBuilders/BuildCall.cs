@@ -24,7 +24,7 @@ namespace GenericServices.Internal.LinqBuilders
                 args.Add( Expression.Property(pIn, propertyInfo));
             }
             var call = Expression.Call(pCall, methodInfo, args);
-            var built = Expression.Lambda<Action<TIn, TClass>>(call, false, new[] { pIn, pCall });
+            var built = Expression.Lambda<Action<TIn, TClass>>(call, false, pIn, pCall);
             return built.Compile();
         }
 
@@ -38,7 +38,33 @@ namespace GenericServices.Internal.LinqBuilders
                 args.Add(Expression.Property(pIn, propertyInfo));
             }
             var call = Expression.Call(pCall, methodInfo, args);
-            var built = Expression.Lambda<Func<TIn, TClass, IStatusGeneric>>(call, false, new[] { pIn, pCall });
+            var built = Expression.Lambda<Func<TIn, TClass, IStatusGeneric>>(call, false, pIn, pCall);
+            return built.Compile();
+        }
+
+        public static Func<TIn, IStatusGeneric<TClass>> CallStaticFactory<TIn, TClass>(this MethodInfo methodInfo, params PropertyInfo[] properties)
+        {
+            var pIn = Expression.Parameter(typeof(TIn), "x");
+            var args = new List<MemberExpression>();
+            foreach (var propertyInfo in properties)
+            {
+                args.Add(Expression.Property(pIn, propertyInfo));
+            }
+            var call = Expression.Call(null, methodInfo, args);
+            var built = Expression.Lambda<Func<TIn, IStatusGeneric<TClass>>>(call, false, pIn);
+            return built.Compile();
+        }
+
+        public static Func<TIn, TClass> CallConstructor<TIn, TClass>(this ConstructorInfo ctor, params PropertyInfo[] properties)
+        {
+            var pIn = Expression.Parameter(typeof(TIn), "x");
+            var args = new List<MemberExpression>();
+            foreach (var propertyInfo in properties)
+            {
+                args.Add(Expression.Property(pIn, propertyInfo));
+            }
+            var newExp = Expression.New(ctor, args);
+            var built = Expression.Lambda<Func<TIn, TClass>>(newExp, false, pIn);
             return built.Compile();
         }
     }
