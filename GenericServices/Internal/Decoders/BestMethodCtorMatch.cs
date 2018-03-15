@@ -14,6 +14,8 @@ namespace GenericServices.Internal.Decoders
 {
     internal class BestMethodCtorMatch
     {
+        public const double perfectMatchValue = 0.99999;
+
         public MethodInfo Method { get;  set; }
         public ConstructorInfo Constructor { get; }
 
@@ -52,6 +54,16 @@ namespace GenericServices.Internal.Decoders
             }
 
             return bestSoFar;
+        }
+
+        public override string ToString()
+        {
+            var start = Score >= perfectMatchValue
+                ? "Match: "
+                : $"Closest match at {Score:P0}: ";
+            var paramString = string.Join(", ",
+                DtoPropertiesInOrder.Select(x => $"{x.PropertyInfo.PropertyType.Name} {x.PropertyInfo.Name}"));
+            return start + (Constructor == null ? Method.Name : "ctor") + "(" + paramString + ")";
         }
     }
 }

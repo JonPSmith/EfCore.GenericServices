@@ -76,6 +76,22 @@ namespace Tests.UnitTests.GenericServicesInternal
             bestMethod.Method.Name.ShouldEqual(nameof(InstanceMethods.MyBadMethod));
         }
 
+        [Fact]
+        public void TestToString()
+        {
+            //SETUP 
+            var props = typeof(Dto).GetProperties().ToImmutableList();
+            var method = typeof(InstanceMethods)
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Last();
+
+            //ATTEMPT
+            var bestMethod = BestMethodCtorMatch.FindMatch(props, new MethodInfo[] { method });
+
+            //VERIFY
+            bestMethod.ShouldNotBeNull();
+            bestMethod.ToString().ShouldEqual("Closest match at 50%: MyBadMethod(Int32 MyInt, String MyString)");
+        }
+
         //-----------------------------------------------------------
         //Ctors
 

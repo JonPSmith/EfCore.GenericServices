@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
 using AutoMapper;
 using GenericLibsBase;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
+using GenericServices.Internal.LinqBuilders;
 
 namespace GenericServices.Internal.MappingCode
 {
@@ -25,9 +25,9 @@ namespace GenericServices.Internal.MappingCode
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
         }
 
-        public IStatusGeneric CreateEntityAndFillFromDto(TDto dto)
+        public IStatusGeneric<object> CreateEntityAndFillFromDto(TDto dto)
         {
-            var status = new StatusGenericHandler();
+            var status = new StatusGenericHandler<object>();
             if (!_entityInfo.CanBeCreated)
                 throw new InvalidOperationException($"I cannot create the entity class {_entityInfo.EntityType.Name} because it has no public constructor, or valid static factory methods.");
 
@@ -47,15 +47,36 @@ namespace GenericServices.Internal.MappingCode
                     bestMatch = bestCtorMatch;
             }
 
-            if (bestMatch?.Score >= 0.999999)
+            if (bestMatch?.Score >= BestMethodCtorMatch.perfectMatchValue)
             {
-                //Build call to the method/ctor
+                if (bestMatch.Constructor != null)
+                {
+                    var ctor = bestMatch.Constructor.CallConstructor(typeof(TDto),
+                        bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
+                    status.Result = ctor.Invoke(dto);
+                }
+                else
+                {
+                    var staticFactory = bestMatch.Method.CallStaticFactory(typeof(TDto),
+                        bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
+                    var factoryStatus = staticFactory.Invoke(dto);
+                    status.CombineErrors((IStatusGeneric)factoryStatus);
+                    status.Result = factoryStatus.Result;
+                }
+
             }
             else if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
                 //set up AutoMapper mappings
+                throw new NotImplementedException();
             }
-
+            else
+            {
+                var messagePart = bestMatch == null
+                    ? "no ctors or static factories and it couldn't update via properties."
+                    : $"no matching ctors/static factories:\n closest match was {bestMatch}.";
+                status.AddError("Could not create and update a new entity because there where " + messagePart);
+            }
 
             return status;
 

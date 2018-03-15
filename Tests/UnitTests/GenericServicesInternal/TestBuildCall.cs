@@ -65,7 +65,24 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid<Dto, Target1>(prop);
+            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), prop);
+            action.Invoke(dto, target);
+
+            //VERIFY
+            target.MyInt.ShouldEqual(123);
+        }
+
+        [Fact]
+        public void TestBuildCallMethodNoReturnAgain()
+        {
+            //SETUP 
+            var prop = typeof(Dto).GetProperty(nameof(Dto.MyInt));
+            var method = typeof(Target1).GetMethod(nameof(Target1.SetMyInt));
+            var dto = new Dto { MyInt = 123 };
+            var target = new Target1();
+
+            //ATTEMPT
+            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), prop);
             action.Invoke(dto, target);
 
             //VERIFY
@@ -82,12 +99,12 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnStatus<Dto, Target1>(prop);
+            var action = method.CallMethodReturnStatus(typeof(Dto), typeof(Target1), prop);
             var status = action.Invoke(dto, target);
 
             //VERIFY
             target.MyString.ShouldEqual("Hello");
-            status.Message.ShouldEqual("OK");
+            ((string)status.Message).ShouldEqual("OK");
         }
 
         [Fact]
@@ -100,13 +117,13 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = method.CallStaticFactory<Dto, Target1>(prop1, prop2);
+            var action = method.CallStaticFactory(typeof(Dto), prop1, prop2);
             var status = action.Invoke(dto);
 
             //VERIFY
-            status.Message.ShouldEqual("Static");
-            status.Result.MyInt.ShouldEqual(123);
-            status.Result.MyString.ShouldEqual("Hello");
+            ((string)status.Message).ShouldEqual("Static");
+            ((int)status.Result.MyInt).ShouldEqual(123);
+            ((string)status.Result.MyString).ShouldEqual("Hello");
         }
 
         [Fact]
@@ -119,12 +136,12 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = ctor.CallConstructor<Dto, Target1>(prop1, prop2);
+            var action = ctor.CallConstructor(typeof(Dto), prop1, prop2);
             var newInstance = action.Invoke(dto);
 
             //VERIFY
-            newInstance.MyInt.ShouldEqual(123);
-            newInstance.MyString.ShouldEqual("Hello");
+            ((int)newInstance.MyInt).ShouldEqual(123);
+            ((string)newInstance.MyString).ShouldEqual("Hello");
         }
 
     }
