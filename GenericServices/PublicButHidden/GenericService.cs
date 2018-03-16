@@ -68,16 +68,15 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var parameterlessCtor =
-                    entityInfo.PublicCtors.SingleOrDefault(x => !x.GetParameters().Any());
-                if (parameterlessCtor == null)
-                    throw new NotImplementedException();
-                var entityInstance = Activator.CreateInstance(entityInfo.EntityType);
-                var copier = new CreateCopier(_context, _mapper, typeof(T), entityInfo);
-                copier.Accessor.MapDtoToEntity(entityOrDto, entityInstance);
-                _context.Add(entityInstance);
-                _context.SaveChanges();
-                //Needs to copy back keys afterwards
+                var creator = new EntityCreateHandler<T>(_context, _mapper, entityInfo);
+                var status = creator.CreateEntityAndFillFromDto(entityOrDto);
+                CombineErrors(status);
+                if(!status.HasErrors)
+                {
+                    _context.Add(status.Result);
+                    _context.SaveChanges();
+                    status.Result.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                }
             }
         }
 

@@ -31,6 +31,11 @@ namespace GenericServices.Internal.Decoders
             Score += type == propertyInfo.PropertyType ? 0.3 : 0;
         }
 
+        public static BestPropertyMatch FindMatch(PropertyInfo propertyToMatch, IEnumerable<PropertyInfo> propertiesToCheck)
+        {
+            return FindMatch(propertyToMatch.Name, propertyToMatch.PropertyType, propertiesToCheck);
+        }
+
         public static BestPropertyMatch FindMatch(string name, Type type, IEnumerable<PropertyInfo> propertiesToCheck)
         {
             BestPropertyMatch bestMatch = null;

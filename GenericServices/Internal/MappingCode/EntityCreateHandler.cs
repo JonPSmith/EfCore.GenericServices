@@ -36,12 +36,12 @@ namespace GenericServices.Internal.MappingCode
             //2. A public parameterised constructor (chosing the one with the most parameters that the DTO has too)
             //3. By creating via parameterless ctor and then using AutoMapper to set the properties
 
-            var dtoInfo = typeof(TDto).GetDtoInfo();
-            var bestMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfo.Select(x => x.PropertyInfo).ToImmutableList(), 
+            var dtoInfo = typeof(TDto).GetDtoInfo(_entityInfo);
+            var bestMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfos.Select(x => x.PropertyInfo).ToImmutableList(), 
                 _entityInfo.PublicStaticFactoryMethods);
             if (bestMatch == null || bestMatch.Score < 1)
             {
-                var bestCtorMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfo.Select(x => x.PropertyInfo).ToImmutableList(),
+                var bestCtorMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfos.Select(x => x.PropertyInfo).ToImmutableList(),
                     _entityInfo.PublicCtors);
                 if (bestCtorMatch != null && bestCtorMatch.Score > bestMatch.Score)
                     bestMatch = bestCtorMatch;
@@ -67,8 +67,10 @@ namespace GenericServices.Internal.MappingCode
             }
             else if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
-                //set up AutoMapper mappings
-                throw new NotImplementedException();
+                var entityInstance = Activator.CreateInstance(_entityInfo.EntityType);
+                var copier = new CreateCopier(_context, _mapper, typeof(TDto), _entityInfo);
+                copier.Accessor.MapDtoToEntity(dto, entityInstance);
+                status.Result = entityInstance;
             }
             else
             {
