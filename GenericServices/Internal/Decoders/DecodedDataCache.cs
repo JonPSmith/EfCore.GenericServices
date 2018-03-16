@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using GenericLibsBase;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Internal.Decoders
@@ -25,9 +26,17 @@ namespace GenericServices.Internal.Decoders
 
         private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
 
-        public static DecodedDto GetDtoInfo(this Type classType, DecodedEntityClass entityInfo)
+        public static IStatusGeneric<DecodedDto> GetDtoInfo(this Type classType, DecodedEntityClass entityInfo)
         {
-            return DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo));
+            var status = new StatusGenericHandler<DecodedDto>();
+            if (!classType.IsPublic)
+                status.AddError("Sorry, but the DTO/VM class must be public for GenericServices to work.");
+            else
+            {
+                status.Result = DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo));
+            }
+
+            return status;
         }
 
         private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();

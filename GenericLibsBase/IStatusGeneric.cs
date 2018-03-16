@@ -31,6 +31,6 @@ namespace GenericLibsBase
         /// This allows statuses to be combined
         /// </summary>
         /// <param name="status"></param>
-        void CombineErrors(IStatusGeneric status);
+        IStatusGeneric CombineErrors(IStatusGeneric status);
     }
 }

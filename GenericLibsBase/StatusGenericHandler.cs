@@ -73,11 +73,13 @@ namespace GenericLibsBase
         /// This allows statuses to be combined. Copies over any errors and replaces the Message if the currect message is null
         /// </summary>
         /// <param name="status"></param>
-        public void CombineErrors(IStatusGeneric status)
+        public IStatusGeneric CombineErrors(IStatusGeneric status)
         {
             _errors.AddRange(status.Errors);
             if (!HasErrors && status.Message != null)
                 Message = status.Message;
+
+            return this;
         }
     }
 }
