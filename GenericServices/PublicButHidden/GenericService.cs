@@ -55,7 +55,7 @@ namespace GenericServices.PublicButHidden
 
             //else its a DTO, so we need to project the entity to the DTO 
             var projector = new CreateProjector(_context, _mapper, typeof(T), entityInfo);
-            return (IQueryable<T>)projector.Accessor.GetManyProjectedNoTracking();
+            return projector.Accessor.GetManyProjectedNoTracking();
         }
 
         public void Create<T>(T entityOrDto) where T : class

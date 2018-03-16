@@ -15,8 +15,8 @@ namespace GenericServices.Internal.MappingCode
         public CreateCopier(DbContext context, IMapper mapper, Type tDto, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericCopier<,>);
-            var projectorType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
-            Accessor = Activator.CreateInstance(projectorType, new object[] { context, mapper, entityInfo });
+            var copierType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
+            Accessor = Activator.CreateInstance(copierType, new object[] { context, mapper});
         }
 
         public class GenericCopier<TDto, TEntity>
@@ -25,18 +25,16 @@ namespace GenericServices.Internal.MappingCode
         {
             private readonly DbContext _context;
             private readonly IMapper _mapper;
-            private readonly DecodedEntityClass _entityInfo;
 
-            public GenericCopier(DbContext context, IMapper mapper, DecodedEntityClass entityInfo)
+            public GenericCopier(DbContext context, IMapper mapper)
             {
                 _context = context ?? throw new ArgumentNullException(nameof(context));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-                _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
             }
                 
             public void MapDtoToEntity(TDto dto, object entity)
             {
-                _mapper.Map(dto, entity);
+                var output = _mapper.Map(dto, entity);
             }
 
             public void LoadExistingAndMap(TDto dto, params object[] keys)

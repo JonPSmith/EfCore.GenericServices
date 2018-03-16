@@ -8,7 +8,7 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestExtractDisplayHelpers
     {
-        private Test _test;
+        private Test _test = new Test();
 
         [DisplayName("ClassName")]
         private class Test
