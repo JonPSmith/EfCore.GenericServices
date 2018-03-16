@@ -29,12 +29,10 @@ namespace GenericServices.Internal.Decoders
         public static IStatusGeneric<DecodedDto> GetDtoInfo(this Type classType, DecodedEntityClass entityInfo)
         {
             var status = new StatusGenericHandler<DecodedDto>();
-            if (!classType.IsPublic)
-                status.AddError("Sorry, but the DTO/VM class must be public for GenericServices to work.");
-            else
-            {
+            if (classType.IsPublic || classType.IsNestedPublic)
                 status.Result = DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo));
-            }
+            else
+                status.AddError("Sorry, but the DTO/VM class must be public for GenericServices to work.");
 
             return status;
         }
