@@ -22,7 +22,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             }
         }
 
-        private class Dto1 : ILinkToEntity<Book>
+        public class Dto1 : ILinkToEntity<Book>
         {
             public int BookId { get; set; }
 

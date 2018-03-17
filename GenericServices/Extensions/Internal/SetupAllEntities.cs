@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using GenericLibsBase;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +44,14 @@ namespace GenericServices.Extensions.Internal
         public static IStatusGeneric SetupEntityClasses(DbContext context)
         {
             var status = new StatusGenericHandler();
+            var entityNameList = new List<string>();
             foreach (var entityType in context.Model.GetEntityTypes())
             {
-                context.RegisterEntityClassInfoIfNotAlreadySet(entityType.ClrType);
+                var entityInfo = context.GetUnderlyingEntityInfo(entityType.ClrType);
+                entityNameList.Add(entityInfo.EntityType.Name);
             }
 
+            status.Message = "Entity types: " + string.Join(", ", entityNameList);
             return status;
         }
     }

@@ -28,11 +28,6 @@ namespace GenericServices.Internal.Decoders
             return context.GetEntityClassInfo(entityType);
         }
 
-        public static void RegisterEntityClassInfoIfNotAlreadySet(this DbContext context, Type classType)
-        {
-            context.GetEntityClassInfo(classType);
-        }
-
         private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
 
         public static IStatusGeneric<DecodedDto> GetDtoInfo(this Type classType, DecodedEntityClass entityInfo)
@@ -41,7 +36,7 @@ namespace GenericServices.Internal.Decoders
             if (classType.IsPublic || classType.IsNestedPublic)
                 status.Result = DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo));
             else
-                status.AddError("Sorry, but the DTO/VM class must be public for GenericServices to work.");
+                status.AddError($"Sorry, but the DTO/ViewModel class '{classType.Name}' must be public for GenericServices to work.");
 
             return status;
         }

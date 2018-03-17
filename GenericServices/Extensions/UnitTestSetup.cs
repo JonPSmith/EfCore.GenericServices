@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GenericLibsBase;
 using GenericServices.Extensions.Internal;
@@ -12,26 +13,15 @@ namespace GenericServices.Extensions
 {
     public static class UnitTestSetup
     {
-        public static IStatusGeneric CheckSetupEntities(this DbContext context, bool strictMode = true, IGenericServiceConfig config = null, Action<string> writeLine = null)
+        public static IStatusGeneric CheckSetupEntities(this DbContext context, bool strictMode = true, IGenericServiceConfig config = null)
         {
             var status = SetupAllEntities.SetupEntityClasses(context);
-            if (status.HasErrors)
-            {
-                if (writeLine != null)
-                {
-                    foreach (var error in status.Errors)
-                    {
-                        writeLine.Invoke(error.ToString());
-                    }
-                }
-            }
-
             return status;
         }
 
-        public static void AssertSetupEntitiesOk(this DbContext context, bool strictMode = true, IGenericServiceConfig config = null, Action<string> writeLine = null)
+        public static void AssertSetupEntitiesOk(this DbContext context, bool strictMode = true, IGenericServiceConfig config = null)
         {
-            var status = context.CheckSetupEntities(strictMode, config, writeLine);
+            var status = context.CheckSetupEntities(strictMode, config);
             if (status.HasErrors)
             {
                 throw new InvalidOperationException($"There were {status.Errors.Count} found for the DbContext {context.GetType().Name}.");
@@ -49,35 +39,29 @@ namespace GenericServices.Extensions
                     $"The class {typeof(TDto).Name} does not have the interface {DecodedDto.NameILinkToEntity} on it. That is required to make GenericServices to work.");
             }
 
-            CheckKnownDtoLinkedToEntity(context, typeof(TDto), writeLine, status);
+            status.CombineErrors(CheckKnownDtoLinkedToEntity(context, typeof(TDto)));
             return status;
         }
 
-        private static void CheckKnownDtoLinkedToEntity(this DbContext context, Type dtoType, Action<string> writeLine, StatusGenericHandler status)
+        private static IStatusGeneric CheckKnownDtoLinkedToEntity(this DbContext context, Type dtoType)
         {
+            var status = new StatusGenericHandler();
             var entityInfo = context.GetUnderlyingEntityInfo(dtoType);
             var dtoStatus = dtoType.GetDtoInfo(entityInfo);
             status.CombineErrors(dtoStatus);
-            if (status.HasErrors)
-            {
-                if (writeLine != null)
-                {
-                    foreach (var error in status.Errors)
-                    {
-                        writeLine.Invoke(error.ToString());
-                    }
-                }
-            }
+            return status;
         }
 
         public static IStatusGeneric CheckDtosInAssemblyWith<TDto>(this DbContext context, bool strictMode = true,
-            IGenericServiceConfig config = null, Action<string> writeLine = null)
+            IGenericServiceConfig config = null)
             where TDto : class
         {
             var status = new StatusGenericHandler();
+            
             var assemblyToScan = typeof(TDto).Assembly;
             var allLinkToEntityClasses = assemblyToScan.GetTypes()
                 .Where(x => x.GetLinkInterfaceFromDto() != null);
+            var dtoAndentityList = new List<string>();
             foreach (var dtoType in allLinkToEntityClasses)
             {
                 var entityType = dtoType.GetLinkInterfaceFromDto();
@@ -86,9 +70,11 @@ namespace GenericServices.Extensions
                     status.AddError(
                         $"The DTO {dtoType.Name} has the entity class {entityType.Name}, which isn't in the context {context.GetType().Name}.");
                 }
-                context.CheckKnownDtoLinkedToEntity(dtoType, writeLine, status);
+                status.CombineErrors(context.CheckKnownDtoLinkedToEntity(dtoType));
+                dtoAndentityList.Add($"{dtoType.Name}[{entityType.Name}]");
             }
 
+            status.Message = "DTO class+linked entity: " + string.Join(", ", dtoAndentityList);
             return status;
         }
     }

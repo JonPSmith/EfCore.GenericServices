@@ -69,5 +69,13 @@ namespace GenericServices.Internal.Decoders
             }
             PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod?.IsPublic ?? false).ToArray();
         }
+
+        public override string ToString()
+        {
+            var normalStyle = HasPublicParameterlessCtor && PropertiesWithPublicSetter.Any();
+            return $"Entity {EntityType.Name}: " + (normalStyle
+                       ? $"Normal-style with {PropertiesWithPublicSetter.Length} settable properties"
+                       : $"DDD-styled with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
+        }
     }
 }
