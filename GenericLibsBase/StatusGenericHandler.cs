@@ -44,11 +44,12 @@ namespace GenericLibsBase
         /// </summary>
         /// <param name="errorMessage">The text of the error message</param>
         /// <param name="propertyNames">optional. A list of property names that this error applies to</param>
-        public void AddError(string errorMessage, params string[] propertyNames)
+        public IStatusGeneric AddError(string errorMessage, params string[] propertyNames)
         {
             if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
             _errors.Add(new ValidationResult
                 (errorMessage, propertyNames));
+            return this;
         }
 
         /// <summary>

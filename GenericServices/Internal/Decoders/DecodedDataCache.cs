@@ -13,15 +13,24 @@ namespace GenericServices.Internal.Decoders
 {
     internal static class DecodedDataCache
     {
-        public static DecodedEntityClass GetUnderlyingEntityInfo(this Type entityOrDto, DbContext context)
+        public static Type GetLinkInterfaceFromDto(this Type entityOrDto)
+        {
+            var linkInterface = entityOrDto.GetInterface(DecodedDto.NameILinkToEntity);
+            return linkInterface?.GetGenericArguments().Single();
+        }
+
+        public static DecodedEntityClass GetUnderlyingEntityInfo(this DbContext context, Type entityOrDto)
         {
             if (EntityInfoCache.ContainsKey(entityOrDto)) return EntityInfoCache[entityOrDto];
 
-            var linkInterface = entityOrDto.GetInterface(DecodedDto.NameILinkToEntity); ;
-            var entityType = linkInterface == null
-                ? entityOrDto //Its not a class marked with the ILinkToEntity<T> interface, so it must be an entity class
-                : linkInterface.GetGenericArguments().Single();
-            return entityType.GetEntityClassInfo(context);
+            //If the entity type is found in the LinkToEntity interface it returns that, otherwise the called type because it must be the entity
+            var entityType = entityOrDto.GetLinkInterfaceFromDto() ?? entityOrDto;
+            return context.GetEntityClassInfo(entityType);
+        }
+
+        public static void RegisterEntityClassInfoIfNotAlreadySet(this DbContext context, Type classType)
+        {
+            context.GetEntityClassInfo(classType);
         }
 
         private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
@@ -39,7 +48,7 @@ namespace GenericServices.Internal.Decoders
 
         private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();
 
-        private static DecodedEntityClass GetEntityClassInfo(this Type classType, DbContext context) 
+        private static DecodedEntityClass GetEntityClassInfo(this DbContext context, Type classType) 
         {
             return EntityInfoCache.GetOrAdd(classType, type => new DecodedEntityClass(classType, context));
         }

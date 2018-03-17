@@ -12,7 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
 {
-    public class GenericService<TContext> : StatusGenericHandler where TContext : DbContext
+    public class GenericService<TContext> : 
+        StatusGenericHandler, 
+        IGenericService<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
         private readonly IMapper _mapper;
@@ -26,7 +28,7 @@ namespace GenericServices.PublicButHidden
         public T GetSingle<T>(params object[] keys) where T : class
         {
             T result = null;
-            var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 result = _context.Set<T>().Find(keys);
@@ -47,7 +49,7 @@ namespace GenericServices.PublicButHidden
 
         public IQueryable<T> GetManyNoTracked<T>() where T : class
         {
-            var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 return _context.Set<T>().AsNoTracking();
@@ -60,7 +62,7 @@ namespace GenericServices.PublicButHidden
 
         public void Create<T>(T entityOrDto) where T : class
         {
-            var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
@@ -82,7 +84,7 @@ namespace GenericServices.PublicButHidden
 
         public T Update<T>(T entityOrDto) where T : class
         {
-            var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
@@ -101,7 +103,7 @@ namespace GenericServices.PublicButHidden
 
         public void Delete<T>(params object[] keys) where T : class
         {
-            var entityInfo = typeof(T).GetUnderlyingEntityInfo(_context);
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 var entity = _context.Set<T>().Find(keys);
