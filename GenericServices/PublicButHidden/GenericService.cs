@@ -19,10 +19,10 @@ namespace GenericServices.PublicButHidden
         private readonly TContext _context;
         private readonly IMapper _mapper;
 
-        public GenericService(TContext context, IMapper mapper)
+        public GenericService(TContext context, IWrappedIMapper wapper)
         {
             _context = context;
-            _mapper = mapper;
+            _mapper = wapper?.Mapper ?? throw new ArgumentException(nameof(wapper));
         }
 
         public T GetSingle<T>(params object[] keys) where T : class

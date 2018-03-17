@@ -18,7 +18,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitle()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitle>();
+            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
@@ -32,7 +32,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitle>();
+            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
@@ -46,7 +46,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitleAndCount()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitleAndCount>();
+            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitleAndCount>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
@@ -75,7 +75,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleBadType()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitleBadType>();
+            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitleBadType>();
 
             //ATTEMPT
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
@@ -88,7 +88,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingToBookNotSetPrivateSetter()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<BookTitle, Book>();
+            var mapper = AutoMapperHelpers.CreateMapper<BookTitle, Book>();
             var entity = DddEfTestData.CreateFourBooks().First();
 
             //ATTEMPT

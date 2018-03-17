@@ -19,7 +19,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectBookTitleSingleOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitle>();
+            var mapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -42,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleOk()
         {
             //SETUP
-            var mapper = BookTitleAndCount.Config.CreateMapper();
+            var mapper = new WrappedIMapper ( BookTitleAndCount.Config.CreateMapper());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -65,7 +65,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectBookTitleManyOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitle>();
+            var mapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -88,7 +88,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestCreateEntityOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMap<AuthorNameDto, Author>();
+            var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -116,7 +116,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //public void TestUpdateEntityOk()
         //{
         //    //SETUP
-        //    var mapper = AutoMapperHelpers.CreateMap<AuthorNameDto, Author>();
+        //    var mapper = AutoMapperHelpers.CreateMapper<AuthorNameDto, Author>();
         //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
         //    using (var context = new EfCoreContext(options))
         //    {
