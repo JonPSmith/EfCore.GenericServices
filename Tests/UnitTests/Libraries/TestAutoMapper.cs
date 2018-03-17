@@ -72,6 +72,34 @@ namespace Tests.UnitTests.Libraries
         }
 
         [Fact]
+        public void TestProjectionMappingBookTitleBadType()
+        {
+            //SETUP
+            var mapper = AutoMapperHelpers.CreateMap<Book, BookTitleBadType>();
+
+            //ATTEMPT
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
+            //VERIFY
+            //Doesn't error on name fit but different 
+        }
+
+        [Fact]
+        public void TestDirectMappingToBookNotSetPrivateSetter()
+        {
+            //SETUP
+            var mapper = AutoMapperHelpers.CreateMap<BookTitle, Book>();
+            var entity = DddEfTestData.CreateFourBooks().First();
+
+            //ATTEMPT
+            var dto = new BookTitle {Title = "New Title"};
+            var data = mapper.Map(dto, entity);
+
+            //VERIFY
+            data.Title.ShouldEqual("Refactoring");
+        }
+
+        [Fact]
         public void TestPacalNamingConvention()
         {
             //SETUP

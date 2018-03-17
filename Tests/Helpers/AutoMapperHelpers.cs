@@ -11,30 +11,9 @@ namespace Tests.Helpers
         public static IMapper CreateMap<TIn, TOut>()
         {
             var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<TIn, TOut>();
-            });
-            var mapper = config.CreateMapper();
-            return mapper;
-        }
-
-        public static IMapper CreateMapper<T>() where T : Profile, new()
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new T());
-            });
-            var mapper = config.CreateMapper();
-            return mapper;
-        }
-
-        public static IMapper CreateMapper<T1, T2>() where T1 : Profile, new() where T2 : Profile, new()
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new T1());
-                cfg.AddProfile(new T2());
-            });
+                {
+                    cfg.CreateMap<TIn, TOut>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                });
             var mapper = config.CreateMapper();
             return mapper;
         }
