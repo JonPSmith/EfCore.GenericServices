@@ -36,7 +36,7 @@ namespace GenericServices.Internal.MappingCode
             //2. A public parameterised constructor (chosing the one with the most parameters that the DTO has too)
             //3. By creating via parameterless ctor and then using AutoMapper to set the properties
 
-            var dtoStatus = typeof(TDto).GetDtoInfo(_entityInfo);
+            var dtoStatus = typeof(TDto).GetOrCreateDtoInfo(_entityInfo);
             if (dtoStatus.HasErrors)
             {
                 //This happens if the DTO is not public access

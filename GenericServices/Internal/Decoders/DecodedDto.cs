@@ -10,10 +10,7 @@ namespace GenericServices.Internal.Decoders
 {
     internal class DecodedDto
     {
-        private class Dummy : ILinkToEntity<Dummy> { }
-        //This contains the name of the ILinkToEntity<T> interface
-        public static readonly string NameILinkToEntity = typeof(Dummy).GetInterfaces().Single().Name;
-        
+
         public Type DtoType { get; }
         public Type LinkedToType { get; }
         public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
@@ -21,9 +18,9 @@ namespace GenericServices.Internal.Decoders
         public DecodedDto(Type dtoType, DecodedEntityClass entityInfo)
         {
             DtoType = dtoType ?? throw new ArgumentNullException(nameof(dtoType));
-            var linkInterface = dtoType.GetInterface(NameILinkToEntity);
+            var linkInterface = dtoType.GetInterface(DecodedDtoExtensions.InterfaceNameILinkToEntity);
             if (linkInterface == null)
-                throw new InvalidOperationException($"Class {dtoType.Name} isn't an entity class, so it should have the {NameILinkToEntity.Substring(0, NameILinkToEntity.Length-2)}<> interface.");
+                throw new InvalidOperationException($"Class {dtoType.Name} isn't an entity class, so it should have the {DecodedDtoExtensions.HumanReadableILinkToEntity}<> interface.");
             LinkedToType = linkInterface.GetGenericArguments().Single();
             PropertyInfos = dtoType.GetProperties()
                 .Select(x => new DecodedDtoProperty(x, 

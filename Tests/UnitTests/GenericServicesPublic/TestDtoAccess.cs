@@ -116,7 +116,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //public void TestUpdateEntityOk()
         //{
         //    //SETUP
-        //    var mapper = AutoMapperHelpers.CreateMapper<AuthorNameDto, Author>();
+        //    var mapper = AutoMapperHelpers.CreateConfig<AuthorNameDto, Author>();
         //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
         //    using (var context = new EfCoreContext(options))
         //    {

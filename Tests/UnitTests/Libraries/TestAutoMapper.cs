@@ -5,6 +5,7 @@ using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
+using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
@@ -32,7 +33,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
@@ -46,14 +47,16 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitleAndCount()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitleAndCount>();
+            var genSerConfig = new BookTitleWithCountConfig();
+            var mapperConfig = AutoMapperHelpers.CreateReadConfigWithConfig<Book, BookTitleAndCount>(genSerConfig.AlterReadMapping);
 
             //ATTEMPT
-            var input = DddEfTestData.CreateFourBooks().First();
+            var input = DddEfTestData.CreateFourBooks().Last();
             var data = mapperConfig.CreateMapper().Map<BookTitleAndCount>(input);
 
             //VERIFY
-            data.Title.ShouldEqual("Refactoring");
+            data.Title.ShouldEqual("Quantum Networking");
+            data.ReviewsCount.ShouldEqual(2);
         }
 
         [Fact]
@@ -75,7 +78,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleBadType()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitleBadType>();
+            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitleBadType>();
 
             //ATTEMPT
             mapperConfig.AssertConfigurationIsValid();
@@ -89,7 +92,7 @@ namespace Tests.UnitTests.Libraries
         {
             //SETUP
 
-            var mapperConfig = AutoMapperHelpers.CreateMapper<BookTitle, Book>();
+            var mapperConfig = AutoMapperHelpers.CreateConfig<BookTitle, Book>();
             var entity = DddEfTestData.CreateFourBooks().First();
 
             //ATTEMPT

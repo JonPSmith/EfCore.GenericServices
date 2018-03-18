@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GenericLibsBase;
+using GenericServices.Configuration;
 using GenericServices.Extensions.Internal;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace GenericServices.Extensions
     {
         public static IStatusGeneric CheckSetupEntities(this DbContext context, bool strictMode = true, IGenericServiceConfig config = null)
         {
-            var status = SetupAllEntities.SetupEntityClasses(context);
+            var status = SetupAllEntities.RegisterEntityClasses(context);
             return status;
         }
 
@@ -32,11 +33,11 @@ namespace GenericServices.Extensions
             where TDto : class
         {
             var status = new StatusGenericHandler();
-            var linkInterface = typeof(TDto).GetInterface(DecodedDto.NameILinkToEntity);
+            var linkInterface = typeof(TDto).GetInterface(DecodedDtoExtensions.InterfaceNameILinkToEntity);
             if (linkInterface == null)
             {
                 return status.AddError(
-                    $"The class {typeof(TDto).Name} does not have the interface {DecodedDto.NameILinkToEntity} on it. That is required to make GenericServices to work.");
+                    $"The class {typeof(TDto).Name} does not have the interface {DecodedDtoExtensions.InterfaceNameILinkToEntity} on it. That is required to make GenericServices to work.");
             }
 
             status.CombineErrors(CheckKnownDtoLinkedToEntity(context, typeof(TDto)));
@@ -47,7 +48,7 @@ namespace GenericServices.Extensions
         {
             var status = new StatusGenericHandler();
             var entityInfo = context.GetUnderlyingEntityInfo(dtoType);
-            var dtoStatus = dtoType.GetDtoInfo(entityInfo);
+            var dtoStatus = dtoType.GetOrCreateDtoInfo(entityInfo);
             status.CombineErrors(dtoStatus);
             return status;
         }
@@ -60,11 +61,11 @@ namespace GenericServices.Extensions
             
             var assemblyToScan = typeof(TDto).Assembly;
             var allLinkToEntityClasses = assemblyToScan.GetTypes()
-                .Where(x => x.GetLinkInterfaceFromDto() != null);
+                .Where(x => x.GetLinkedEntityFromDto() != null);
             var dtoAndentityList = new List<string>();
             foreach (var dtoType in allLinkToEntityClasses)
             {
-                var entityType = dtoType.GetLinkInterfaceFromDto();
+                var entityType = dtoType.GetLinkedEntityFromDto();
                 if (context.Model.GetEntityTypes(entityType) == null)
                 {
                     status.AddError(

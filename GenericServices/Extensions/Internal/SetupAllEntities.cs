@@ -4,19 +4,20 @@
 using System;
 using System.Collections.Generic;
 using GenericLibsBase;
+using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
+using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Extensions.Internal
 {
-    internal class SetupAllEntities : ISetupAllEntities
+    internal class SetupAllEntities : StatusGenericHandler, IGenericServicesSetup
     {
         private IGenericServiceConfig _configuration;
 
         public IServiceCollection Services { get; }
-
-        public IStatusGeneric Status { get; private set; } = new StatusGenericHandler();
+        public WrappedAutoMapperConfig AutoMapperConfig { get;}
 
         public SetupAllEntities(IServiceCollection services, IGenericServiceConfig configuration, Type[] contextTypes)
         {
@@ -34,20 +35,20 @@ namespace GenericServices.Extensions.Internal
                     using (var context = serviceScope.ServiceProvider.GetService(contextType) as DbContext)
                     {
                         if (context == null)
-                            throw new InvalidOperationException($"You provided the a DbContext {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
-                        Status.CombineErrors(SetupEntityClasses(context));
+                            throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
+                        CombineErrors(RegisterEntityClasses(context));
                     }
                 }
             }
         }
 
-        public static IStatusGeneric SetupEntityClasses(DbContext context)
+        public static IStatusGeneric RegisterEntityClasses(DbContext context)
         {
             var status = new StatusGenericHandler();
             var entityNameList = new List<string>();
             foreach (var entityType in context.Model.GetEntityTypes())
             {
-                var entityInfo = context.GetUnderlyingEntityInfo(entityType.ClrType);
+                var entityInfo = context.RegisterDecodedEntityClass(entityType.ClrType);
                 entityNameList.Add(entityInfo.EntityType.Name);
             }
 

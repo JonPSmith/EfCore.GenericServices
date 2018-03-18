@@ -3,7 +3,9 @@
 
 using System;
 using System.Reflection;
+using GenericServices.Configuration;
 using GenericServices.Extensions.Internal;
+using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,13 +13,27 @@ namespace GenericServices.Extensions
 {
     public static class ConfigureGenericServices
     {
-        public static ISetupAllEntities ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
+        /// <summary>
+        /// This will configure GenericServices if you are using one DbContext and you are happy to use the default GenericServices configuration.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public static IServiceCollection GenericServicesSimpleSetup(this IServiceCollection services,
+            params Assembly[] assemblies)
+        {
+            return services.ConfigureGenericServicesEntities()
+                .ScanAssemblesForDtos(assemblies)
+                .RegisterGenericServices();
+        }
+
+        public static IGenericServicesSetup ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
             params Type[] contextTypes)
         {
             return serviceCollection.ConfigureGenericServicesEntities(null, contextTypes);
         }
 
-        public static ISetupAllEntities ConfigureGenericServicesEntities(this IServiceCollection services,
+        public static IGenericServicesSetup ConfigureGenericServicesEntities(this IServiceCollection services,
             IGenericServiceConfig configuration, params Type[] contextTypes)
         {
             if (contextTypes.Length == 0)
@@ -30,11 +46,24 @@ namespace GenericServices.Extensions
             return setupEntities;
         }
 
-        public static IServiceCollection ConfigureServicesDtos(this ISetupAllEntities setupEntities,
+        public static IGenericServicesSetup ScanAssemblesForDtos(this IGenericServicesSetup genericServicesSetup,
             params Assembly[] assemblies)
         {
+            assemblies = assemblies ?? AppDomain.CurrentDomain.GetAssemblies();
 
-            return setupEntities.Services;
+            return genericServicesSetup;
+        }
+
+        public static IServiceCollection RegisterGenericServices(this IGenericServicesSetup genericServicesSetup)
+        {
+            //services.AddScoped<IGenericService, GenericService>();
+            genericServicesSetup.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+            //Async to go here
+
+            //Register AutoMapper configuration goes here
+
+
+            return genericServicesSetup.Services;
         }
     }
 }

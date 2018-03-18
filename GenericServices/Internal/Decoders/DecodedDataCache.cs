@@ -13,24 +13,26 @@ namespace GenericServices.Internal.Decoders
 {
     internal static class DecodedDataCache
     {
-        public static Type GetLinkInterfaceFromDto(this Type entityOrDto)
-        {
-            var linkInterface = entityOrDto.GetInterface(DecodedDto.NameILinkToEntity);
-            return linkInterface?.GetGenericArguments().Single();
-        }
-
         public static DecodedEntityClass GetUnderlyingEntityInfo(this DbContext context, Type entityOrDto)
         {
             if (EntityInfoCache.ContainsKey(entityOrDto)) return EntityInfoCache[entityOrDto];
 
             //If the entity type is found in the LinkToEntity interface it returns that, otherwise the called type because it must be the entity
-            var entityType = entityOrDto.GetLinkInterfaceFromDto() ?? entityOrDto;
+            var entityType = entityOrDto.GetLinkedEntityFromDto() ?? entityOrDto;
             return context.GetEntityClassInfo(entityType);
         }
 
-        private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
+        public static DecodedEntityClass RegisterDecodedEntityClass(this DbContext context, Type entityType)
+        {
+            return context.GetEntityClassInfo(entityType);
+        }
 
-        public static IStatusGeneric<DecodedDto> GetDtoInfo(this Type classType, DecodedEntityClass entityInfo)
+        public static DecodedEntityClass GetRegisteredEntityInfo(this Type entityType)
+        {
+            return EntityInfoCache.ContainsKey(entityType) ? EntityInfoCache[entityType] : null;
+        }
+
+        public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo)
         {
             var status = new StatusGenericHandler<DecodedDto>();
             if (classType.IsPublic || classType.IsNestedPublic)
@@ -40,6 +42,11 @@ namespace GenericServices.Internal.Decoders
 
             return status;
         }
+
+        //-----------------------------------------------------
+        //private methods/dicts
+
+        private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
 
         private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();
 
