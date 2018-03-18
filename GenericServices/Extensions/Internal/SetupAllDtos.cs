@@ -51,8 +51,19 @@ namespace GenericServices.Extensions.Internal
 
                 var configInfo = CreateConfigInfoIfPresent(dtoType);
 
-                var decodedDto = dtoType.GetOrCreateDtoInfo(entityInfo);
+                var decodeStatus = dtoType.GetOrCreateDtoInfo(entityInfo);
+                if (decodeStatus.HasErrors)
+                {
+                    CombineErrors(decodeStatus);
+                    continue;
+                }
+                mapsThisassembly.AddRange(CreateAutoMapperMappings(decodeStatus.Result, configInfo));
             }
+            throw new NotImplementedException();
+        }
+
+        private IEnumerable<IMappingExpression> CreateAutoMapperMappings(DecodedDto decodedDto, object configInfo)
+        {
             throw new NotImplementedException();
         }
 
