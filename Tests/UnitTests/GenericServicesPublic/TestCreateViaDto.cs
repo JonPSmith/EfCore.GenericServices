@@ -26,7 +26,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestCreateAuthorViaAutoMapperOk()
         {
             //SETUP
-            var wrapped = new WrappedIMapper( AutoMapperHelpers.CreateMapper<AuthorDto, Author>());
+            var wrapped = new WrappedAutoMapperConfig( AutoMapperHelpers.CreateMapper<AuthorDto, Author>());
             var unique = Guid.NewGuid().ToString();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))

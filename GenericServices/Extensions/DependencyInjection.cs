@@ -17,6 +17,8 @@ namespace GenericServices.Extensions
             //services.AddScoped<IGenericService, GenericService>();
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             //Async to go here
+
+            //Register AutoMapper configuration
             return services;
         }
     }

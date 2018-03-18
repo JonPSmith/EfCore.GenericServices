@@ -17,12 +17,12 @@ namespace GenericServices.PublicButHidden
         IGenericService<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly IMapper _mapper;
+        private readonly MapperConfiguration _mapperConfig;
 
-        public GenericService(TContext context, IWrappedIMapper wapper)
+        public GenericService(TContext context, IWrappedAutoMapperConfig wapper)
         {
             _context = context;
-            _mapper = wapper?.Mapper ?? throw new ArgumentException(nameof(wapper));
+            _mapperConfig = wapper.AutoMapperConfig ?? throw new ArgumentException(nameof(wapper));
         }
 
         public T GetSingle<T>(params object[] keys) where T : class
@@ -36,7 +36,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateProjector(_context, _mapper, typeof(T), entityInfo);
+                var projector = new CreateProjector(_context, _mapperConfig, typeof(T), entityInfo);
                 result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
             }
 
@@ -56,7 +56,7 @@ namespace GenericServices.PublicButHidden
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
-            var projector = new CreateProjector(_context, _mapper, typeof(T), entityInfo);
+            var projector = new CreateProjector(_context, _mapperConfig, typeof(T), entityInfo);
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
@@ -70,7 +70,7 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var creator = new EntityCreateHandler<T>(_context, _mapper, entityInfo);
+                var creator = new EntityCreateHandler<T>(_context, _mapperConfig, entityInfo);
                 var status = creator.CreateEntityAndFillFromDto(entityOrDto);
                 CombineErrors(status);
                 if(!status.HasErrors)
@@ -94,7 +94,7 @@ namespace GenericServices.PublicButHidden
             }
             else
             { 
-                var copier = new CreateCopier(_context, _mapper, typeof(T), entityInfo);
+                var copier = new CreateCopier(_context, _mapperConfig, typeof(T), entityInfo);
                 var entity = copier.Accessor.LoadExistingAndMap(entityOrDto);
                 _context.SaveChanges();
                 throw new NotImplementedException("Needs to get keys");

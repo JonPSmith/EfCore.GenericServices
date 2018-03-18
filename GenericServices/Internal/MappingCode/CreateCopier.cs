@@ -12,7 +12,7 @@ namespace GenericServices.Internal.MappingCode
     {
         public dynamic Accessor { get;  }
 
-        public CreateCopier(DbContext context, IMapper mapper, Type tDto, DecodedEntityClass entityInfo)
+        public CreateCopier(DbContext context, MapperConfiguration mapper, Type tDto, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericCopier<,>);
             var copierType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
@@ -24,23 +24,23 @@ namespace GenericServices.Internal.MappingCode
             where TEntity : class
         {
             private readonly DbContext _context;
-            private readonly IMapper _mapper;
+            private readonly MapperConfiguration _mapperConfig;
 
-            public GenericCopier(DbContext context, IMapper mapper)
+            public GenericCopier(DbContext context, MapperConfiguration mapper)
             {
                 _context = context ?? throw new ArgumentNullException(nameof(context));
-                _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+                _mapperConfig = mapper ?? throw new ArgumentNullException(nameof(mapper));
             }
                 
             public void MapDtoToEntity(TDto dto, object entity)
             {
-                var output = _mapper.Map(dto, entity);
+                var output = _mapperConfig.CreateMapper().Map(dto, entity);
             }
 
             public void LoadExistingAndMap(TDto dto, params object[] keys)
             {
                 var entity = _context.Set<TEntity>().Find(keys);
-                _mapper.Map(dto, entity);
+                _mapperConfig.CreateMapper().Map(dto, entity);
             }
         }
     }

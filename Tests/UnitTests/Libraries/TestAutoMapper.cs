@@ -18,11 +18,11 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitle()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
-            var data = mapper.Map<BookTitle>(input);
+            var data = mapperConfig.CreateMapper().Map<BookTitle>(input);
 
             //VERIFY
             data.Title.ShouldEqual("Refactoring");
@@ -32,11 +32,11 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
-            var list = input.ProjectTo<BookTitle>(mapper.ConfigurationProvider).ToList();
+            var list = input.ProjectTo<BookTitle>(mapperConfig).ToList();
 
             //VERIFY
             list.First().Title.ShouldEqual("Refactoring");
@@ -46,11 +46,11 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitleAndCount()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitleAndCount>();
+            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitleAndCount>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
-            var data = mapper.Map<BookTitleAndCount>(input);
+            var data = mapperConfig.CreateMapper().Map<BookTitleAndCount>(input);
 
             //VERIFY
             data.Title.ShouldEqual("Refactoring");
@@ -60,11 +60,11 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleAndCount()
         {
             //SETUP
-            var mapper = BookTitleAndCount.Config.CreateMapper();
+            var mapperConfig = BookTitleAndCount.Config;
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
-            var list = input.ProjectTo<BookTitleAndCount>(mapper.ConfigurationProvider).ToList();
+            var list = input.ProjectTo<BookTitleAndCount>(mapperConfig).ToList();
 
             //VERIFY
             list.Last().Title.ShouldEqual("Quantum Networking");
@@ -75,10 +75,10 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleBadType()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMapper<Book, BookTitleBadType>();
+            var mapperConfig = AutoMapperHelpers.CreateMapper<Book, BookTitleBadType>();
 
             //ATTEMPT
-            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            mapperConfig.AssertConfigurationIsValid();
 
             //VERIFY
             //Doesn't error on name fit but different 
@@ -88,12 +88,13 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingToBookNotSetPrivateSetter()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateMapper<BookTitle, Book>();
+
+            var mapperConfig = AutoMapperHelpers.CreateMapper<BookTitle, Book>();
             var entity = DddEfTestData.CreateFourBooks().First();
 
             //ATTEMPT
             var dto = new BookTitle {Title = "New Title"};
-            var data = mapper.Map(dto, entity);
+            var data = mapperConfig.CreateMapper().Map(dto, entity);
 
             //VERIFY
             data.Title.ShouldEqual("Refactoring");

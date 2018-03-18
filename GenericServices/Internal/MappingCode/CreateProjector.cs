@@ -15,7 +15,7 @@ namespace GenericServices.Internal.MappingCode
     {
         public dynamic Accessor { get;  }
 
-        public CreateProjector(DbContext context, IMapper mapper, Type tOut, DecodedEntityClass entityInfo)
+        public CreateProjector(DbContext context, MapperConfiguration mapper, Type tOut, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericProjector<,>);
             var projectorType = myGeneric.MakeGenericType(tOut, entityInfo.EntityType);
@@ -27,25 +27,25 @@ namespace GenericServices.Internal.MappingCode
             where TEntity : class
         {
             private readonly DbContext _context;
-            private readonly IMapper _mapper;
+            private readonly MapperConfiguration _mapperConfig;
             private readonly DecodedEntityClass _entityInfo;
 
-            public GenericProjector(DbContext context, IMapper mapper, DecodedEntityClass entityInfo)
+            public GenericProjector(DbContext context, MapperConfiguration mapper, DecodedEntityClass entityInfo)
             {
                 _context = context ?? throw new ArgumentNullException(nameof(context));
-                _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+                _mapperConfig = mapper ?? throw new ArgumentNullException(nameof(mapper));
                 _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
             }
 
             public IQueryable<TDto> GetViaKeysWithProject(params object[] keys)
             {
                 var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
-                return _context.Set<TEntity>().Where(predicate).ProjectTo<TDto>(_mapper.ConfigurationProvider);
+                return _context.Set<TEntity>().Where(predicate).ProjectTo<TDto>(_mapperConfig);
             }
 
             public IQueryable<TDto> GetManyProjectedNoTracking()
             {
-                return _context.Set<TEntity>().AsNoTracking().ProjectTo<TDto>(_mapper.ConfigurationProvider);
+                return _context.Set<TEntity>().AsNoTracking().ProjectTo<TDto>(_mapperConfig);
             }
         }
     }

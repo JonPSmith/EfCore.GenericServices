@@ -42,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleOk()
         {
             //SETUP
-            var mapper = new WrappedIMapper ( BookTitleAndCount.Config.CreateMapper());
+            var mapper = new WrappedAutoMapperConfig ( BookTitleAndCount.Config);
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {

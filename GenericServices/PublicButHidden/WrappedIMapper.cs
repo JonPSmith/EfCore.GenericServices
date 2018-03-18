@@ -6,19 +6,19 @@ using AutoMapper;
 
 namespace GenericServices.PublicButHidden
 {
-    public interface IWrappedIMapper
+    public interface IWrappedAutoMapperConfig
     {
-        IMapper Mapper { get; }
+        MapperConfiguration AutoMapperConfig { get; }
     }
 
-    public class WrappedIMapper : IWrappedIMapper
+    public class WrappedAutoMapperConfig : IWrappedAutoMapperConfig
     {
-        public WrappedIMapper(IMapper mapper)
+        public WrappedAutoMapperConfig(MapperConfiguration mapperConfig)
         {
-            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            AutoMapperConfig = mapperConfig ?? throw new ArgumentNullException(nameof(mapperConfig));
         }
 
-        public IMapper Mapper { get; }
+        public MapperConfiguration AutoMapperConfig { get; }
 
 
     }

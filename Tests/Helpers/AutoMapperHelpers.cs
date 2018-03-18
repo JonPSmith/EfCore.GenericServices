@@ -9,24 +9,22 @@ namespace Tests.Helpers
     public static class AutoMapperHelpers
     {
 
-        public static IMapper CreateMapper<TIn, TOut>()
+        public static MapperConfiguration CreateMapper<TIn, TOut>()
         {
             var config = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TIn, TOut>().IgnoreAllPropertiesWithAnInaccessibleSetter();
                 });
-            var mapper = config.CreateMapper();
-            return mapper;
+            return config;
         }
 
-        public static WrappedIMapper CreateWrapperMapper<TIn, TOut>()
+        public static WrappedAutoMapperConfig CreateWrapperMapper<TIn, TOut>()
         {
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TIn, TOut>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             });
-            var mapper = config.CreateMapper();
-            return new WrappedIMapper(mapper);
+            return new WrappedAutoMapperConfig(config);
         }
     }
 }

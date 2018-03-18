@@ -19,7 +19,7 @@ namespace Tests.UnitTests.GenericServicesPublic
     public class TestDirectAccess
     {
         //Dummy - not needed becasue direct, but GenericService tests to make sure its not null
-        WrappedIMapper _wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
+        WrappedAutoMapperConfig _wrappedMapperConfig = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
 
         [Fact]
         public void TestGetSingleOnEntityOk()
@@ -31,7 +31,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = service.GetSingle<Book>(1);
@@ -53,7 +53,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = service.GetSingle<Book>(99);
@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var books = service.GetManyNoTracked<Book>();
@@ -100,7 +100,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -128,7 +128,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var author = service.GetSingle<Author>(1);
@@ -156,7 +156,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -184,7 +184,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrappedMapper);
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 service.Delete<Book>(1);

@@ -15,13 +15,13 @@ namespace GenericServices.Internal.MappingCode
     internal class EntityCreateHandler<TDto> where TDto : class
     {
         private readonly DbContext _context;
-        private readonly IMapper _mapper;
+        private readonly MapperConfiguration _mapperConfig;
         private readonly DecodedEntityClass _entityInfo;
 
-        public EntityCreateHandler(DbContext context, IMapper mapper, DecodedEntityClass entityInfo)
+        public EntityCreateHandler(DbContext context, MapperConfiguration mapper, DecodedEntityClass entityInfo)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mapperConfig = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
         }
 
@@ -76,7 +76,7 @@ namespace GenericServices.Internal.MappingCode
             else if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
                 var entityInstance = Activator.CreateInstance(_entityInfo.EntityType);
-                var copier = new CreateCopier(_context, _mapper, typeof(TDto), _entityInfo);
+                var copier = new CreateCopier(_context, _mapperConfig, typeof(TDto), _entityInfo);
                 copier.Accessor.MapDtoToEntity(dto, entityInstance);
                 status.Result = entityInstance;
             }
