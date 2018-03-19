@@ -140,16 +140,43 @@ namespace Tests.UnitTests.Libraries
         }
 
         [Fact]
-        public void TestPacalNamingConvention()
+        public void TestUsingProfileBasic()
         {
             //SETUP
-            var pascal = new PascalCaseNamingConvention();
+            var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
+            var profile = new AutoMapperProfile(false);
+            profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
 
             //ATTEMPT
-            var result = pascal.SplittingExpression.Replace("ThisIsPascal", "$1 ");
+            var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
+            var mapper = config.CreateMapper();
+            var data = mapper.Map(dto, entity);
 
             //VERIFY
-            result.ShouldEqual("This Is Pascal ");
+            data.Name.ShouldEqual("New Name");       
+            data.AuthorId.ShouldEqual(123);            
+            data.Email.ShouldEqual("youhavechanged@gmail.com");    
+        }
+
+        [Fact]
+        public void TestUsingProfileWithIgnore()
+        {
+            //SETUP
+            var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
+            var profile = new AutoMapperProfile(true);
+            profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+
+            //ATTEMPT
+            var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
+            var mapper = config.CreateMapper();
+            var data = mapper.Map(dto, entity);
+
+            //VERIFY
+            data.Name.ShouldEqual("New Name");       //changed
+            data.AuthorId.ShouldEqual(1);            //not changed - HiddenInput
+            data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
     }
 }

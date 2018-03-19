@@ -4,8 +4,8 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericServices.Extensions;
 using GenericServices.PublicButHidden;
+using GenericServices.Startup;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
@@ -86,10 +86,9 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityOk()
+        public void TestCreateEntityUsingDefaults_AutoMapperOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -97,6 +96,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
+                var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>(false);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
@@ -110,7 +110,37 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Authors.Count().ShouldEqual(1);
-                context.Authors.Find(1).Name.ShouldEqual("New Name");
+                context.Authors.Single().Name.ShouldEqual("New Name");
+                context.Authors.Single().Email.ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestCreateEntityUsingDefaults_AutoMapperMappingSetOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                var mapper = context.SetupSingleDtoAndEntities<AuthorNameDto>(true);
+                var service = new GenericService<EfCoreContext>(context, mapper);
+
+                //ATTEMPT
+                var dto = new AuthorNameDto { Name = "New Name" };
+                service.Create(dto);
+
+                //VERIFY
+                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                context.Authors.Count().ShouldEqual(1);
+                context.Authors.Single().Name.ShouldEqual("New Name");
+                context.Authors.Single().Email.ShouldBeNull();
             }
         }
 

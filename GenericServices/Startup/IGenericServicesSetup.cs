@@ -1,7 +1,7 @@
 ﻿using GenericServices.PublicButHidden;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Extensions
+namespace GenericServices.Startup
 {
     public interface IGenericServicesSetup
     {

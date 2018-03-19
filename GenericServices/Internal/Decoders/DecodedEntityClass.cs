@@ -2,20 +2,22 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using GenericLibsBase;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
+    // ReSharper disable once InconsistentNaming
+    internal enum EntityStyles { Normal, DDDStyled, NotUpdatable, ReadOnly}
+
     internal class DecodedEntityClass
     {
-        public Type EntityType { get; private set; }
+        public Type EntityType { get; }
+        public EntityStyles EntityStyle { get; }
 
         public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
 
@@ -25,9 +27,9 @@ namespace GenericServices.Internal.Decoders
         public PropertyInfo[] PropertiesWithPublicSetter { get; }
 
         public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
+        public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
         public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
-        public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
@@ -68,14 +70,28 @@ namespace GenericServices.Internal.Decoders
                     select method).ToArray();
             }
             PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod?.IsPublic ?? false).ToArray();
+
+            if (HasPublicParameterlessCtor && CanBeUpdatedViaProperties)
+                EntityStyle = EntityStyles.Normal;
+            else 
+            {
+                if (CanBeCreated)
+                {
+                    EntityStyle = CanBeUpdatedViaMethods ? EntityStyles.DDDStyled : EntityStyles.NotUpdatable;
+                }
+                else
+                {
+                    EntityStyle = EntityStyles.ReadOnly;
+                }
+            }
+
         }
 
         public override string ToString()
         {
-            var normalStyle = HasPublicParameterlessCtor && PropertiesWithPublicSetter.Any();
-            return $"Entity {EntityType.Name}: " + (normalStyle
-                       ? $"Normal-style with {PropertiesWithPublicSetter.Length} settable properties"
-                       : $"DDD-styled with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
+            return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitCamelCase()} " + (EntityStyle == EntityStyles.Normal
+                       ? $"with {PropertiesWithPublicSetter.Length} settable properties"
+                       : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
         }
     }
 }

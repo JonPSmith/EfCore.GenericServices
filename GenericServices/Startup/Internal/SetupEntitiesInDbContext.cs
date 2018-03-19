@@ -6,7 +6,7 @@ using GenericLibsBase;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
 
-namespace GenericServices.Extensions.Internal
+namespace GenericServices.Startup.Internal
 {
     internal static class SetupEntitiesInDbContext
     {

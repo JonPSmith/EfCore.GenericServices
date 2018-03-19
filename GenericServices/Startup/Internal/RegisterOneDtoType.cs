@@ -7,10 +7,11 @@ using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
 
-namespace GenericServices.Extensions.Internal
+namespace GenericServices.Startup.Internal
 {
     internal class RegisterOneDtoType : StatusGenericHandler
     {
+        public DecodedEntityClass EntityInfo { get; }
         public DecodedDto DtoInfo { get; }
 
         public PerDtoConfig PerDtoConfig { get; }
@@ -20,17 +21,17 @@ namespace GenericServices.Extensions.Internal
         public RegisterOneDtoType(Type dtoType, IGenericServiceConfig configuration)
         {
             var entityType = dtoType.GetLinkedEntityFromDto();
-            var entityInfo = entityType.GetRegisteredEntityInfo();
-            if (entityInfo == null)
+            EntityInfo = entityType.GetRegisteredEntityInfo();
+            if (EntityInfo == null)
                 AddError(
                     $"The entity {entityType} found in the  {DecodedDtoExtensions.HumanReadableILinkToEntity} interface of the DTO/VM {dtoType.Name} " +
                     "cannot be found. The class must be one that EF Core maps to the database.");
 
             var configInfo = CreateConfigInfoIfPresent(dtoType);
-            MapGenerator = new CreateMapGenerator(dtoType, entityInfo, configuration, configInfo);
+            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, configInfo);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
-            var decodeStatus = dtoType.GetOrCreateDtoInfo(entityInfo, configuration, PerDtoConfig);
+            var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineErrors(decodeStatus);
             DtoInfo = decodeStatus.Result;
         }

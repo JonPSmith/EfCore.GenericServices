@@ -4,12 +4,12 @@
 using System;
 using System.Reflection;
 using GenericServices.Configuration;
-using GenericServices.Extensions.Internal;
+using GenericServices.Startup.Internal;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Extensions
+namespace GenericServices.Startup
 {
     public static class ConfigureGenericServices
     {

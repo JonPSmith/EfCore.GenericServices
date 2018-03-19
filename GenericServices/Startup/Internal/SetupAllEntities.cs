@@ -10,7 +10,7 @@ using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Extensions.Internal
+namespace GenericServices.Startup.Internal
 {
     internal class SetupAllEntities : StatusGenericHandler, IGenericServicesSetup
     {

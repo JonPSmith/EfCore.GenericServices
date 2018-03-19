@@ -33,23 +33,23 @@ namespace GenericServices.Internal.MappingCode
                 _config = config;
             }
 
-            public void BuildReadMapping(IMapperConfigurationExpression cfg)
+            public void BuildReadMapping(Profile readProfile)
             {
                 if (_config?.AlterReadMapping == null)
-                    cfg.CreateMap<TEntity, TDto>();
+                    readProfile.CreateMap<TEntity, TDto>();
                 else
                 {
-                    _config.AlterReadMapping(cfg.CreateMap<TEntity, TDto>());
+                    _config.AlterReadMapping(readProfile.CreateMap<TEntity, TDto>());
                 }
             }
 
-            public void BuildSaveMapping(IMapperConfigurationExpression cfg)
+            public void BuildSaveMapping(Profile writeProfile)
             {
                 if (_config?.AlterSaveMapping == null)
-                    cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                    writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
                 else
                 {
-                    _config.AlterSaveMapping(cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
+                    _config.AlterSaveMapping(writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
                 }
             }
 

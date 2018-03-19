@@ -9,7 +9,7 @@ using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 
-namespace GenericServices.Extensions.Internal
+namespace GenericServices.Startup.Internal
 {
     internal class SetupAllDtosAndMappings : StatusGenericHandler
     {
@@ -31,8 +31,6 @@ namespace GenericServices.Extensions.Internal
 
         public void RegisterDtosInAssemblyAndBuildMaps(Assembly assemblyToScan)
         {
-
-
             var allTypesInAssembly = assemblyToScan.GetTypes();
             var allLinkToEntityClasses = allTypesInAssembly
                 .Where(x => x.GetLinkedEntityFromDto() != null);
@@ -49,7 +47,7 @@ namespace GenericServices.Extensions.Internal
                 //Now build the mapping using the MapGenerator in the register
             }
 
-            //Now scan for nexted maps and set up the mapping for them too
+            //Now scan for next maps and set up the mapping for them too
             throw new NotImplementedException();
         }
 

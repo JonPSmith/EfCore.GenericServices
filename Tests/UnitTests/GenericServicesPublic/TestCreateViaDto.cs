@@ -6,8 +6,8 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
-using GenericServices.Extensions;
 using GenericServices.PublicButHidden;
+using GenericServices.Startup;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -27,13 +27,39 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestCreateAuthorViaAutoMapperOk()
         {
             //SETUP
-            var wrapped = new WrappedAutoMapperConfig( AutoMapperHelpers.CreateConfig<AuthorDto, Author>());
             var unique = Guid.NewGuid().ToString();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
+                var wrapped = new WrappedAutoMapperConfig( AutoMapperHelpers.CreateConfig<AuthorDto, Author>());
                 context.SetupSingleDtoAndEntities<AuthorDto>(false);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var author = new AuthorDto { Name = "New Name", Email = unique };
+                service.Create(author);
+
+                //VERIFY
+                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                context.Authors.Count().ShouldEqual(1);
+                context.Authors.Find(1).Email.ShouldEqual(unique);
+            }
+        }
+
+        [Fact]
+        public void TestCreateAuthorViaAutoMapperMappingViaTestSetupOk()
+        {
+            //SETUP
+            var unique = Guid.NewGuid().ToString();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>(true);
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT
