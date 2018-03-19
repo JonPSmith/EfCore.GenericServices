@@ -136,7 +136,7 @@ namespace Tests.UnitTests.Libraries
 
             //VERIFY
             data.Name.ShouldEqual("New Name");       //changed
-            data.AuthorId.ShouldEqual(1);            //not changed - HiddenInput
+            data.AuthorId.ShouldEqual(1);            //not changed - UiHint("Hidden")
             data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
 
@@ -176,7 +176,7 @@ namespace Tests.UnitTests.Libraries
 
             //VERIFY
             data.Name.ShouldEqual("New Name");       //changed
-            data.AuthorId.ShouldEqual(1);            //not changed - HiddenInput
+            data.AuthorId.ShouldEqual(1);            //not changed - UiHint("Hidden")
             data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
     }

@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.Helpers
 {
