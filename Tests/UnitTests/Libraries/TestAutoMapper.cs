@@ -8,6 +8,7 @@ using System.Reflection;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
+using Microsoft.AspNetCore.Mvc;
 using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -108,6 +109,8 @@ namespace Tests.UnitTests.Libraries
 
         private bool Filter(MemberInfo member)
         {
+            if (member.GetCustomAttribute<HiddenInputAttribute>() != null)
+                return true;
             var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
             return isReadOnly;
@@ -126,13 +129,14 @@ namespace Tests.UnitTests.Libraries
             });
 
             //ATTEMPT
-            var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name"};
+            var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com"};
             var mapper = config.CreateMapper();
             var data = mapper.Map(dto, entity);
 
             //VERIFY
-            data.Name.ShouldEqual("New Name");
-            data.AuthorId.ShouldEqual(1);
+            data.Name.ShouldEqual("New Name");       //changed
+            data.AuthorId.ShouldEqual(1);            //not changed - HiddenInput
+            data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
 
         [Fact]

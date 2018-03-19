@@ -4,19 +4,18 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DataLayer.EfClasses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.Dtos
 {
     public class WriteAuthorReadOnlyDto
     {
-        [ReadOnly(true)]
+        [HiddenInput]
         public int AuthorId { get; set; }
 
-        [Required]
-        [MaxLength(Author.NameLength)]
         public string Name { get; set; }
 
-        [MaxLength(Author.EmailLength)]
+        [ReadOnly(true)]
         public string Email { get; set; }
     }
 }
