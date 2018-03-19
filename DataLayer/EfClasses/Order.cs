@@ -47,8 +47,7 @@ namespace DataLayer.EfClasses
             if (!order._lineItems.Any())
                 status.AddError("No items in your basket.");
 
-            status.Result = order;
-            return status;
+            return status.SetResult(order); //don't worry, the Result will return default(T) if there are errors
         }
 
         public IStatusGeneric ChangeDeliveryDate(string userId, DateTime newDeliveryDate)

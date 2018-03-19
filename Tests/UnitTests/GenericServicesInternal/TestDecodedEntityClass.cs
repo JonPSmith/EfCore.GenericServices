@@ -5,6 +5,8 @@ using DataLayer.EfCode;
 using GenericLibsBase;
 using Xunit;
 using GenericServices.Internal.Decoders;
+using Tests.EfClasses;
+using Tests.EfCode;
 using TestSupport.EfHelpers;
 using Xunit.Extensions.AssertExtensions;
 
@@ -25,6 +27,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Author), context);
 
                 //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Normal);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Author.AuthorId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
@@ -48,6 +51,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Review), context);
 
                 //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.ReadOnly);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Review.ReviewId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
                 decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
@@ -70,6 +74,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Book), context);
 
                 //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Book.BookId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
                 decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
@@ -92,6 +97,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Order), context);
 
                 //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Order.OrderId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
                 decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
@@ -100,6 +106,136 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
                 decoded.PublicSetterMethods.Length.ShouldEqual(1);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
+            }
+        }
+
+        //---------------------------------------------------
+        //TestDbContext
+
+        [Fact]
+        public void TestNormalEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(NormalEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Normal);
+                decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
+                decoded.HasPublicParameterlessCtor.ShouldBeTrue();
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicSetterMethods.Length.ShouldEqual(0);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(3);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+            }
+        }
+
+        [Fact]
+        public void TestDddCtorEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(DddCtorEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.HasPublicParameterlessCtor.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+                decoded.PublicSetterMethods.Length.ShouldEqual(2);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+            }
+        }
+
+        [Fact]
+        public void TestDddStaticFactEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(DddStaticFactEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.HasPublicParameterlessCtor.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(2);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestDddCtorAndFactEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(DddCtorAndFactEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.HasPublicParameterlessCtor.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+                decoded.PublicSetterMethods.Length.ShouldEqual(2);
+                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestNotUpdatableEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(NotUpdatableEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.NotUpdatable);
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.HasPublicParameterlessCtor.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestReadOnlyEntityDecoded()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(ReadOnlyEntity), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.ReadOnly);
+                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.HasPublicParameterlessCtor.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeCreated.ShouldBeFalse();
             }
         }
 

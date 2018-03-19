@@ -47,10 +47,9 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var status =
                     new StatusGenericHandler<Target1>
                     {
-                        Result = new Target1( myInt, myString),
                         Message = "Static"
                     };
-                return status;
+                return status.SetResult(new Target1(myInt, myString));
             }
 
         }

@@ -16,7 +16,12 @@ namespace GenericLibsBase
         public T Result
         {
             get => HasErrors ? default(T) : _result;
-            set => _result = value;
+        }
+
+        public StatusGenericHandler<T> SetResult(T result)
+        {
+            _result = result;
+            return this;
         }
     }
 }

@@ -3,11 +3,11 @@
 
 namespace GenericLibsBase
 {
-    public interface IStatusGeneric<T> : IStatusGeneric
+    public interface IStatusGeneric<out T> : IStatusGeneric
     {
         /// <summary>
         /// This contains the return result, or if there are errors it will retunr default(T)
         /// </summary>
-        T Result { get; set; }
+        T Result { get; }
     }
 }
