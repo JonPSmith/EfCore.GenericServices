@@ -55,7 +55,7 @@ namespace GenericServices.Internal.MappingCode
                 }
             }
 
-            public PerDtoConfig GetRestOfDtoConfigInfo()
+            public PerDtoConfig GetRestOfPerDtoConfig()
             {
                 return _config;
             }
