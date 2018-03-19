@@ -19,6 +19,13 @@ namespace GenericServices.PublicButHidden
         private readonly TContext _context;
         private readonly MapperConfiguration _mapperConfig;
 
+        /// <summary>
+        /// This allows you to access the current DbContext that this instance of the GenericService is using.
+        /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
+        /// For instance, setting up a dropdownlist based on some other database data
+        /// </summary>
+        public TContext CurrentContext => _context;
+
         public GenericService(TContext context, IWrappedAutoMapperConfig wapper)
         {
             _context = context;
@@ -71,13 +78,13 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var creator = new EntityCreateHandler<T>(_context, _mapperConfig, entityInfo);
-                var status = creator.CreateEntityAndFillFromDto(entityOrDto);
-                CombineErrors(status);
-                if(!status.HasErrors)
+                var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
+                CombineErrors(creator);
+                if(!HasErrors)
                 {
-                    _context.Add(status.Result);
+                    _context.Add(entity);
                     _context.SaveChanges();
-                    status.Result.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
         }

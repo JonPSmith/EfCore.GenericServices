@@ -27,7 +27,7 @@ namespace GenericServices.Internal.Decoders
             return linkInterface?.GetGenericArguments().Single();
         }
 
-        public static Type GetConfigFromDto(this Type entityOrDto)
+        public static Type GetConfigTypeFromDto(this Type entityOrDto)
         {
             var linkInterface = entityOrDto.GetInterface(InterfaceNameIConfigFoundIn);
             return linkInterface?.GetGenericArguments().Single();

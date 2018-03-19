@@ -4,6 +4,7 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericServices.Extensions;
 using GenericServices.PublicButHidden;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -96,6 +97,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
+                context.SetupSingleDtoAndEntities<AuthorNameDto>(false);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT

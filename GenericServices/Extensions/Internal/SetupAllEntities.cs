@@ -36,24 +36,12 @@ namespace GenericServices.Extensions.Internal
                     {
                         if (context == null)
                             throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
-                        CombineErrors(RegisterEntityClasses(context));
+                        CombineErrors(context.RegisterEntityClasses());
                     }
                 }
             }
         }
 
-        public static IStatusGeneric RegisterEntityClasses(DbContext context)
-        {
-            var status = new StatusGenericHandler();
-            var entityNameList = new List<string>();
-            foreach (var entityType in context.Model.GetEntityTypes())
-            {
-                var entityInfo = context.RegisterDecodedEntityClass(entityType.ClrType);
-                entityNameList.Add(entityInfo.EntityType.Name);
-            }
 
-            status.Message = "Entity types: " + string.Join(", ", entityNameList);
-            return status;
-        }
     }
 }

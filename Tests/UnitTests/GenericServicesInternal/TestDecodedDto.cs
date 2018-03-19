@@ -40,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Dto1), _bookInfo);
+            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, null, null);
 
             //VERIFY
             decoded.LinkedToType.ShouldEqual(typeof(Book));

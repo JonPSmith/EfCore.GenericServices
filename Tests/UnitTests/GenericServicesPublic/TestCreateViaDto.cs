@@ -6,6 +6,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
+using GenericServices.Extensions;
 using GenericServices.PublicButHidden;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
@@ -32,9 +33,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+                context.SetupSingleDtoAndEntities<AuthorDto>(false);
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT

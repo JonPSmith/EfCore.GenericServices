@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using GenericLibsBase;
+using GenericServices.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Internal.Decoders
@@ -32,11 +33,17 @@ namespace GenericServices.Internal.Decoders
             return EntityInfoCache.ContainsKey(entityType) ? EntityInfoCache[entityType] : null;
         }
 
-        public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo)
+        public static DecodedDto GetRegisteredDtoInfo(this Type dtoType)
+        {
+            return DecodedDtoCache.ContainsKey(dtoType) ? DecodedDtoCache[dtoType] : null;
+        }
+
+        public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo, 
+            IGenericServiceConfig overallConfig, PerDtoConfig perDtoConfig)
         {
             var status = new StatusGenericHandler<DecodedDto>();
             if (classType.IsPublic || classType.IsNestedPublic)
-                status.Result = DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo));
+                status.Result = DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo, overallConfig, perDtoConfig));
             else
                 status.AddError($"Sorry, but the DTO/ViewModel class '{classType.Name}' must be public for GenericServices to work.");
 

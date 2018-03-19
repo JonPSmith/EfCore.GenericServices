@@ -35,11 +35,10 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestAuthorReadMappings()
         {
             //SETUP
-            var decodedDto = new DecodedDto(typeof(AuthorNameDto), _AuthorInfo);
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(decodedDto, _bookInfo, null, null);
+            var mapCreator = new CreateMapGenerator(typeof(AuthorNameDto), _bookInfo, null, null);
             mapCreator.Accessor.BuildReadMapping(maps);
 
             //VERIFY
@@ -53,11 +52,10 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestBookReadMappingsWithConfig()
         {
             //SETUP
-            var decodedDto = new DecodedDto(typeof(BookTitleAndCount), _bookInfo);
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(decodedDto, _bookInfo, null, new BookTitleWithCountConfig());
+            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, null, new BookTitleWithCountConfig());
             mapCreator.Accessor.BuildReadMapping(maps);
 
             //VERIFY

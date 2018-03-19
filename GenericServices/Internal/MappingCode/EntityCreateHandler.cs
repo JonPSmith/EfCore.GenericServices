@@ -12,7 +12,8 @@ using GenericServices.Internal.LinqBuilders;
 
 namespace GenericServices.Internal.MappingCode
 {
-    internal class EntityCreateHandler<TDto> where TDto : class
+    internal class EntityCreateHandler<TDto> : StatusGenericHandler
+        where TDto : class
     {
         private readonly DbContext _context;
         private readonly MapperConfiguration _mapperConfig;
@@ -25,9 +26,8 @@ namespace GenericServices.Internal.MappingCode
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
         }
 
-        public IStatusGeneric<object> CreateEntityAndFillFromDto(TDto dto)
+        public object CreateEntityAndFillFromDto(TDto dto)
         {
-            var status = new StatusGenericHandler<object>();
             if (!_entityInfo.CanBeCreated)
                 throw new InvalidOperationException($"I cannot create the entity class {_entityInfo.EntityType.Name} because it has no public constructor, or valid static factory methods.");
 
@@ -36,15 +36,14 @@ namespace GenericServices.Internal.MappingCode
             //2. A public parameterised constructor (chosing the one with the most parameters that the DTO has too)
             //3. By creating via parameterless ctor and then using AutoMapper to set the properties
 
-            var dtoStatus = typeof(TDto).GetOrCreateDtoInfo(_entityInfo);
-            if (dtoStatus.HasErrors)
+            var dtoInfo = typeof(TDto).GetRegisteredDtoInfo();
+            if (dtoInfo == null)
             {
-                //This happens if the DTO is not public access
-                status.CombineErrors(dtoStatus);
-                return status;
+                AddError(
+                    $"The DTO/ViewModel class {typeof(TDto).Name} is not registered as a valid GenericService DTO. Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
+                return null;
             }
 
-            var dtoInfo = dtoStatus.Result;
             var bestMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfos.Select(x => x.PropertyInfo).ToImmutableList(), 
                 _entityInfo.PublicStaticFactoryMethods);
             if (bestMatch == null || bestMatch.Score < 1)
@@ -61,34 +60,32 @@ namespace GenericServices.Internal.MappingCode
                 {
                     var ctor = bestMatch.Constructor.CallConstructor(typeof(TDto),
                         bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
-                    status.Result = ctor.Invoke(dto);
+                    return ctor.Invoke(dto);
                 }
                 else
                 {
                     var staticFactory = bestMatch.Method.CallStaticFactory(typeof(TDto),
                         bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
                     var factoryStatus = staticFactory.Invoke(dto);
-                    status.CombineErrors((IStatusGeneric)factoryStatus);
-                    status.Result = factoryStatus.Result;
+                    CombineErrors((IStatusGeneric)factoryStatus);
+                    return HasErrors ? null : factoryStatus.Result;
                 }
-
             }
-            else if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
+
+            if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
                 var entityInstance = Activator.CreateInstance(_entityInfo.EntityType);
                 var copier = new CreateCopier(_context, _mapperConfig, typeof(TDto), _entityInfo);
                 copier.Accessor.MapDtoToEntity(dto, entityInstance);
-                status.Result = entityInstance;
-            }
-            else
-            {
-                var messagePart = bestMatch == null
-                    ? "no ctors or static factories and it couldn't update via properties."
-                    : $"no matching ctors/static factories:\n closest match was {bestMatch}.";
-                status.AddError("Could not create and update a new entity because there where " + messagePart);
+                return entityInstance;
             }
 
-            return status;
+            var messagePart = bestMatch == null
+                ? "no ctors or static factories and it couldn't update via properties."
+                : $"no matching ctors/static factories:\n closest match was {bestMatch}.";
+            AddError("Could not create and update a new entity because there where " + messagePart);
+
+            return null;
 
         }
 
