@@ -4,7 +4,10 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using AutoMapper;
+
+[assembly: InternalsVisibleTo("Tests")]
 
 namespace GenericServices.Startup.Internal
 {
@@ -18,7 +21,7 @@ namespace GenericServices.Startup.Internal
 
         private static bool Filter(MemberInfo member)
         {
-            if ( member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
+            if (member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
                 return true;
             return member.GetCustomAttribute<ReadOnlyAttribute>()?.IsReadOnly ?? false;
         }

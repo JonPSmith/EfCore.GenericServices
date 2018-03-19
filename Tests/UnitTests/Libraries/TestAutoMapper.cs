@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
@@ -109,7 +110,7 @@ namespace Tests.UnitTests.Libraries
 
         private bool Filter(MemberInfo member)
         {
-            if (member.GetCustomAttribute<HiddenInputAttribute>() != null)
+            if (member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
                 return true;
             var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
@@ -144,7 +145,7 @@ namespace Tests.UnitTests.Libraries
         {
             //SETUP
             var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
-            var profile = new AutoMapperProfile(false);
+            var profile = new UnitTestProfile(false);
             profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
 
@@ -164,7 +165,7 @@ namespace Tests.UnitTests.Libraries
         {
             //SETUP
             var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
-            var profile = new AutoMapperProfile(true);
+            var profile = new UnitTestProfile(true);
             profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
 

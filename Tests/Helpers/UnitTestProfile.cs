@@ -3,15 +3,16 @@
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.Helpers
 {
-    public class AutoMapperProfile : Profile
+    public class UnitTestProfile : Profile
     {
-        public AutoMapperProfile(bool addIgnoreParts)
+        public UnitTestProfile(bool addIgnoreParts)
         {
             if (addIgnoreParts)
                 ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
@@ -35,7 +36,7 @@ namespace Tests.Helpers
 
         private bool Filter(MemberInfo member)
         {
-            if (member.GetCustomAttribute<HiddenInputAttribute>() != null)
+            if (member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
                 return true;
             var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
