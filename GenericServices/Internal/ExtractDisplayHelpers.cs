@@ -17,7 +17,7 @@ namespace GenericServices.Internal
         public static string GetNameForProperty<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class
         {
             var propAndAttr = GetPropAndAttr(model);
-            return propAndAttr.Item2?.Name ?? propAndAttr.Item1.Name.SplitCamelCase();
+            return propAndAttr.Item2?.Name ?? propAndAttr.Item1.Name.SplitPascalCase();
         }
 
         public static string GetNameForClass<T>() where T : class
@@ -28,7 +28,7 @@ namespace GenericServices.Internal
         public static string GetNameForClass(this Type type)
         {
             var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
-            return displayNameAttr?.DisplayName ?? type.Name.SplitCamelCase();
+            return displayNameAttr?.DisplayName ?? type.Name.SplitPascalCase();
         }
 
         //public static string GetShortName<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class

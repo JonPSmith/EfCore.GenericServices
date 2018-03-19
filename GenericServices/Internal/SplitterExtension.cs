@@ -14,7 +14,7 @@ namespace GenericServices.Internal
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string SplitCamelCase(this string str)
+        public static string SplitPascalCase(this string str)
         {
             return Reg.Replace(str, "$1 ");
         }

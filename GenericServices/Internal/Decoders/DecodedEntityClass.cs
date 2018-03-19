@@ -89,7 +89,7 @@ namespace GenericServices.Internal.Decoders
 
         public override string ToString()
         {
-            return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitCamelCase()} " + (EntityStyle == EntityStyles.Normal
+            return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitPascalCase()} " + (EntityStyle == EntityStyles.Normal
                        ? $"with {PropertiesWithPublicSetter.Length} settable properties"
                        : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
         }

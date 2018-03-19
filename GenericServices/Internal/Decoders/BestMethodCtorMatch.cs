@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using GenericServices.Configuration;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -14,8 +15,6 @@ namespace GenericServices.Internal.Decoders
 {
     internal class BestMethodCtorMatch
     {
-        public const double perfectMatchValue = 0.99999;
-
         public MethodInfo Method { get;  set; }
         public ConstructorInfo Constructor { get; }
 
@@ -58,7 +57,7 @@ namespace GenericServices.Internal.Decoders
 
         public override string ToString()
         {
-            var start = Score >= perfectMatchValue
+            var start = Score >= PropertyMatch.PerfectMatchValue
                 ? "Match: "
                 : $"Closest match at {Score:P0}: ";
             var paramString = string.Join(", ",

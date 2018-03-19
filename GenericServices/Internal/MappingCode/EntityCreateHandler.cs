@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using AutoMapper;
 using GenericLibsBase;
+using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
 using GenericServices.Internal.LinqBuilders;
@@ -54,7 +55,7 @@ namespace GenericServices.Internal.MappingCode
                     bestMatch = bestCtorMatch;
             }
 
-            if (bestMatch?.Score >= BestMethodCtorMatch.perfectMatchValue)
+            if (bestMatch?.Score >= PropertyMatch.PerfectMatchValue)
             {
                 if (bestMatch.Constructor != null)
                 {
