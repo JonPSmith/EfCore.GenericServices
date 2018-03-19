@@ -106,20 +106,11 @@ namespace Tests.UnitTests.Libraries
             data.Title.ShouldEqual("Refactoring");
         }
 
-        private IMappingExpression<WriteAuthorReadOnlyDto, Author> IgnoreReadOnlyProperties
-            (IMappingExpression<WriteAuthorReadOnlyDto, Author> mappingExpression)
+        private bool Filter(MemberInfo member)
         {
-            mappingExpression
-                .ForAllMembers(x => x.Condition((source, dest, inMember) 
-                => Filter(inMember)));
-            return mappingExpression;
-        }
-
-        private bool Filter(object member)
-        {
-            var readOnlyAttr = member?.GetType().GetCustomAttribute<ReadOnlyAttribute>();
+            var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
-            return !isReadOnly;
+            return isReadOnly;
         }
 
         [Fact]
@@ -129,14 +120,15 @@ namespace Tests.UnitTests.Libraries
             var entity = new Author{AuthorId = 1, Name = "Start Name", Email = "me@nospam.com"};
             var config = new MapperConfiguration(cfg =>
             {
-                IgnoreReadOnlyProperties(cfg.CreateMap<WriteAuthorReadOnlyDto, Author>());
+                //see https://github.com/AutoMapper/AutoMapper/issues/2571#issuecomment-374159340
+                cfg.ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
+                cfg.CreateMap<WriteAuthorReadOnlyDto, Author>();
             });
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name"};
             var mapper = config.CreateMapper();
             var data = mapper.Map(dto, entity);
-            var newData = mapper.Map<Author>(dto);
 
             //VERIFY
             data.Name.ShouldEqual("New Name");
