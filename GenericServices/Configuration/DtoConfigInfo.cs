@@ -9,6 +9,6 @@ namespace GenericServices.Configuration
     public abstract class DtoConfigInfo<TDto,TEntity> where TDto : class where TEntity : class
     {
         public virtual Action<IMappingExpression<TEntity, TDto>> AlterReadMapping { get { return null; } }
-        public virtual Action<IMappingExpression<TEntity, TDto>> AlterSaveMapping { get { return null; } }
+        public virtual Action<IMappingExpression<TDto, TEntity>> AlterSaveMapping { get { return null; } }
     }
 }

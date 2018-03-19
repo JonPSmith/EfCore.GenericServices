@@ -51,9 +51,16 @@ namespace GenericServices.Internal.MappingCode
                     cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
                 else
                 {
-                    _configInfo.AlterReadMapping(cfg.CreateMap<TEntity, TDto>().IgnoreAllPropertiesWithAnInaccessibleSetter());
+                    _configInfo.AlterSaveMapping(cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
                 }
             }
+
+            //private IMappingExpression<TDto, TEntity> IgnoreReadOnlyProperties
+            //    (IMappingExpression<TDto, TEntity> mappingExpression)
+            //{
+            //    mappingExpression.ForAllMembers(x => x.Condition(source => source. ));
+            //    return mappingExpression;
+            //}
         }
     }
 }
