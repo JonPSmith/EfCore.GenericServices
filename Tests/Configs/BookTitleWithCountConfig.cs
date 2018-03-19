@@ -10,7 +10,7 @@ using Tests.Dtos;
 
 namespace Tests.Configs
 {
-    public class BookTitleWithCountConfig : DtoConfigInfo<BookTitleAndCount, Book>
+    public class BookTitleWithCountConfig : PerDtoConfig<BookTitleAndCount, Book>
     {
         public override Action<IMappingExpression<Book, BookTitleAndCount>> AlterReadMapping
         {

@@ -28,39 +28,37 @@ namespace GenericServices.Internal.MappingCode
             where TDto : class
             where TEntity : class
         {
-            private readonly DtoConfigInfo<TDto, TEntity> _configInfo;
+            private readonly PerDtoConfig<TDto, TEntity> _config;
 
-            public MapGenerator(DtoConfigInfo<TDto, TEntity> configInfo)
+            public MapGenerator(PerDtoConfig<TDto, TEntity> config)
             {
-                _configInfo = configInfo;
+                _config = config;
             }
 
             public void BuildReadMapping(IMapperConfigurationExpression cfg)
             {
-                if (_configInfo?.AlterReadMapping == null)
+                if (_config?.AlterReadMapping == null)
                     cfg.CreateMap<TEntity, TDto>();
                 else
                 {
-                    _configInfo.AlterReadMapping(cfg.CreateMap<TEntity, TDto>());
+                    _config.AlterReadMapping(cfg.CreateMap<TEntity, TDto>());
                 }
             }
 
             public void BuildSaveMapping(IMapperConfigurationExpression cfg)
             {
-                if (_configInfo?.AlterSaveMapping == null)
+                if (_config?.AlterSaveMapping == null)
                     cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
                 else
                 {
-                    _configInfo.AlterSaveMapping(cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
+                    _config.AlterSaveMapping(cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
                 }
             }
 
-            //private IMappingExpression<TDto, TEntity> IgnoreReadOnlyProperties
-            //    (IMappingExpression<TDto, TEntity> mappingExpression)
-            //{
-            //    mappingExpression.ForAllMembers(x => x.Condition(source => source. ));
-            //    return mappingExpression;
-            //}
+            public PerDtoConfig GetRestOfDtoConfigInfo()
+            {
+                return _config;
+            }
         }
     }
 }
