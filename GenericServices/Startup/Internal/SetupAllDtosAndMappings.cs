@@ -39,7 +39,7 @@ namespace GenericServices.Startup.Internal
                 var register = new RegisterOneDtoType(dtoType, _configuration);
                 if (!register.IsValid)
                 {
-                    CombineStatus(register);
+                    CombineStatuses(register);
                     continue;
                 }
 

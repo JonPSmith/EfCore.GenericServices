@@ -12,9 +12,9 @@ namespace GenericServices
     public interface IStatusGeneric
     {
         /// <summary>
-        /// This holds the list of ValidationResult errors. If the collection is empty, then there were no errors
+        /// This holds the list of errors. If the collection is empty, then there were no errors
         /// </summary>
-        IImmutableList<ValidationResult> Errors { get; }
+        IImmutableList<ErrorGeneric> Errors { get; }
 
         /// <summary>
         /// This is true if there are no errors registered
@@ -31,6 +31,6 @@ namespace GenericServices
         /// This allows statuses to be combined
         /// </summary>
         /// <param name="status"></param>
-        IStatusGeneric CombineStatus(IStatusGeneric status);
+        IStatusGeneric CombineStatuses(IStatusGeneric status);
     }
 }

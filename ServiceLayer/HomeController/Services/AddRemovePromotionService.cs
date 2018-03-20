@@ -43,7 +43,7 @@ namespace ServiceLayer.HomeController.Services
                 AddError("Sorry, I could not find the book you were looking for.");
                 return null;
             }
-            CombineStatus( book.AddPromotion(dto.ActualPrice, dto.PromotionalText));
+            CombineStatuses( book.AddPromotion(dto.ActualPrice, dto.PromotionalText));
             if (!IsValid) return null;
 
             _context.SaveChanges();                 

@@ -14,13 +14,22 @@ namespace GenericServices
     /// </summary>
     public class StatusGenericHandler : IStatusGeneric
     {
-        private readonly List<ValidationResult> _errors = new List<ValidationResult>();
-        private string _successMessage;
+        private readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
+        private string _successMessage = "OK";
+
+        /// <summary>
+        /// This creates a StatusGenericHandler, with optional header (see Header property, and CombineStatuses)
+        /// </summary>
+        /// <param name="header"></param>
+        public StatusGenericHandler(string header = "")
+        {
+            Header = header;
+        }
 
         /// <summary>
         /// This holds the list of ValidationResult errors. If the collection is empty, then there were no errors
         /// </summary>
-        public IImmutableList<ValidationResult> Errors => _errors.ToImmutableList();
+        public IImmutableList<ErrorGeneric> Errors => _errors.ToImmutableList();
 
         /// <summary>
         /// This is true if any errors have been reistered 
@@ -34,10 +43,16 @@ namespace GenericServices
         public string Message
         {
             get => IsValid
-                ? _successMessage ?? "<not run yet>"
+                ? _successMessage
                 : $"Failed with {_errors.Count} error" + (_errors.Count == 1 ? "" : "s");
             set => _successMessage = value;
         }
+
+        /// <summary>
+        /// The header provides a prefix to any errors you add. Useful if you want to have a general prefix to all your errors
+        /// e.g. a header if "MyClass" would produce error messages such as "MyClass: This is my error message."
+        /// </summary>
+        public string Header { get; set; }
 
         /// <summary>
         /// This adds one error to the Errors collection
@@ -47,8 +62,7 @@ namespace GenericServices
         public IStatusGeneric AddError(string errorMessage, params string[] propertyNames)
         {
             if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-            _errors.Add(new ValidationResult
-                (errorMessage, propertyNames));
+            _errors.Add(new ErrorGeneric(Header, new ValidationResult(errorMessage, propertyNames)));
             return this;
         }
 
@@ -58,7 +72,7 @@ namespace GenericServices
         /// <param name="validationResult"></param>
         public void AddValidationResult(ValidationResult validationResult)
         {
-            _errors.Add(validationResult);
+            _errors.Add(new ErrorGeneric(Header, validationResult));
         }
 
         /// <summary>
@@ -67,16 +81,24 @@ namespace GenericServices
         /// <param name="validationResults"></param>
         public void AddValidationResults(IEnumerable<ValidationResult> validationResults)
         {
-            _errors.AddRange(validationResults);
+            _errors.AddRange(validationResults.Select(x => new ErrorGeneric(Header, x)));
         }
 
         /// <summary>
         /// This allows statuses to be combined. Copies over any errors and replaces the Message if the currect message is null
+        /// If you are using Headers then it will combine the headers in any errors in combines
+        /// e.g. Status1 with header "MyClass" combines Status2 which has header "MyProp" and status2 has errors.
+        /// The result would be error message in status2 would be updates to start with "MyClass>MyProp: This is my error message."
         /// </summary>
         /// <param name="status"></param>
-        public IStatusGeneric CombineStatus(IStatusGeneric status)
+        public IStatusGeneric CombineStatuses(IStatusGeneric status)
         {
-            _errors.AddRange(status.Errors);
+            if (!status.IsValid)
+            {
+                _errors.AddRange(string.IsNullOrEmpty(Header)
+                    ? status.Errors
+                    : status.Errors.Select(x => new ErrorGeneric(Header, x)));
+            }
             if (IsValid && status.Message != null)
                 Message = status.Message;
 

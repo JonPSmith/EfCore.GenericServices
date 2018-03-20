@@ -17,7 +17,7 @@ namespace GenericServices.Startup
         {
             var status = context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), globalConfig);
-            status.CombineStatus(dtoRegister);
+            status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count}. Errors are:\n" 
                                                     + string.Join("\n", status.Errors.Select(x => x.ToString())));

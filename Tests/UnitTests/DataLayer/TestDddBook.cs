@@ -153,7 +153,7 @@ namespace Tests.UnitTests.DataLayer
 
                 //VERIFY
                 status.IsValid.ShouldBeFalse();
-                status.Errors.Single().ErrorMessage.ShouldEqual("You must provide some text to go with the promotion.");
+                status.Errors.Single().ToString().ShouldEqual("You must provide some text to go with the promotion.");
             }
         }
 

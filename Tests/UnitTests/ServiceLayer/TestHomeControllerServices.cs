@@ -96,7 +96,7 @@ namespace Tests.UnitTests.ServiceLayer
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.Errors.Single().ErrorMessage.ShouldEqual("You must provide some text to go with the promotion.");
+                service.Errors.Single().ToString().ShouldEqual("You must provide some text to go with the promotion.");
             }
         }
 

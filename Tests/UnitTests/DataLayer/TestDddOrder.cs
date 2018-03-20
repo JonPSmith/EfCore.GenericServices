@@ -61,7 +61,7 @@ namespace Tests.UnitTests.DataLayer
 
             //VERIFY
             status.IsValid.ShouldBeFalse();
-            status.Errors.Single().ErrorMessage.ShouldEqual("No items in your basket.");
+            status.Errors.Single().ToString().ShouldEqual("No items in your basket.");
         }
 
         [Fact]

@@ -67,7 +67,7 @@ namespace GenericServices.Internal.MappingCode
                     var staticFactory = bestMatch.Method.CallStaticFactory(typeof(TDto),
                         bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
                     var factoryStatus = staticFactory.Invoke(dto);
-                    CombineStatus((IStatusGeneric)factoryStatus);
+                    CombineStatuses((IStatusGeneric)factoryStatus);
                     return IsValid ? factoryStatus.Result : null;
                 }
             }

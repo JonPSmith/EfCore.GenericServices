@@ -78,7 +78,7 @@ namespace GenericServices.PublicButHidden
             {
                 var creator = new EntityCreateHandler<T>(_context, _mapperConfig, entityInfo);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
-                CombineStatus(creator);
+                CombineStatuses(creator);
                 if(IsValid)
                 {
                     _context.Add(entity);

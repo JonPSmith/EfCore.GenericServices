@@ -33,15 +33,15 @@ namespace RazorPageApp.Helpers
             var namesThatWeShouldInclude = PropertyNamesInDto(displayDto);
             foreach (var error in status.Errors)
             {
-                if (!error.MemberNames.Any())
-                    modelState.AddModelError("", error.ErrorMessage);
+                if (!error.ErrorResult.MemberNames.Any())
+                    modelState.AddModelError("", error.ErrorResult.ErrorMessage);
                 else
-                    foreach (var errorKeyName in error.MemberNames)
+                    foreach (var errorKeyName in error.ErrorResult.MemberNames)
                         modelState.AddModelError(
                             (namesThatWeShouldInclude.Any(x => x == errorKeyName) 
                                 ? (modelName == null ? errorKeyName : modelName + "." + errorKeyName)
                                 : ""),
-                            error.ErrorMessage);
+                            error.ErrorResult.ErrorMessage);
             }
         }
 
@@ -55,7 +55,7 @@ namespace RazorPageApp.Helpers
             if (status.IsValid) return;
 
             foreach (var error in status.Errors)
-                    modelState.AddModelError("", error.ErrorMessage);
+                    modelState.AddModelError("", error.ErrorResult.ErrorMessage);
         }
 
         //-----------------------------------------------------------------------------------

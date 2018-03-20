@@ -31,7 +31,7 @@ namespace GenericServices.Startup.Internal
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
-            CombineStatus(decodeStatus);
+            CombineStatuses(decodeStatus);
             DtoInfo = decodeStatus.Result;
         }
 
