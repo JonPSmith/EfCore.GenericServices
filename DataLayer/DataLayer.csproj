@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GenericLibsBase\GenericLibsBase.csproj" />
+    <ProjectReference Include="..\GenericServices\GenericServices.csproj" />
   </ItemGroup>
 
 </Project>

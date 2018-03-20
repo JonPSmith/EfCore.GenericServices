@@ -31,8 +31,8 @@ namespace GenericServices.Internal.Decoders
                         BestPropertyMatch.FindMatch(x, entityInfo.PrimaryKeyProperties ).Score >= PropertyMatch.PerfectMatchValue))
                 .ToImmutableList();
 
-            if (entityInfo.CanBeUpdatedViaMethods || perDtoConfig.UpdateMethods != null)
-                _availableSetterMethods = MatchUpdateMethods(entityInfo, perDtoConfig.UpdateMethods);
+            if (entityInfo.CanBeUpdatedViaMethods || perDtoConfig?.UpdateMethods != null)
+                _availableSetterMethods = MatchUpdateMethods(entityInfo, perDtoConfig?.UpdateMethods);
         }
 
         private List<MethodInfo> MatchUpdateMethods(DecodedEntityClass entityInfo, string updateMethods)

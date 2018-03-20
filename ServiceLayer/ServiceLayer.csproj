@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
-    <ProjectReference Include="..\GenericLibsBase\GenericLibsBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

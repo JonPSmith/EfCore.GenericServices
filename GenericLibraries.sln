@@ -13,13 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{272949B3-4A1F-4A98-9E24-DAED1F115AB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericLibsBase", "GenericLibsBase\GenericLibsBase.csproj", "{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{0B6C08D4-D744-4E46-AFA0-692E35885BA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{0B6C08D4-D744-4E46-AFA0-692E35885BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{6D3D7458-6669-4348-91D5-54E78D50CB13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{6D3D7458-6669-4348-91D5-54E78D50CB13}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericServices", "GenericServices\GenericServices.csproj", "{763A722A-0F95-43C8-B491-752BADB202EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericServices", "GenericServices\GenericServices.csproj", "{763A722A-0F95-43C8-B491-752BADB202EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{272949B3-4A1F-4A98-9E24-DAED1F115AB5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8E58B1C-FAB2-4CB3-99F8-3F1DE1BD56D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B6C08D4-D744-4E46-AFA0-692E35885BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
