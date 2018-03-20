@@ -3,6 +3,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
+using GenericServices.Configuration;
 using Xunit;
 using GenericServices.Internal.Decoders;
 using TestSupport.EfHelpers;
@@ -32,15 +33,13 @@ namespace Tests.UnitTests.GenericServicesInternal
             public string ImageUrl { get; set; }
         }
 
-
-
         [Fact]
         public void TestDecodedDto1()
         {
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, null, null);
+            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, new GenericServicesConfig(), null);
 
             //VERIFY
             decoded.LinkedToType.ShouldEqual(typeof(Book));

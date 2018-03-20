@@ -15,7 +15,9 @@ namespace GenericServices.Startup
     {
         public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context, bool withMapping, IGenericServiceConfig globalConfig = null)
         {
-            var status = context.RegisterEntityClasses();
+            var status = new StatusGenericHandler();
+            globalConfig = globalConfig ?? new GenericServicesConfig();
+            context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), globalConfig);
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)

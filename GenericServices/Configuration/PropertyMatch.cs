@@ -7,13 +7,16 @@ using GenericServices.Internal;
 
 namespace GenericServices.Configuration
 {
-    
-    public struct PropertyMatch
+    /// <summary>
+    /// This holds the information on a match between a name/type and a propertyInfo, with a score to set how it did
+    /// This is used by a name matcher to try to match method/ctor properties to a set of properties in a class
+    /// </summary>
+    public class PropertyMatch
     {
         public const double PerfectMatchValue = 0.99999;
         public const double NoMatchAtAll = 0.00001;
 
-        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) : this()
+        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo)
         {
             NameMatched = nameMatched;
             TypeMatch = typeMatch; 

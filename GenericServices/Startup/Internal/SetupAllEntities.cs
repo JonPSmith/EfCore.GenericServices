@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Startup.Internal
 {
-    internal class SetupAllEntities : StatusGenericHandler, IGenericServicesSetup
+    internal class SetupAllEntities : IGenericServicesSetup
     {
         private IGenericServiceConfig _configuration;
 
@@ -35,7 +35,7 @@ namespace GenericServices.Startup.Internal
                     {
                         if (context == null)
                             throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
-                        CombineStatuses(context.RegisterEntityClasses());
+                        context.RegisterEntityClasses();
                     }
                 }
             }

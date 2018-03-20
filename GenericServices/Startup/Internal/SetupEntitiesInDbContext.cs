@@ -9,18 +9,14 @@ namespace GenericServices.Startup.Internal
 {
     internal static class SetupEntitiesInDbContext
     {
-        public static IStatusGeneric RegisterEntityClasses(this DbContext context)
+        public static void RegisterEntityClasses(this DbContext context)
         {
-            var status = new StatusGenericHandler();
             var entityNameList = new List<string>();
             foreach (var entityType in context.Model.GetEntityTypes())
             {
                 var entityInfo = context.RegisterDecodedEntityClass(entityType.ClrType);
                 entityNameList.Add(entityInfo.EntityType.Name);
             }
-
-            status.Message = "Entity types: " + string.Join(", ", entityNameList);
-            return status;
         }
     }
 }
