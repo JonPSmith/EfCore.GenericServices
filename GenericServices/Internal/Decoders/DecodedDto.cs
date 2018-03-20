@@ -79,7 +79,7 @@ namespace GenericServices.Internal.Decoders
                 if (!result.Any())
                 {
                     //Nothing else has worked so do a default scan of all methods
-                    var matches = MethodMatch.GradeAllMethods(methodsThatMatchedDtoName.ToArray(),
+                    var matches = MethodMatch.GradeAllMethods(entityInfo.PublicSetterMethods.ToArray(),
                         nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties, _overallConfig.NameMatcher);
                     result.AddRange(matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue));
                 }

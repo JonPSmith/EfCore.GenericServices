@@ -15,7 +15,7 @@ namespace GenericServices.Configuration
             var nameMatched = name.FirstCharToUpper() == propertyInfo.Name;
             //I have only done a simple match - someone can do a better match for collections etc.
             var typeMatch = type == propertyInfo.PropertyType
-                ? PropertyMatch.TypeMatchLevels.PerfectMatch
+                ? PropertyMatch.TypeMatchLevels.Match
                 : PropertyMatch.TypeMatchLevels.NoMatch;
             return new PropertyMatch(nameMatched, typeMatch, propertyInfo);
         }

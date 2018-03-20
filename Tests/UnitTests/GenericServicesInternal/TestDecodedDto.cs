@@ -34,7 +34,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         }
 
         [Fact]
-        public void TestDecodedDto1()
+        public void TestDecodedDto1CheckPropertyTypes()
         {
             //SETUP
 
@@ -47,10 +47,34 @@ namespace Tests.UnitTests.GenericServicesInternal
             decoded.PropertyInfos.Single(x => x.PropertyType == DtoPropertyTypes.Normal).PropertyInfo.Name.ShouldEqual(nameof(Dto1.ImageUrl));
             var names = decoded.PropertyInfos.Where(x => x.PropertyType.HasFlag(DtoPropertyTypes.ReadOnly)).Select(x => x.PropertyInfo.Name).ToArray();
             names.ShouldEqual(new string[]{ nameof(Dto1.BookId) , nameof(Dto1.Title) });
-
         }
 
-        
+        [Fact]
+        public void TestDecodedMethodDefinedByDtoName()
+        {
+            //SETUP
 
+            //ATTEMPT
+            var decoded = new DecodedDto(typeof(Tests.Dtos.AddReviewDto), _bookInfo, new GenericServicesConfig(), null);
+
+            //VERIFY
+            decoded.MatchedSetterMethods.Count.ShouldEqual(1);
+            decoded.MatchedSetterMethods.First().Method.Name.ShouldEqual("AddReview");
+            decoded.MatchedSetterMethods.First().HowDefined.ShouldEqual(HowTheyWereAskedFor.NamedMethodFromDtoClass);
+        }
+
+        [Fact]
+        public void TestDecodedMethodFoundByDefault()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookInfo, new GenericServicesConfig(), null);
+
+            //VERIFY
+            decoded.MatchedSetterMethods.Count.ShouldEqual(2);
+            decoded.MatchedSetterMethods.First().Method.Name.ShouldEqual("UpdatePublishedOn");
+            decoded.MatchedSetterMethods.First().HowDefined.ShouldEqual(HowTheyWereAskedFor.DefaultMatchToProperties);
+        }
     }
 }

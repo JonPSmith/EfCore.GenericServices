@@ -61,9 +61,8 @@ namespace GenericServices.Internal.Decoders
             var start = PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue
                 ? "Match: "
                 : $"Matched {PropertiesMatch.MatchedPropertiesInOrder.Count(x => x != null && x.Score >= PropertyMatch.NoMatchAtAll)}"+
-                  $" params out of {PropertiesMatch.MatchedPropertiesInOrder.Count}. Score {PropertiesMatch.Score:P0}";
-            var paramString = string.Join(", ",
-                PropertiesMatch.MatchedPropertiesInOrder.Select(x => $"{x.PropertyInfo.PropertyType.Name} {x.PropertyInfo.Name}"));
+                  $" params out of {PropertiesMatch.MatchedPropertiesInOrder.Count}. Score {PropertiesMatch.Score:P0} ";
+            var paramString = string.Join(", ", PropertiesMatch.MatchedPropertiesInOrder.Select(x => x.ToString()));
             return start + (Constructor == null ? Method.Name : "ctor") + "(" + paramString + ")";
         }
     }
