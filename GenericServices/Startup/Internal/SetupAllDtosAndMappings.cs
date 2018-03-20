@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using GenericLibsBase;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
@@ -38,9 +37,9 @@ namespace GenericServices.Startup.Internal
             foreach (var dtoType in allLinkToEntityClasses)
             {
                 var register = new RegisterOneDtoType(dtoType, _configuration);
-                if (register.HasErrors)
+                if (!register.IsValid)
                 {
-                    CombineErrors(register);
+                    CombineStatus(register);
                     continue;
                 }
 

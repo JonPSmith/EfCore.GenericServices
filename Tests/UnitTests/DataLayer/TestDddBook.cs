@@ -129,7 +129,7 @@ namespace Tests.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
-                status.HasErrors.ShouldBeFalse();
+                status.IsValid.ShouldBeTrue();
                 book.ActualPrice.ShouldEqual(book.OrgPrice / 2);
             }
         }
@@ -152,7 +152,7 @@ namespace Tests.UnitTests.DataLayer
                 var status = book.AddPromotion(book.OrgPrice / 2, "");
 
                 //VERIFY
-                status.HasErrors.ShouldBeTrue();
+                status.IsValid.ShouldBeFalse();
                 status.Errors.Single().ErrorMessage.ShouldEqual("You must provide some text to go with the promotion.");
             }
         }

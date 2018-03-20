@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using GenericLibsBase;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
@@ -36,7 +35,7 @@ namespace GenericServices.Startup.Internal
                     {
                         if (context == null)
                             throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
-                        CombineErrors(context.RegisterEntityClasses());
+                        CombineStatus(context.RegisterEntityClasses());
                     }
                 }
             }

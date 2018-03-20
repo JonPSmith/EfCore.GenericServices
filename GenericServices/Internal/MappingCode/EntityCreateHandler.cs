@@ -5,7 +5,6 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using AutoMapper;
-using GenericLibsBase;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
@@ -68,8 +67,8 @@ namespace GenericServices.Internal.MappingCode
                     var staticFactory = bestMatch.Method.CallStaticFactory(typeof(TDto),
                         bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
                     var factoryStatus = staticFactory.Invoke(dto);
-                    CombineErrors((IStatusGeneric)factoryStatus);
-                    return HasErrors ? null : factoryStatus.Result;
+                    CombineStatus((IStatusGeneric)factoryStatus);
+                    return IsValid ? factoryStatus.Result : null;
                 }
             }
 

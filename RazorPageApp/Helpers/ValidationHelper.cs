@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using GenericLibsBase;
+using GenericServices;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RazorPageApp.Helpers
@@ -23,7 +23,7 @@ namespace RazorPageApp.Helpers
         /// <param name="modelName">When using razor pages with a DTO you need to prefix the member name by the name of the model's property</param>
         public static void CopyErrorsToModelState<T>(this IStatusGeneric status, ModelStateDictionary modelState, T displayDto, string modelName = null) 
         {
-            if (!status.HasErrors) return;
+            if (status.IsValid) return;
             if (displayDto == null)
             {
                 status.CopyErrorsToModelState(modelState);
@@ -52,7 +52,7 @@ namespace RazorPageApp.Helpers
         /// <param name="modelState"></param>
         public static void CopyErrorsToModelState(this IStatusGeneric status, ModelStateDictionary modelState)
         {
-            if (!status.HasErrors) return;
+            if (status.IsValid) return;
 
             foreach (var error in status.Errors)
                     modelState.AddModelError("", error.ErrorMessage);

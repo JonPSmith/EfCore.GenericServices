@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-namespace GenericLibsBase
+namespace GenericServices
 {
     /// <summary>
     /// This contains the error hanlding part of the GenericBizRunner
@@ -15,7 +15,7 @@ namespace GenericLibsBase
         /// </summary>
         public T Result
         {
-            get => HasErrors ? default(T) : _result;
+            get => IsValid ? _result : default(T);
         }
 
         public StatusGenericHandler<T> SetResult(T result)

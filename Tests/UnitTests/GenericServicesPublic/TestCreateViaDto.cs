@@ -41,7 +41,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Create(author);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
             }
             using (var context = new EfCoreContext(options))
             {
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Create(author);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
             }
             using (var context = new EfCoreContext(options))
             {

@@ -2,7 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using DataLayer.EfClasses;
-using GenericLibsBase;
+using GenericServices;
 using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController

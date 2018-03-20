@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using GenericLibsBase;
+using GenericServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.EfClasses

@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using AutoMapper;
-using GenericLibsBase;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
@@ -79,8 +78,8 @@ namespace GenericServices.PublicButHidden
             {
                 var creator = new EntityCreateHandler<T>(_context, _mapperConfig, entityInfo);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
-                CombineErrors(creator);
-                if(!HasErrors)
+                CombineStatus(creator);
+                if(IsValid)
                 {
                     _context.Add(entity);
                     _context.SaveChanges();

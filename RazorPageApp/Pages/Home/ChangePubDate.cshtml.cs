@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using GenericLibsBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageApp.Helpers;
@@ -28,7 +27,7 @@ namespace RazorPageApp.Pages
         public void OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
-            if (_service.HasErrors)
+            if (!_service.IsValid)
             {
                 _service.CopyErrorsToModelState(ModelState, Dto);
             }
@@ -42,7 +41,7 @@ namespace RazorPageApp.Pages
                 return Page();
             }
             _service.UpdateBook(id, Dto);
-            if (!_service.HasErrors)
+            if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new {message = "Successfully changed publication date."});
 
             //Error state

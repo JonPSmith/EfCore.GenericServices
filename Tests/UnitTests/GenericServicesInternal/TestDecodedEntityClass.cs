@@ -2,7 +2,6 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericLibsBase;
 using Xunit;
 using GenericServices.Internal.Decoders;
 using Tests.EfClasses;

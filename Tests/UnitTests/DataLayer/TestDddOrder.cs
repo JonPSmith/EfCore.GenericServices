@@ -28,7 +28,7 @@ namespace Tests.UnitTests.DataLayer
             var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), bookOrders);
 
             //VERIFY
-            status.HasErrors.ShouldBeFalse();
+            status.IsValid.ShouldBeTrue();
             status.Result.LineItems.Count().ShouldEqual(2);
             status.Result.LineItems.First().LineNum.ShouldEqual((byte)1);
             status.Result.LineItems.Last().LineNum.ShouldEqual((byte)2);
@@ -45,7 +45,7 @@ namespace Tests.UnitTests.DataLayer
             var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), lineItems);
 
             //VERIFY
-            status.HasErrors.ShouldBeFalse();
+            status.IsValid.ShouldBeTrue();
             status.Result.LineItems.Count().ShouldEqual(1);
             status.Result.LineItems.First().NumBooks.ShouldEqual((short)3);
             status.Result.LineItems.First().BookPrice.ShouldEqual(book.ActualPrice);
@@ -60,7 +60,7 @@ namespace Tests.UnitTests.DataLayer
             var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), new OrderBooksDto[]{});
 
             //VERIFY
-            status.HasErrors.ShouldBeTrue();
+            status.IsValid.ShouldBeFalse();
             status.Errors.Single().ErrorMessage.ShouldEqual("No items in your basket.");
         }
 
@@ -79,7 +79,7 @@ namespace Tests.UnitTests.DataLayer
             var status = order.ChangeDeliveryDate("user", newDeliverDate);
 
             //VERIFY
-            status.HasErrors.ShouldBeFalse();
+            status.IsValid.ShouldBeTrue();
             order.ExpectedDeliveryDate.ShouldEqual(newDeliverDate);
         }
 

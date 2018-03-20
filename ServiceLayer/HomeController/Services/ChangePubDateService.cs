@@ -4,7 +4,7 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericLibsBase;
+using GenericServices;
 using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController.Services

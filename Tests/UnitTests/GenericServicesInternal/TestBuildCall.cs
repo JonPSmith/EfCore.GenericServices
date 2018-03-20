@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GenericLibsBase;
+using GenericServices;
 using GenericServices.Internal.LinqBuilders;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;

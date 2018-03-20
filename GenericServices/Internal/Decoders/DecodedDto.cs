@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using GenericLibsBase;
 using GenericServices.Configuration;
 
 namespace GenericServices.Internal.Decoders

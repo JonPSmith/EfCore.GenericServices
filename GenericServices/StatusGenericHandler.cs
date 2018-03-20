@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace GenericLibsBase
+namespace GenericServices
 {
     /// <summary>
     /// This contains the error hanlding part of the GenericBizRunner
@@ -25,7 +25,7 @@ namespace GenericLibsBase
         /// <summary>
         /// This is true if any errors have been reistered 
         /// </summary>
-        public bool HasErrors => _errors.Any();
+        public bool IsValid => !_errors.Any();
 
         /// <summary>
         /// On success this returns the message as set by the business logic, or the default messages set by the BizRunner
@@ -33,9 +33,9 @@ namespace GenericLibsBase
         /// </summary>
         public string Message
         {
-            get => HasErrors
-                ? $"Failed with {_errors.Count} error" + (_errors.Count == 1 ? "" : "s")
-                : _successMessage ?? "<not run yet>";
+            get => IsValid
+                ? _successMessage ?? "<not run yet>"
+                : $"Failed with {_errors.Count} error" + (_errors.Count == 1 ? "" : "s");
             set => _successMessage = value;
         }
 
@@ -74,10 +74,10 @@ namespace GenericLibsBase
         /// This allows statuses to be combined. Copies over any errors and replaces the Message if the currect message is null
         /// </summary>
         /// <param name="status"></param>
-        public IStatusGeneric CombineErrors(IStatusGeneric status)
+        public IStatusGeneric CombineStatus(IStatusGeneric status)
         {
             _errors.AddRange(status.Errors);
-            if (!HasErrors && status.Message != null)
+            if (IsValid && status.Message != null)
                 Message = status.Message;
 
             return this;

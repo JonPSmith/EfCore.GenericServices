@@ -25,7 +25,7 @@ namespace RazorPageApp.Pages
         public void OnGet(int id)
         {
             Dto = _service.GetOriginal(id);
-            if (_service.HasErrors)
+            if (!_service.IsValid)
             {
                 _service.CopyErrorsToModelState(ModelState, Dto);
             }
@@ -39,7 +39,7 @@ namespace RazorPageApp.Pages
                 return Page();
             }
             _service.AddReviewToBook(Dto);
-            if (!_service.HasErrors)
+            if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = "Successfully added a review to the book." });
 
             //Error state

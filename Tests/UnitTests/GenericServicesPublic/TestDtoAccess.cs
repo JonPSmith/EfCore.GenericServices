@@ -33,7 +33,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var dto = service.GetSingle<BookTitle>(1);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
                 dto.BookId.ShouldEqual(1);
                 dto.Title.ShouldEqual("Refactoring");
             }
@@ -56,7 +56,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var dto = service.GetSingle<BookTitleAndCount>(1);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
                 dto.BookId.ShouldEqual(1);
                 dto.Title.ShouldEqual("Refactoring");
             }
@@ -79,7 +79,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var list = service.GetManyNoTracked<BookTitle>().ToList();
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
                 list.Count.ShouldEqual(4);
                 list.Select(x => x.Title).ShouldEqual(new []{ "Refactoring", "Patterns of Enterprise Application Architecture", "Domain-Driven Design", "Quantum Networking" });
             }
@@ -105,7 +105,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Create(dto);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
             }
             using (var context = new EfCoreContext(options))
             {
@@ -134,7 +134,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Create(dto);
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
             }
             using (var context = new EfCoreContext(options))
             {
@@ -164,7 +164,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //        service.Update(dto);
 
         //        //VERIFY
-        //        service.HasErrors.ShouldBeFalse(string.Join("\n", service.Errors));
+        //        service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
         //    }
         //    using (var context = new EfCoreContext(options))
         //    {

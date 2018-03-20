@@ -4,7 +4,7 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericLibsBase;
+using GenericServices;
 using ServiceLayer.HomeController.Dtos;
 
 namespace ServiceLayer.HomeController.Services
@@ -43,8 +43,8 @@ namespace ServiceLayer.HomeController.Services
                 AddError("Sorry, I could not find the book you were looking for.");
                 return null;
             }
-            CombineErrors( book.AddPromotion(dto.ActualPrice, dto.PromotionalText));
-            if (HasErrors) return null;
+            CombineStatus( book.AddPromotion(dto.ActualPrice, dto.PromotionalText));
+            if (!IsValid) return null;
 
             _context.SaveChanges();                 
             return book;

@@ -2,7 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using GenericLibsBase;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
@@ -32,7 +31,7 @@ namespace GenericServices.Startup.Internal
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
-            CombineErrors(decodeStatus);
+            CombineStatus(decodeStatus);
             DtoInfo = decodeStatus.Result;
         }
 

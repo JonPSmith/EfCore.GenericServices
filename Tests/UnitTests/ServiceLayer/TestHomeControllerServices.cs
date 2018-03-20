@@ -68,7 +68,7 @@ namespace Tests.UnitTests.ServiceLayer
                 context.SaveChanges();
 
                 //VERIFY
-                service.HasErrors.ShouldBeFalse();
+                service.IsValid.ShouldBeTrue();
                 book.ActualPrice.ShouldEqual(book.OrgPrice / 2);
             }
         }
@@ -95,7 +95,7 @@ namespace Tests.UnitTests.ServiceLayer
                 service.AddPromotion(dto);
 
                 //VERIFY
-                service.HasErrors.ShouldBeTrue();
+                service.IsValid.ShouldBeFalse();
                 service.Errors.Single().ErrorMessage.ShouldEqual("You must provide some text to go with the promotion.");
             }
         }

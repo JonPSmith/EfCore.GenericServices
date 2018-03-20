@@ -4,7 +4,7 @@
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 
-namespace GenericLibsBase
+namespace GenericServices
 {
     /// <summary>
     /// This is the interface for creating and returning 
@@ -17,9 +17,9 @@ namespace GenericLibsBase
         IImmutableList<ValidationResult> Errors { get; }
 
         /// <summary>
-        /// This is true if any errors have been reistered 
+        /// This is true if there are no errors registered
         /// </summary>
-        bool HasErrors { get; }
+        bool IsValid { get; }
 
         /// <summary>
         /// On success this returns the message as set by the business logic, or the default messages set by the BizRunner
@@ -31,6 +31,6 @@ namespace GenericLibsBase
         /// This allows statuses to be combined
         /// </summary>
         /// <param name="status"></param>
-        IStatusGeneric CombineErrors(IStatusGeneric status);
+        IStatusGeneric CombineStatus(IStatusGeneric status);
     }
 }
