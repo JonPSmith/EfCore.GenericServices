@@ -19,6 +19,7 @@ namespace GenericServices.Startup.Internal
 
         public RegisterOneDtoType(Type dtoType, IGenericServiceConfig configuration)
         {
+            Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
             EntityInfo = entityType.GetRegisteredEntityInfo();
             if (EntityInfo == null)
@@ -33,6 +34,7 @@ namespace GenericServices.Startup.Internal
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineStatuses(decodeStatus);
             DtoInfo = decodeStatus.Result;
+            CombineStatuses(DtoInfo);
         }
 
         private object CreateConfigInfoIfPresent(Type dtoType)

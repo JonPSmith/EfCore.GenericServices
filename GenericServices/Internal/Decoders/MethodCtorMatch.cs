@@ -19,7 +19,7 @@ namespace GenericServices.Internal.Decoders
     /// This is given a set of methodsOrCtors (with the same name) and picks the best matching method 
     /// that fits the set of possible properties that are available
     /// </summary>
-    internal class MethodMatch
+    internal class MethodCtorMatch
     {
         public MethodInfo Method { get;}
         public ConstructorInfo Constructor { get; }
@@ -30,7 +30,7 @@ namespace GenericServices.Internal.Decoders
 
         public bool IsParameterlessMethod => !PropertiesMatch.MatchedPropertiesInOrder.Any();
 
-        public MethodMatch(dynamic methodOrCtor, ParametersMatch propertiesMatch, HowTheyWereAskedFor howDefined)
+        public MethodCtorMatch(dynamic methodOrCtor, ParametersMatch propertiesMatch, HowTheyWereAskedFor howDefined)
         {
             Method = methodOrCtor as MethodInfo;
             Constructor = methodOrCtor as ConstructorInfo;
@@ -45,11 +45,11 @@ namespace GenericServices.Internal.Decoders
         /// <param name="propertiesToCheck"></param>
         /// <param name="propMatcher"></param>
         /// <param name="howDefined"></param>
-        /// <returns>It returns a collection of MethodMatch, with the best scores first, with secondary sort order with longest number of params first</returns>
-        public static IEnumerable<MethodMatch> GradeAllMethods(dynamic[] methodsOrCtors, 
+        /// <returns>It returns a collection of MethodCtorMatch, with the best scores first, with secondary sort order with longest number of params first</returns>
+        public static IEnumerable<MethodCtorMatch> GradeAllMethods(dynamic[] methodsOrCtors, 
             List<PropertyInfo> propertiesToCheck, HowTheyWereAskedFor howDefined, MatchNameAndType propMatcher)
         {
-            var result = methodsOrCtors.Select(method => new MethodMatch(method, 
+            var result = methodsOrCtors.Select(method => new MethodCtorMatch(method, 
                 new ParametersMatch(method.GetParameters(), propertiesToCheck, propMatcher), howDefined));
 
             return result.OrderByDescending(x => x.PropertiesMatch.Score)

@@ -8,7 +8,7 @@ namespace GenericServices
 {
     public struct ErrorGeneric
     {
-        private const string HeaderSeparator = ">";
+        public const string HeaderSeparator = ">";
         public ErrorGeneric(string header, ValidationResult error) : this()
         {
             Header = header ?? throw new ArgumentNullException(nameof(header));

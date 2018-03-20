@@ -22,7 +22,7 @@ namespace GenericServices.Internal.Decoders
         /// <summary>
         /// This contains the update methods that are available to the user - if there is more than one the user must define which one they want
         /// </summary>
-        public ImmutableList<MethodMatch> MatchedSetterMethods { get; }
+        public ImmutableList<MethodCtorMatch> MatchedSetterMethods { get; }
 
         public DecodedDto(Type dtoType, DecodedEntityClass entityInfo, 
             IGenericServiceConfig overallConfig, PerDtoConfig perDtoConfig)
@@ -39,18 +39,18 @@ namespace GenericServices.Internal.Decoders
                 MatchedSetterMethods = MatchUpdateMethods(entityInfo, perDtoConfig?.UpdateMethods).ToImmutableList();
         }
 
-        private List<MethodMatch> MatchUpdateMethods(DecodedEntityClass entityInfo, string updateMethods)
+        private List<MethodCtorMatch> MatchUpdateMethods(DecodedEntityClass entityInfo, string updateMethods)
         {
             var nonReadOnlyPropertyInfo = PropertyInfos.Where(y => y.PropertyType != DtoPropertyTypes.ReadOnly)
                 .Select(x => x.PropertyInfo).ToList();
 
-            var result = new List<MethodMatch>();
+            var result = new List<MethodCtorMatch>();
             if (updateMethods != null)
             {          
                 //The user has defined the exact update methods they want matched
                 foreach (var methodName in updateMethods.Split(',').Select(x => x.Trim()))
                 {
-                    var matches = MethodMatch.GradeAllMethods(FindMethodsWithGivenName(entityInfo, methodName, true).ToArray(),
+                    var matches = MethodCtorMatch.GradeAllMethods(FindMethodsWithGivenName(entityInfo, methodName, true).ToArray(),
                          nonReadOnlyPropertyInfo, HowTheyWereAskedFor.SpecifiedInPerDtoConfig, _overallConfig.NameMatcher);
                     var firstMatch = matches.FirstOrDefault();
                     if (firstMatch == null || firstMatch.PropertiesMatch.Score < PropertyMatch.PerfectMatchValue)
@@ -70,7 +70,7 @@ namespace GenericServices.Internal.Decoders
                 var methodsThatMatchedDtoName = FindMethodsWithGivenName(entityInfo, methodNameToLookFor, false);
                 if (methodsThatMatchedDtoName.Any())
                 {
-                    var matches = MethodMatch.GradeAllMethods(methodsThatMatchedDtoName.ToArray(),
+                    var matches = MethodCtorMatch.GradeAllMethods(methodsThatMatchedDtoName.ToArray(),
                         nonReadOnlyPropertyInfo, HowTheyWereAskedFor.NamedMethodFromDtoClass, _overallConfig.NameMatcher);
                     var firstMatch = matches.FirstOrDefault();
                     if (firstMatch != null || firstMatch.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue)
@@ -79,7 +79,7 @@ namespace GenericServices.Internal.Decoders
                 if (!result.Any())
                 {
                     //Nothing else has worked so do a default scan of all methods
-                    var matches = MethodMatch.GradeAllMethods(entityInfo.PublicSetterMethods.ToArray(),
+                    var matches = MethodCtorMatch.GradeAllMethods(entityInfo.PublicSetterMethods.ToArray(),
                         nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties, _overallConfig.NameMatcher);
                     result.AddRange(matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue));
                 }

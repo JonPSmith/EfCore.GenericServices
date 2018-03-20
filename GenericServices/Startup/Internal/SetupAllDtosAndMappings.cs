@@ -30,6 +30,7 @@ namespace GenericServices.Startup.Internal
 
         public void RegisterDtosInAssemblyAndBuildMaps(Assembly assemblyToScan)
         {
+            Header = $"Scanning {assemblyToScan.GetName()}";
             var allTypesInAssembly = assemblyToScan.GetTypes();
             var allLinkToEntityClasses = allTypesInAssembly
                 .Where(x => x.GetLinkedEntityFromDto() != null);
