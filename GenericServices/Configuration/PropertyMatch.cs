@@ -38,10 +38,13 @@ namespace GenericServices.Configuration
         /// </summary>
         public double Score => (NameMatched ? 0.7 : 0.0) + ((int) TypeMatch / 10.0);
 
-        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, MatchSources matchSource = MatchSources.Property)
+        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) 
+            : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property) { }
+
+        internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, MatchSources matchSource)
         {
             NameMatched = nameMatched;
-            TypeMatch = typeMatch; 
+            TypeMatch = typeMatch;
             if ((int)TypeMatch > 3)
                 throw new InvalidOperationException("The TypeMatchLevels must run from 0 to 3, 3 being a perfect match.");
             PropertyInfo = propertyInfo;

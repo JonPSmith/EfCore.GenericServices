@@ -26,6 +26,13 @@ namespace GenericServices.Configuration.Internal
             CurrentContext = currentContext;
         }
 
+        /// <summary>
+        /// This handles method properties that require injection of DbContext 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
         public PropertyMatch InternalPropertyMatch(string name, Type type, PropertyInfo propertyInfo)
         {
             if (type == typeof(DbContext) || type.IsSubclassOf(typeof(DbContext)))
