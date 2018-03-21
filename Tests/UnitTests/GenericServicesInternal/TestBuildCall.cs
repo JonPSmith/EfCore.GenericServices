@@ -98,6 +98,23 @@ namespace Tests.UnitTests.GenericServicesInternal
         }
 
         [Fact]
+        public void TestBuildCallTooManyParamIn()
+        {
+            //SETUP 
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
+            var method = typeof(Target1).GetMethod(nameof(Target1.SetMyInt));
+            var dto = new Dto { MyInt = 123 };
+            var target = new Target1();
+
+            //ATTEMPT
+            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] { prop });
+            action.Invoke(dto, target);
+
+            //VERIFY
+            target.MyInt.ShouldEqual(123);
+        }
+
+        [Fact]
         public void TestBuildCallMethodNoReturnWithDbContext()
         {
             //SETUP 
@@ -122,6 +139,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 context.NormalEntities.Count().ShouldEqual(1);
             }
         }
+
 
         [Fact]
         public void TestBuildCallMethodWithReturn()

@@ -8,18 +8,20 @@ namespace GenericServices.PublicButHidden
 {
     public interface IWrappedAutoMapperConfig
     {
-        MapperConfiguration AutoMapperConfig { get; }
+        MapperConfiguration MapperReadConfig { get; }
+        MapperConfiguration MapperSaveConfig { get; }
     }
 
     public class WrappedAutoMapperConfig : IWrappedAutoMapperConfig
     {
-        public WrappedAutoMapperConfig(MapperConfiguration mapperConfig)
+        public WrappedAutoMapperConfig(MapperConfiguration mapperReadConfig, MapperConfiguration mapperSaveConfig)
         {
-            AutoMapperConfig = mapperConfig ?? throw new ArgumentNullException(nameof(mapperConfig));
+            MapperReadConfig = mapperReadConfig ?? throw new ArgumentNullException(nameof(mapperReadConfig));
+            MapperSaveConfig = mapperSaveConfig ?? throw new ArgumentNullException(nameof(mapperSaveConfig));
         }
 
-        public MapperConfiguration AutoMapperConfig { get; }
+        public MapperConfiguration MapperReadConfig { get; }
 
-
+        public MapperConfiguration MapperSaveConfig { get; }
     }
 }

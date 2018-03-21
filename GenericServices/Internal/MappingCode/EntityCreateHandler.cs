@@ -49,7 +49,7 @@ namespace GenericServices.Internal.MappingCode
             if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
                 var entityInstance = Activator.CreateInstance(_entityInfo.EntityType);
-                var copier = new CreateCopier(_context, _mapperConfig, typeof(TDto), _entityInfo);
+                var copier = new CreateReader(_context, _mapperConfig, typeof(TDto), _entityInfo);
                 copier.Accessor.MapDtoToEntity(dto, entityInstance);
                 return entityInstance;
             }

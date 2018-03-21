@@ -18,7 +18,7 @@ namespace GenericServices.PublicButHidden
         IGenericService<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly MapperConfiguration _mapperConfig;
+        private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
         private readonly IExpandedGlobalConfig _config;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GenericServices.PublicButHidden
         public GenericService(TContext context, IWrappedAutoMapperConfig wapper, IGenericServicesConfig config = null)
         {
             _context = context;
-            _mapperConfig = wapper.AutoMapperConfig ?? throw new ArgumentException(nameof(wapper));
+            _wrapperMapperConfigs = wapper ?? throw new ArgumentException(nameof(wapper));
             _config = new ExpandedGlobalConfig(config ?? new GenericServicesConfig(), context);
         }
 
@@ -46,7 +46,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateProjector(_context, _mapperConfig, typeof(T), entityInfo);
+                var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
                 result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
             }
 
@@ -66,7 +66,7 @@ namespace GenericServices.PublicButHidden
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
-            var projector = new CreateProjector(_context, _mapperConfig, typeof(T), entityInfo);
+            var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
@@ -80,19 +80,20 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var creator = new EntityCreateHandler<T>(_context, _mapperConfig, entityInfo);
-                var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
-                CombineStatuses(creator);
-                if(IsValid)
-                {
-                    _context.Add(entity);
-                    _context.SaveChanges();
-                    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
-                }
+                throw new NotImplementedException();
+                //var creator = new EntityCreateHandler<T>(_context, _wrapperMapperConfigs, entityInfo);
+                //var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
+                //CombineStatuses(creator);
+                //if(IsValid)
+                //{
+                //    _context.Add(entity);
+                //    _context.SaveChanges();
+                //    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                //}
             }
         }
 
-        public T Update<T>(T entityOrDto) where T : class
+        public T Update<T>(T entityOrDto, string methodName = null) where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -100,15 +101,18 @@ namespace GenericServices.PublicButHidden
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
                 _context.SaveChanges();
-                return entityOrDto;
             }
             else
-            { 
-                var copier = new CreateCopier(_context, _mapperConfig, typeof(T), entityInfo);
-                var entity = copier.Accessor.LoadExistingAndMap(entityOrDto);
+            {
+                var dtoInfo = typeof(T).GetRegisteredDtoInfo();
+                var keys = _context.GetKeysFromDtoInCorrectOrder(entityOrDto, entityInfo.EntityType, dtoInfo);
+                var copier = new CreateReader(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
+                var entity = copier.Accessor.ReturnExistingEntity(keys);
+                
                 _context.SaveChanges();
-                throw new NotImplementedException("Needs to get keys");
+                
             }
+            return entityOrDto;
         }
 
         public void Delete<T>(params object[] keys) where T : class

@@ -15,16 +15,6 @@ namespace GenericServices.Configuration
         //Control of (CRUD) Create, Read Update and Delete methods
 
         /// <summary>
-        /// This controls whether you can call GetSingle or GetMany methods on this DTO.
-        /// </summary>
-        public virtual bool Read { get; } = true;
-
-        /// <summary>
-        /// This controls whether you can call the Delete methods on this DTO
-        /// </summary>
-        public virtual bool Delete { get; } = true;
-
-        /// <summary>
         /// This allows you to specify the exact constructor, static method or AutoMapper that can be used to update the entity
         /// The options are:
         /// - use constructor: "ctor(n)", where n is the number of parameters the ctor has
@@ -46,12 +36,12 @@ namespace GenericServices.Configuration
         //------------------------------------------------------
         //Misc
 
-        /// <summary>
-        /// The default SaveChanges doesn't validate any entities written to the database (it assumes the front-end has validated it)
-        /// By default the normal SaveChanges (non-validation) method  is used, but that can be overridden globally in the GenericServicesConfig class. 
-        /// Setting this to true/false will override everything so that you can set validation on/off just the methods in this DTO.
-        /// </summary>
-        public virtual bool? UseSaveChangesWithValidation { get; } = null;
+        ///// <summary>
+        ///// The default SaveChanges doesn't validate any entities written to the database (it assumes the front-end has validated it)
+        ///// By default the normal SaveChanges (non-validation) method  is used, but that can be overridden globally in the GenericServicesConfig class. 
+        ///// Setting this to true/false will override everything so that you can set validation on/off just the methods in this DTO.
+        ///// </summary>
+        //public virtual bool? UseSaveChangesWithValidation { get; } = null;
 
 
     }

@@ -43,7 +43,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleOk()
         {
             //SETUP
-            var mapper = new WrappedAutoMapperConfig ( BookTitleAndCount.Config);
+            var mapper = new WrappedAutoMapperConfig ( BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -148,7 +148,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //public void TestUpdateEntityOk()
         //{
         //    //SETUP
-        //    var mapper = AutoMapperHelpers.CreateConfig<AuthorNameDto, Author>();
+        //    var mapper = AutoMapperHelpers.CreateSaveConfig<AuthorNameDto, Author>();
         //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
         //    using (var context = new EfCoreContext(options))
         //    {

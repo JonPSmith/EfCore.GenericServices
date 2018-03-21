@@ -28,28 +28,20 @@ namespace GenericServices.Startup
             if (!withMapping)
                 return null;
 
-            MapperConfiguration mapConfig = null;
             var readProfile = new MappingProfile(false);
             dtoRegister.MapGenerator.Accessor.BuildReadMapping(readProfile);
-            if (dtoRegister.EntityInfo.EntityStyle == GenericServices.Internal.Decoders.EntityStyles.Normal)
+            var readConfig = new MapperConfiguration(cfg =>
             {
-                var saveProfile = new MappingProfile(true);
-                dtoRegister.MapGenerator.Accessor.BuildSaveMapping(saveProfile);
-                mapConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(readProfile);
-                    cfg.AddProfile(saveProfile);
-                });
-            }
-            else
+                cfg.AddProfile(readProfile);
+            });
+            var saveProfile = new MappingProfile(true);
+            dtoRegister.MapGenerator.Accessor.BuildSaveMapping(saveProfile);
+            var saveConfig = new MapperConfiguration(cfg =>
             {
-                mapConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(readProfile);
-                });
-            }
+                cfg.AddProfile(saveProfile);
+            });
 
-            return new WrappedAutoMapperConfig(mapConfig);
+            return new WrappedAutoMapperConfig(readConfig, saveConfig);
         }
     }
 }

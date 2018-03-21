@@ -8,7 +8,6 @@ using DataLayer.EfCode;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
-using Microsoft.EntityFrameworkCore.Design;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 

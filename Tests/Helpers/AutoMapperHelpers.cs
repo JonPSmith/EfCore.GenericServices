@@ -10,31 +10,35 @@ namespace Tests.Helpers
     public static class AutoMapperHelpers
     {
 
-        public static MapperConfiguration CreateConfig<TIn, TOut>()
+        public static MapperConfiguration CreateSaveConfig<TDto, TEntity>()
         {
             var config = new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<TIn, TOut>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                    cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
                 });
             return config;
         }
 
-        public static MapperConfiguration CreateReadConfigWithConfig<TIn, TOut>(Action<IMappingExpression<TIn, TOut>> alterMapping)
+        public static MapperConfiguration CreateReadConfig<TEntity, TDto>(Action<IMappingExpression<TEntity, TDto>> alterMapping)
         {
             var config = new MapperConfiguration(cfg =>
             {
-                alterMapping(cfg.CreateMap<TIn, TOut>());
+                alterMapping(cfg.CreateMap<TEntity, TDto>());
             });
             return config;
         }
 
-        public static WrappedAutoMapperConfig CreateWrapperMapper<TIn, TOut>()
+        public static WrappedAutoMapperConfig CreateWrapperMapper<TDto, TEntity>()
         {
-            var config = new MapperConfiguration(cfg =>
+            var readConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<TIn, TOut>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                cfg.CreateMap<TEntity, TDto>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             });
-            return new WrappedAutoMapperConfig(config);
+            var saveConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            });
+            return new WrappedAutoMapperConfig(readConfig, saveConfig);
         }
     }
 }

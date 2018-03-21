@@ -4,7 +4,6 @@
 using System;
 using System.Reflection;
 using GenericServices.Configuration;
-using Microsoft.EntityFrameworkCore.Design;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;

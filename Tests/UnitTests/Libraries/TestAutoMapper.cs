@@ -24,7 +24,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
@@ -38,7 +38,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitle>();
+            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
@@ -53,7 +53,7 @@ namespace Tests.UnitTests.Libraries
         {
             //SETUP
             var genSerConfig = new BookTitleWithCountConfig();
-            var mapperConfig = AutoMapperHelpers.CreateReadConfigWithConfig<Book, BookTitleAndCount>(genSerConfig.AlterReadMapping);
+            var mapperConfig = AutoMapperHelpers.CreateReadConfig<Book, BookTitleAndCount>(genSerConfig.AlterReadMapping);
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().Last();
@@ -83,7 +83,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleBadType()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateConfig<Book, BookTitleBadType>();
+            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitleBadType>();
 
             //ATTEMPT
             mapperConfig.AssertConfigurationIsValid();
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.Libraries
         {
             //SETUP
 
-            var mapperConfig = AutoMapperHelpers.CreateConfig<BookTitle, Book>();
+            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<BookTitle, Book>();
             var entity = DddEfTestData.CreateFourBooks().First();
 
             //ATTEMPT
@@ -187,7 +187,7 @@ namespace Tests.UnitTests.Libraries
             var config1 = new MapperConfiguration(cfg => cfg.AddProfile(profile1));
             var profile2 = new UnitTestProfile(false);
             profile2.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
-            var config2 = new MapperConfiguration(cfg => cfg.AddProfile(profile1));
+            var config2 = new MapperConfiguration(cfg => cfg.AddProfile(profile2));
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };

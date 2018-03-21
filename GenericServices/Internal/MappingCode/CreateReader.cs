@@ -2,17 +2,18 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using AutoMapper;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Internal.MappingCode
 {
-    internal class CreateCopier
+    internal class CreateReader
     {
         public dynamic Accessor { get;  }
 
-        public CreateCopier(DbContext context, MapperConfiguration mapper, Type tDto, DecodedEntityClass entityInfo)
+        public CreateReader(DbContext context, MapperConfiguration mapper, Type tDto, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericCopier<,>);
             var copierType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
@@ -37,10 +38,9 @@ namespace GenericServices.Internal.MappingCode
                 var output = _mapperConfig.CreateMapper().Map(dto, entity);
             }
 
-            public void LoadExistingAndMap(TDto dto, params object[] keys)
+            public TEntity ReturnExistingEntity(params object[] keys)
             {
-                var entity = _context.Set<TEntity>().Find(keys);
-                _mapperConfig.CreateMapper().Map(dto, entity);
+                return _context.Set<TEntity>().Find(keys);
             }
         }
     }
