@@ -3,7 +3,7 @@
 
 namespace GenericServices.Configuration
 {
-    public interface IGenericServiceConfig
+    public interface IGenericServicesConfig
     {
         /// <summary>
         /// This holds the code that will match the Name and Type to the Name/Type of a PropertyInfo

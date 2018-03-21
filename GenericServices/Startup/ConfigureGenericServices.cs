@@ -34,7 +34,7 @@ namespace GenericServices.Startup
         }
 
         public static IGenericServicesSetup ConfigureGenericServicesEntities(this IServiceCollection services,
-            IGenericServiceConfig configuration, params Type[] contextTypes)
+            IGenericServicesConfig configuration, params Type[] contextTypes)
         {
             if (contextTypes.Length == 0)
             {

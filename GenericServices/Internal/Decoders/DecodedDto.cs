@@ -7,12 +7,13 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
     internal class DecodedDto : StatusGenericHandler
     {
-        private readonly IGenericServiceConfig _overallConfig;
+        private readonly IExpandedGlobalConfig _overallConfig;
         private readonly List<MethodInfo> _availableSetterMethods = new List<MethodInfo>();
 
         public Type DtoType { get; }
@@ -24,8 +25,8 @@ namespace GenericServices.Internal.Decoders
         /// </summary>
         public ImmutableList<MethodCtorMatch> MatchedSetterMethods { get; }
 
-        public DecodedDto(Type dtoType, DecodedEntityClass entityInfo, 
-            IGenericServiceConfig overallConfig, PerDtoConfig perDtoConfig)
+        public DecodedDto(Type dtoType, DecodedEntityClass entityInfo,
+            IExpandedGlobalConfig overallConfig, PerDtoConfig perDtoConfig)
         {
             DtoType = dtoType ?? throw new ArgumentNullException(nameof(dtoType));
             _overallConfig = overallConfig ?? throw new ArgumentNullException(nameof(overallConfig));
@@ -51,7 +52,7 @@ namespace GenericServices.Internal.Decoders
                 foreach (var methodName in updateMethods.Split(',').Select(x => x.Trim()))
                 {
                     var matches = MethodCtorMatch.GradeAllMethods(FindMethodsWithGivenName(entityInfo, methodName, true).ToArray(),
-                         nonReadOnlyPropertyInfo, HowTheyWereAskedFor.SpecifiedInPerDtoConfig, _overallConfig.NameMatcher);
+                         nonReadOnlyPropertyInfo, HowTheyWereAskedFor.SpecifiedInPerDtoConfig, _overallConfig.InternalPropertyMatch);
                     var firstMatch = matches.FirstOrDefault();
                     if (firstMatch == null || firstMatch.PropertiesMatch.Score < PropertyMatch.PerfectMatchValue)
                         AddError(
@@ -71,7 +72,7 @@ namespace GenericServices.Internal.Decoders
                 if (methodsThatMatchedDtoName.Any())
                 {
                     var matches = MethodCtorMatch.GradeAllMethods(methodsThatMatchedDtoName.ToArray(),
-                        nonReadOnlyPropertyInfo, HowTheyWereAskedFor.NamedMethodFromDtoClass, _overallConfig.NameMatcher);
+                        nonReadOnlyPropertyInfo, HowTheyWereAskedFor.NamedMethodFromDtoClass, _overallConfig.InternalPropertyMatch);
                     var firstMatch = matches.FirstOrDefault();
                     if (firstMatch != null || firstMatch.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue)
                         result.Add(firstMatch);
@@ -80,7 +81,7 @@ namespace GenericServices.Internal.Decoders
                 {
                     //Nothing else has worked so do a default scan of all methods
                     var matches = MethodCtorMatch.GradeAllMethods(entityInfo.PublicSetterMethods.ToArray(),
-                        nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties, _overallConfig.NameMatcher);
+                        nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties, _overallConfig.InternalPropertyMatch);
                     result.AddRange(matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue));
                 }
             }

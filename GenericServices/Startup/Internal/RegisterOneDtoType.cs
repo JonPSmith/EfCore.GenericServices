@@ -3,6 +3,7 @@
 
 using System;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
 
@@ -17,7 +18,7 @@ namespace GenericServices.Startup.Internal
 
         public CreateMapGenerator MapGenerator { get; }
 
-        public RegisterOneDtoType(Type dtoType, IGenericServiceConfig configuration)
+        public RegisterOneDtoType(Type dtoType, IExpandedGlobalConfig configuration)
         {
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();

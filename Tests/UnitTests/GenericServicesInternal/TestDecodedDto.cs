@@ -3,7 +3,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
-using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using Xunit;
 using GenericServices.Internal.Decoders;
 using TestSupport.EfHelpers;
@@ -39,7 +39,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.LinkedToType.ShouldEqual(typeof(Book));
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Tests.Dtos.AddReviewDto), _bookInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.AddReviewDto), _bookInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.MatchedSetterMethods.Count.ShouldEqual(1);
@@ -69,7 +69,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.MatchedSetterMethods.Count.ShouldEqual(2);

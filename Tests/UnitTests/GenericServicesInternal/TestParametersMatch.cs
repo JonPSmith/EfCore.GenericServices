@@ -2,8 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using DataLayer.EfCode;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore.Design;
 using Xunit;
@@ -59,6 +62,25 @@ namespace Tests.UnitTests.GenericServicesInternal
 
             //VERIFY
             match.Score.ShouldEqual(0.65);
+        }
+
+        public void MyMethodWithDb(int myInt, EfCoreContext context) { }
+
+        [Fact]
+        public void TesDbContextMatch()
+        {
+            //SETUP
+            var props = new List<PropertyInfo> { _myIntProp, _myStringProp };
+            var method = typeof(TestParametersMatch).GetMethod(nameof(MyMethodWithDb));
+            var internalConf = new ExpandedGlobalConfig(null, null);
+
+            //ATTEMPT
+            var match = new ParametersMatch(method.GetParameters(), props, internalConf.InternalPropertyMatch);
+
+            //VERIFY
+            match.Score.ShouldEqual(1);
+            match.MatchedPropertiesInOrder.First().MatchSource.ShouldEqual(MatchSources.Property);
+            match.MatchedPropertiesInOrder.Last().MatchSource.ShouldEqual(MatchSources.DbContext);
         }
     }
 }

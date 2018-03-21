@@ -4,6 +4,7 @@
 using System;
 using AutoMapper;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 
 namespace GenericServices.Internal.MappingCode
@@ -12,9 +13,9 @@ namespace GenericServices.Internal.MappingCode
     {
         public dynamic Accessor { get; }
 
-        private IGenericServiceConfig _configuration;
+        private IExpandedGlobalConfig _configuration;
 
-        public CreateMapGenerator(Type dtoType, DecodedEntityClass entityInfo, IGenericServiceConfig configuration, object configInfo)
+        public CreateMapGenerator(Type dtoType, DecodedEntityClass entityInfo, IExpandedGlobalConfig configuration, object configInfo)
         {
             _configuration = configuration;
             var myGeneric = typeof(MapGenerator<,>);

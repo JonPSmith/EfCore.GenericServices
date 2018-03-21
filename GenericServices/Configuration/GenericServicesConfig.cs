@@ -8,7 +8,7 @@ namespace GenericServices.Configuration
 {
     public delegate PropertyMatch MatchNameAndType(string name, Type type, PropertyInfo propertyInfo);
 
-    public class GenericServicesConfig : IGenericServiceConfig
+    public class GenericServicesConfig : IGenericServicesConfig
     {
        
         /// <summary>

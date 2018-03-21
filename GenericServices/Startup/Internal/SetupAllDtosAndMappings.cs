@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 
@@ -12,11 +13,11 @@ namespace GenericServices.Startup.Internal
 {
     internal class SetupAllDtosAndMappings : StatusGenericHandler
     {
-        private readonly IGenericServiceConfig _configuration;
+        private readonly IExpandedGlobalConfig _configuration;
 
         WrappedAutoMapperConfig AutoMapperConfig { get; set; }
 
-        public SetupAllDtosAndMappings(IGenericServiceConfig configuration, Assembly[] assembliesToScan)
+        public SetupAllDtosAndMappings(IExpandedGlobalConfig configuration, Assembly[] assembliesToScan)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 

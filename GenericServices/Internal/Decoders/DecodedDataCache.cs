@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Internal.Decoders
@@ -37,8 +38,8 @@ namespace GenericServices.Internal.Decoders
             return DecodedDtoCache.ContainsKey(dtoType) ? DecodedDtoCache[dtoType] : null;
         }
 
-        public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo, 
-            IGenericServiceConfig overallConfig, PerDtoConfig perDtoConfig)
+        public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo,
+            IExpandedGlobalConfig overallConfig, PerDtoConfig perDtoConfig)
         {
             var status = new StatusGenericHandler<DecodedDto>();
             if (classType.IsPublic || classType.IsNestedPublic)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,15 @@ namespace GenericServices.Startup.Internal
 {
     internal class SetupAllEntities : IGenericServicesSetup
     {
-        private IGenericServiceConfig _configuration;
+        private IGenericServicesConfig _publicConfig;
 
         public IServiceCollection Services { get; }
         public WrappedAutoMapperConfig AutoMapperConfig { get;}
 
-        public SetupAllEntities(IServiceCollection services, IGenericServiceConfig configuration, Type[] contextTypes)
+        public SetupAllEntities(IServiceCollection services, IGenericServicesConfig publicConfig, Type[] contextTypes)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
-            _configuration = configuration ?? new GenericServicesConfig();
+            _publicConfig = publicConfig ?? new GenericServicesConfig();
             if (contextTypes == null || contextTypes.Length < 0)
                 throw new ArgumentException(nameof(contextTypes));
 

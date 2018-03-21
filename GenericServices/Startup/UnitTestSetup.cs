@@ -8,17 +8,18 @@ using GenericServices.Startup.Internal;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using GenericServices.Configuration.Internal;
 
 namespace GenericServices.Startup
 {
     public static class UnitTestSetup
     {
-        public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context, bool withMapping, IGenericServiceConfig globalConfig = null)
+        public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context, bool withMapping, IGenericServicesConfig publicConfig = null)
         {
             var status = new StatusGenericHandler();
-            globalConfig = globalConfig ?? new GenericServicesConfig();
+            publicConfig = publicConfig ?? new GenericServicesConfig();
             context.RegisterEntityClasses();
-            var dtoRegister = new RegisterOneDtoType(typeof(TDto), globalConfig);
+            var dtoRegister = new RegisterOneDtoType(typeof(TDto), new ExpandedGlobalConfig( publicConfig, context));
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count}. Errors are:\n" 

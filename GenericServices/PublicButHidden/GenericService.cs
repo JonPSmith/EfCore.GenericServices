@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using AutoMapper;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
@@ -18,7 +19,7 @@ namespace GenericServices.PublicButHidden
     {
         private readonly TContext _context;
         private readonly MapperConfiguration _mapperConfig;
-        private readonly IGenericServiceConfig _config;
+        private readonly IExpandedGlobalConfig _config;
 
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the GenericService is using.
@@ -27,11 +28,11 @@ namespace GenericServices.PublicButHidden
         /// </summary>
         public TContext CurrentContext => _context;
 
-        public GenericService(TContext context, IWrappedAutoMapperConfig wapper, IGenericServiceConfig config = null)
+        public GenericService(TContext context, IWrappedAutoMapperConfig wapper, IGenericServicesConfig config = null)
         {
             _context = context;
             _mapperConfig = wapper.AutoMapperConfig ?? throw new ArgumentException(nameof(wapper));
-            _config = config ?? new GenericServicesConfig();
+            _config = new ExpandedGlobalConfig(config ?? new GenericServicesConfig(), context);
         }
 
         public T GetSingle<T>(params object[] keys) where T : class
