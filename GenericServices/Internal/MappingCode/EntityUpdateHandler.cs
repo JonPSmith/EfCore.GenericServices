@@ -46,7 +46,7 @@ namespace GenericServices.Internal.MappingCode
                     : _dtoInfo.GetDefaultSetterMethod(_entityInfo);
 
                 //This runs the method via LINQ
-                var action = methodToUse.Method.CallMethodReturnVoid(typeof(TDto), _entityInfo.EntityType,
+                var action = BuildCall.CallMethodReturnVoid(methodToUse.Method, typeof(TDto), _entityInfo.EntityType,
                     methodToUse.PropertiesMatch.MatchedPropertiesInOrder);
                 action(dto, entity);
 

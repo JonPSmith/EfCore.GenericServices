@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new[] {prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new[] {prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -111,7 +111,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = DddEfTestData.CreateDummyBooks(1).Single();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new[] { prop });
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new[] { prop });
             action.Invoke(dto, target);
 
             //VERIFY
@@ -134,7 +134,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var target = new Target1();
 
                 //ATTEMPT
-                var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new []{ prop1, prop2});
+                var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new []{ prop1, prop2});
                 action.Invoke(dto, target, context);
                 context.SaveChanges();
 
@@ -155,7 +155,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnStatus(typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnStatus(method, typeof(Dto), typeof(Target1), new[] {prop});
             var status = action.Invoke(dto, target);
 
             //VERIFY
@@ -173,7 +173,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = method.CallStaticFactory(typeof(Dto), new []{ prop1, prop2});
+            var action = BuildCall.CallStaticFactory(method, typeof(Dto), new []{ prop1, prop2});
             var status = action.Invoke(dto);
 
             //VERIFY
@@ -192,7 +192,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = ctor.CallConstructor(typeof(Dto), new[] { prop1, prop2 });
+            var action = BuildCall.CallConstructor(ctor, typeof(Dto), new[] { prop1, prop2 });
             var newInstance = action.Invoke(dto);
 
             //VERIFY
