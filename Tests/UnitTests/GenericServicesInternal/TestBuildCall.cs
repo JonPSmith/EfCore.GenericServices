@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GenericServices;
 using GenericServices.Configuration;
-using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
 using Tests.EfClasses;
 using Tests.EfCode;

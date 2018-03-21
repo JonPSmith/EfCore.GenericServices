@@ -177,5 +177,28 @@ namespace Tests.UnitTests.Libraries
             data.AuthorId.ShouldEqual(123);          //changed
             data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
+
+        [Fact]
+        public void TestUsingProfileWithIgnoreDoesntAffectOtherProfiles()
+        {
+            //SETUP
+            var profile1 = new UnitTestProfile(true);
+            profile1.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
+            var config1 = new MapperConfiguration(cfg => cfg.AddProfile(profile1));
+            var profile2 = new UnitTestProfile(false);
+            profile2.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
+            var config2 = new MapperConfiguration(cfg => cfg.AddProfile(profile1));
+
+            //ATTEMPT
+            var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
+            var entity1 = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
+            config1.CreateMapper().Map(dto, entity1);
+            var entity2 = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
+            config2.CreateMapper().Map(dto, entity2);
+
+            //VERIFY
+            entity1.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
+            entity2.Email.ShouldEqual("youhavechanged@gmail.com"); //changes
+        }
     }
 }
