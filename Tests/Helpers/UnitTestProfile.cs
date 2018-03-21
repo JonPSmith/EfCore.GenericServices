@@ -35,8 +35,6 @@ namespace Tests.Helpers
 
         private bool Filter(MemberInfo member)
         {
-            if (member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
-                return true;
             var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
             return isReadOnly;

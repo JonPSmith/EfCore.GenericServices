@@ -110,8 +110,6 @@ namespace Tests.UnitTests.Libraries
 
         private bool Filter(MemberInfo member)
         {
-            if (member.GetCustomAttribute<UIHintAttribute>()?.UIHint == "Hidden")
-                return true;
             var readOnlyAttr = member.GetCustomAttribute<ReadOnlyAttribute>();
             var isReadOnly = readOnlyAttr?.IsReadOnly ?? false;
             return isReadOnly;
@@ -136,7 +134,7 @@ namespace Tests.UnitTests.Libraries
 
             //VERIFY
             data.Name.ShouldEqual("New Name");       //changed
-            data.AuthorId.ShouldEqual(1);            //not changed - UiHint("Hidden")
+            data.AuthorId.ShouldEqual(123);          //changed
             data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
 
@@ -176,7 +174,7 @@ namespace Tests.UnitTests.Libraries
 
             //VERIFY
             data.Name.ShouldEqual("New Name");       //changed
-            data.AuthorId.ShouldEqual(1);            //not changed - UiHint("Hidden")
+            data.AuthorId.ShouldEqual(123);          //changed
             data.Email.ShouldEqual("me@nospam.com"); //not changed - ReadOnly
         }
     }

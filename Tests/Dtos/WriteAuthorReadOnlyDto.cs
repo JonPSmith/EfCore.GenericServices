@@ -10,8 +10,6 @@ namespace Tests.Dtos
 {
     public class WriteAuthorReadOnlyDto
     {
-        // ReSharper disable once Mvc.TemplateNotResolved
-        [UIHint("Hidden")]
         public int AuthorId { get; set; }
 
         public string Name { get; set; }
