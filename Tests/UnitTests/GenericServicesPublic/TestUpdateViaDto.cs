@@ -28,7 +28,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestUpdateAuthorViaAutoMapperOk()
+        public void TestUpdateViaAutoMapperOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -54,7 +54,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestUpdateAuthorViaDefaultMethodOk()
+        public void TestUpdateViaDefaultMethodOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -74,6 +74,52 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 var entity = context.Books.Find(4);
                 entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
+            }
+        }
+
+        [Fact]
+        public void TestUpdateViaStatedMethodOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                service.Update(dto, nameof(Book.RemovePromotion));
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                var entity = context.Books.Find(4);
+                entity.ActualPrice.ShouldEqual(220);
+            }
+        }
+
+        [Fact]
+        public void TestUpdateViaStatedMethodBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                var ex = Assert.Throws<InvalidOperationException>(() => service.Update(dto, nameof(Book.AddReview)));
+
+                //VERIFY
+                ex.Message.ShouldStartWith("Could not find a method of name AddReview. The method that fit the properties in the DTO/VM are:");
             }
         }
 

@@ -47,7 +47,7 @@ namespace GenericServices.Internal.Decoders
                     x.PropertiesMatch.MatchedPropertiesInOrder.Count == nameInfo.NumParams);
             var result = namedMethods.ToList();
             if (!result.Any())
-                throw new InvalidOperationException($"Could not find a method of name {nameInfo}. The possible options are:\n" +
+                throw new InvalidOperationException($"Could not find a method of name {nameInfo}. The method that fit the properties in the DTO/VM are:\n" +
                                 string.Join("\n", MatchedSetterMethods.Select(x => x.ToStringShort())));
             if (result.Count > 1)
                 throw new InvalidOperationException($"There were multiple methods that fitted the name {nameInfo}. The possible options are:\n" +

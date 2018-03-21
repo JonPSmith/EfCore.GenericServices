@@ -18,6 +18,9 @@ namespace GenericServices.Internal.LinqBuilders
 {
     internal static class BuildCall
     {
+        //BE WARNED: extension methods don't work with dynamics - got some strange error messages
+        //Also the dto and entity properties cannit be object, but dynamic works
+
         public static IStatusGeneric RunMethodViaLinq(MethodInfo methodInfo, dynamic dto, dynamic entity,
             ImmutableList<PropertyMatch> propertyMatches, DbContext context)
         {
