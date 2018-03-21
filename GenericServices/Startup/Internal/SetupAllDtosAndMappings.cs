@@ -50,6 +50,7 @@ namespace GenericServices.Startup.Internal
 
             //Now scan for next maps and set up the mapping for them too
             throw new NotImplementedException();
+            //Don't forget to look at the TurnOffAuthoMapperSaveFilter in the GenericServicesConfig
         }
 
 

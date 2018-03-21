@@ -4,10 +4,13 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -15,18 +18,38 @@ namespace GenericServices.Internal.LinqBuilders
 {
     internal static class BuildCall
     {
-        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
-
-        public static dynamic CallMethodReturnVoid(this MethodInfo methodInfo, Type tIn, Type tClass, IEnumerable<PropertyMatch> propertyMatches)
+        public static IStatusGeneric RunMethodViaLinq(this MethodInfo methodInfo, dynamic dto, dynamic entity,
+            ImmutableList<PropertyMatch> propertyMatches, DbContext context)
         {
-            return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(), 
-                type => methodInfo.PrivateCallMethodReturnVoid(tIn, tClass, propertyMatches));
+            if (methodInfo.ReturnType == typeof(IStatusGeneric))
+            {
+                var func = CallMethodReturnStatus(methodInfo, dto.GetType(), entity.GetType(), propertyMatches);
+                return propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext)
+                    ? (IStatusGeneric)func(dto, entity, context)
+                    : (IStatusGeneric)func(dto, entity);
+            }
+
+            //Otherwise its an action
+            var action = CallMethodReturnVoid(methodInfo, dto.GetType(), entity.GetType(), propertyMatches);
+            if (propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext))
+                action(dto, entity, context);
+            else
+                action(dto, entity);
+            return new StatusGenericHandler();
         }
 
-        private static dynamic PrivateCallMethodReturnVoid(this MethodInfo methodInfo, Type tIn, Type tClass, IEnumerable<PropertyMatch> propertyMatches)
+        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
+
+        public static dynamic CallMethodReturnVoid(this MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
+        {
+            return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(), 
+                type => methodInfo.PrivateCallMethodReturnVoid(tDto, tEntity, propertyMatches));
+        }
+
+        private static dynamic PrivateCallMethodReturnVoid(this MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
         {         
-            var pIn = Expression.Parameter(tIn, "dto");
-            var pCall = Expression.Parameter(tClass, "method");
+            var pIn = Expression.Parameter(tDto, "dto");
+            var pCall = Expression.Parameter(tEntity, "method");
             ParameterExpression pContext = null;
             var args = new List<Expression>();
             foreach (var propertyMatch in propertyMatches)
@@ -48,16 +71,16 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnStatusCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallMethodReturnStatus(this MethodInfo methodInfo, Type tIn, Type tClass, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallMethodReturnStatus(this MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
-                type => methodInfo.PrivateCallMethodReturnStatus(tIn, tClass, propertyMatches));
+                type => methodInfo.PrivateCallMethodReturnStatus(tDto, tEntity, propertyMatches));
         }
 
-        private static dynamic PrivateCallMethodReturnStatus(this MethodInfo methodInfo, Type tIn, Type tClass, IEnumerable<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallMethodReturnStatus(this MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
         {
-            var pIn = Expression.Parameter(tIn, "dto");
-            var pCall = Expression.Parameter(tClass, "call");
+            var pIn = Expression.Parameter(tDto, "dto");
+            var pCall = Expression.Parameter(tEntity, "call");
             ParameterExpression pContext = null;
             var args = new List<Expression>();
             foreach (var propertyMatch in propertyMatches)
@@ -79,15 +102,15 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallStaticFactoryCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallStaticFactory(this MethodInfo methodInfo, Type tIn, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallStaticFactory(this MethodInfo methodInfo, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
-                type => methodInfo.PrivateCallStaticFactory(tIn, propertyMatches));
+                type => methodInfo.PrivateCallStaticFactory(tDto, propertyMatches));
         }
 
-        private static dynamic PrivateCallStaticFactory(this MethodInfo methodInfo, Type tIn, IEnumerable<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallStaticFactory(this MethodInfo methodInfo, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
         {
-            var pIn = Expression.Parameter(tIn, "dto");
+            var pIn = Expression.Parameter(tDto, "dto");
             ParameterExpression pContext = null;
             var args = new List<Expression>();
             foreach (var propertyMatch in propertyMatches)
@@ -109,15 +132,15 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallConstructorCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallConstructor(this ConstructorInfo ctor, Type tIn, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallConstructor(this ConstructorInfo ctor, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(ctor.GenerateKey(),
-                type => ctor.PrivateCallConstructor(tIn, propertyMatches));
+                type => ctor.PrivateCallConstructor(tDto, propertyMatches));
         }
 
-        public static dynamic PrivateCallConstructor(this ConstructorInfo ctor, Type tIn, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic PrivateCallConstructor(this ConstructorInfo ctor, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
         {
-            var pIn = Expression.Parameter(tIn, "dto");
+            var pIn = Expression.Parameter(tDto, "dto");
             ParameterExpression pContext = null;
             var args = new List<Expression>();
             foreach (var propertyMatch in propertyMatches)

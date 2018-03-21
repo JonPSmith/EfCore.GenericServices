@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DataLayer.EfClasses;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.LinqBuilders;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -98,20 +101,21 @@ namespace Tests.UnitTests.GenericServicesInternal
         }
 
         [Fact]
-        public void TestBuildCallTooManyParamIn()
+        public void TestBuildCallChangePubDateDto()
         {
             //SETUP 
-            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
-            var method = typeof(Target1).GetMethod(nameof(Target1.SetMyInt));
-            var dto = new Dto { MyInt = 123 };
-            var target = new Target1();
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, 
+                typeof(Tests.Dtos.ChangePubDateDto).GetProperty(nameof(Tests.Dtos.ChangePubDateDto.PublishedOn)));
+            var method = typeof(Book).GetMethod(nameof(Book.UpdatePublishedOn));
+            var dto = new Tests.Dtos.ChangePubDateDto { PublishedOn = new DateTime(2000,1,1)};
+            var target = DddEfTestData.CreateDummyBooks(1).Single();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] { prop });
+            var action = method.CallMethodReturnVoid(typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new[] { prop });
             action.Invoke(dto, target);
 
             //VERIFY
-            target.MyInt.ShouldEqual(123);
+            target.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
         }
 
         [Fact]

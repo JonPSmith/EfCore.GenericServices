@@ -4,6 +4,7 @@
 using System;
 using AutoMapper;
 using GenericServices.PublicButHidden;
+using GenericServices.Startup.Internal;
 
 namespace Tests.Helpers
 {
@@ -12,31 +13,41 @@ namespace Tests.Helpers
 
         public static MapperConfiguration CreateSaveConfig<TDto, TEntity>()
         {
-            var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-                });
-            return config;
+
+            var saveProfile = new MappingProfile(true);
+            saveProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            var saveConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(saveProfile);
+            });
+            return saveConfig;
         }
 
         public static MapperConfiguration CreateReadConfig<TEntity, TDto>(Action<IMappingExpression<TEntity, TDto>> alterMapping)
         {
-            var config = new MapperConfiguration(cfg =>
+            var readProfile = new MappingProfile(false);
+            alterMapping(readProfile.CreateMap<TEntity, TDto>());
+            var readConfig = new MapperConfiguration(cfg =>
             {
-                alterMapping(cfg.CreateMap<TEntity, TDto>());
+                cfg.AddProfile(readProfile);
             });
-            return config;
+            return readConfig;
         }
 
         public static WrappedAutoMapperConfig CreateWrapperMapper<TDto, TEntity>()
         {
+            var readProfile = new MappingProfile(false);
+            readProfile.CreateMap<TEntity, TDto>();
             var readConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<TEntity, TDto>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                cfg.AddProfile(readProfile);
             });
+
+            var saveProfile = new MappingProfile(true);
+            saveProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             var saveConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                cfg.AddProfile(saveProfile);
             });
             return new WrappedAutoMapperConfig(readConfig, saveConfig);
         }

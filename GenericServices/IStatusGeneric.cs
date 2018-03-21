@@ -32,5 +32,13 @@ namespace GenericServices
         /// </summary>
         /// <param name="status"></param>
         IStatusGeneric CombineStatuses(IStatusGeneric status);
+
+        /// <summary>
+        /// This is a simple method to output all the errors as a single string - null if no errors
+        /// Useful for feeding back all the errors in a single exception (also nice in unit testing)
+        /// </summary>
+        /// <param name="seperator"></param>
+        /// <returns>a single string with all errors seperated by the 'seperator' string</returns>
+        string GetAllErrors(string seperator = "\n");
     }
 }

@@ -36,7 +36,7 @@ namespace GenericServices.Internal.MappingCode
         /// <param name="entityType"></param>
         /// <param name="dtoInfo"></param>
         /// <returns></returns>
-        public static List<object> GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, Type entityType, DecodedDto dtoInfo)
+        public static object[] GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, Type entityType, DecodedDto dtoInfo)
             where TDto : class
         {
             var keys = new List<object>();
@@ -50,7 +50,7 @@ namespace GenericServices.Internal.MappingCode
                 keys.Add(dtoKeyProperty.PropertyInfo.GetValue(dto));
             }
 
-            return keys;
+            return keys.ToArray();
         }
     }
 }

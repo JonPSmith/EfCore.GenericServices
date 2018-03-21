@@ -37,6 +37,7 @@ namespace GenericServices.PublicButHidden
 
         public T GetSingle<T>(params object[] keys) where T : class
         {
+            Header = "GetSingle";
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -72,6 +73,7 @@ namespace GenericServices.PublicButHidden
 
         public void Create<T>(T entityOrDto) where T : class
         {
+            Header = "Create";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -93,8 +95,9 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        public T Update<T>(T entityOrDto, string methodName = null) where T : class
+        public void Update<T>(T entityOrDto, string methodName = null) where T : class
         {
+            Header = "Update";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -104,19 +107,16 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var dtoInfo = typeof(T).GetRegisteredDtoInfo();
-                var keys = _context.GetKeysFromDtoInCorrectOrder(entityOrDto, entityInfo.EntityType, dtoInfo);
-                var copier = new CreateReader(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
-                var entity = copier.Accessor.ReturnExistingEntity(keys);
-                
-                _context.SaveChanges();
-                
+                var updater = new EntityUpdateHandler<T>(entityInfo, _wrapperMapperConfigs, _config);
+                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
+                if (IsValid)
+                    _context.SaveChanges();        
             }
-            return entityOrDto;
         }
 
         public void Delete<T>(params object[] keys) where T : class
         {
+            Header = "Delete";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {

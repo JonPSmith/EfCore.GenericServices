@@ -63,9 +63,9 @@ namespace DataLayer.EfClasses
         public IEnumerable<Review> Reviews => _reviews?.ToList();
         public IEnumerable<BookAuthor> AuthorsLink => _authorsLink?.ToList();
 
-        public void UpdatePublishedOn(DateTime newDate)
+        public void UpdatePublishedOn(DateTime publishedOn)
         {
-            PublishedOn = newDate;
+            PublishedOn = publishedOn;
         }
 
         public void AddReview(int numStars, string comment, string voterName, 

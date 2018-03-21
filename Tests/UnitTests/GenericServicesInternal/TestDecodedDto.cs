@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
@@ -13,13 +14,13 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestDecodedDto
     {
-        private DecodedEntityClass _bookInfo;
+        private DecodedEntityClass _bookEntityInfo;
         public TestDecodedDto()
         {
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
-                _bookInfo = new DecodedEntityClass(typeof(Book), context);
+                _bookEntityInfo = new DecodedEntityClass(typeof(Book), context);
             }
         }
 
@@ -39,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Dto1), _bookInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Dto1), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.LinkedToType.ShouldEqual(typeof(Book));
@@ -55,7 +56,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Tests.Dtos.AddReviewDto), _bookInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.AddReviewDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.MatchedSetterMethods.Count.ShouldEqual(1);
@@ -69,12 +70,82 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
             decoded.MatchedSetterMethods.Count.ShouldEqual(2);
             decoded.MatchedSetterMethods.First().Method.Name.ShouldEqual("UpdatePublishedOn");
             decoded.MatchedSetterMethods.First().HowDefined.ShouldEqual(HowTheyWereAskedFor.DefaultMatchToProperties);
         }
+
+        //-----------------------------------------------------------
+        //DecodedDto methods
+
+        [Fact]
+        public void TestFindSetterMethod()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+
+            //ATTEMPT
+            var method = decoded.FindSetterMethod(new DecodeName("UpdatePublishedOn"));
+
+            //VERIFY
+            method.Method.Name.ShouldEqual("UpdatePublishedOn");
+        }
+
+        [Fact]
+        public void TestFindSetterMethodWithGivenNumParams()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+
+            //ATTEMPT
+            var method = decoded.FindSetterMethod(new DecodeName("UpdatePublishedOn(1)"));
+
+            //VERIFY
+            method.Method.Name.ShouldEqual("UpdatePublishedOn");
+        }
+
+        [Fact]
+        public void TestFindSetterMethodBadName()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() => decoded.FindSetterMethod(new DecodeName("badname")));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("Could not find a method of name badname");
+        }
+
+        [Fact]
+        public void TestFindSetterMethodNumParamsBad()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() => decoded.FindSetterMethod(new DecodeName("UpdatePublishedOn(2)")));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("Could not find a method of name UpdatePublishedOn(2)");
+        }
+
+        [Fact]
+        public void TestGetDefaultSetterMethod()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+
+            //ATTEMPT
+            var method = decoded.GetDefaultSetterMethod(_bookEntityInfo);
+
+            //VERIFY
+            method.Method.Name.ShouldEqual("UpdatePublishedOn");
+            decoded.MatchedSetterMethods.Count.ShouldEqual(2); //It ignores the parameterless RemovePromotion method
+        }
+
     }
 }

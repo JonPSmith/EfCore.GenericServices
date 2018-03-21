@@ -19,6 +19,6 @@ namespace Tests.Dtos
         public string Title { get; set; }
 
         [DataType(DataType.Date)]               
-        public DateTime NewDate { get; set; }
+        public DateTime PublishedOn { get; set; }
     }
 }

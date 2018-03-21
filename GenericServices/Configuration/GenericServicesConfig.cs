@@ -17,5 +17,13 @@ namespace GenericServices.Configuration
         /// </summary>
         public MatchNameAndType NameMatcher { get; } = DefaultNameMatcher.MatchCamelAndPascalName;
 
+        /// <summary>
+        /// By default the properties in the DTO/VM call that are null or have a [ReadOnly(true)] attribute will NOT be
+        /// copied back to the entity class. This applies when you do a create or update that uses AutoMapper.
+        /// You can set this to true to turn off that feature.
+        /// NOTE: This flag does NOT affect the use of the [ReadOnly(true)] attribute in DDD access methods  
+        /// </summary>
+        public bool TurnOffAuthoMapperSaveFilter { get; } = false;
+
     }
 }

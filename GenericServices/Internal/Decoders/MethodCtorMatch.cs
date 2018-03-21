@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -64,6 +63,12 @@ namespace GenericServices.Internal.Decoders
                   $" params out of {PropertiesMatch.MatchedPropertiesInOrder.Count}. Score {PropertiesMatch.Score:P0} ";
             var paramString = string.Join(", ", PropertiesMatch.MatchedPropertiesInOrder.Select(x => x.ToString()));
             return start + (Constructor == null ? Method.Name : "ctor") + "(" + paramString + ")";
+        }
+
+        public string ToStringShort()
+        {
+            return (Constructor == null ? Method.Name : "ctor") +
+                   $"({PropertiesMatch.MatchedPropertiesInOrder.Count} params)";
         }
     }
 }

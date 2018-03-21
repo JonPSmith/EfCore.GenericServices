@@ -14,7 +14,6 @@ namespace GenericServices.Internal.Decoders
     internal class DecodedDto : StatusGenericHandler
     {
         private readonly IExpandedGlobalConfig _overallConfig;
-        private readonly List<MethodInfo> _availableSetterMethods = new List<MethodInfo>();
 
         public Type DtoType { get; }
         public Type LinkedToType { get; }
@@ -39,6 +38,39 @@ namespace GenericServices.Internal.Decoders
             if (entityInfo.CanBeUpdatedViaMethods || perDtoConfig?.UpdateMethods != null)
                 MatchedSetterMethods = MatchUpdateMethods(entityInfo, perDtoConfig?.UpdateMethods).ToImmutableList();
         }
+
+        public MethodCtorMatch FindSetterMethod(DecodeName nameInfo)
+        {
+            var namedMethods = MatchedSetterMethods.Where(x => x.Method.Name == nameInfo.Name);
+            if (nameInfo.NumParams > 0)
+                namedMethods = namedMethods.Where(x =>
+                    x.PropertiesMatch.MatchedPropertiesInOrder.Count == nameInfo.NumParams);
+            var result = namedMethods.ToList();
+            if (!result.Any())
+                throw new InvalidOperationException($"Could not find a method of name {nameInfo}. The possible options are:\n" +
+                                string.Join("\n", MatchedSetterMethods.Select(x => x.ToStringShort())));
+            if (result.Count > 1)
+                throw new InvalidOperationException($"There were multiple methods that fitted the name {nameInfo}. The possible options are:\n" +
+                                string.Join("\n", result.Select(x => x.ToStringShort())));
+            return result.Single();
+        }
+
+        public MethodCtorMatch GetDefaultSetterMethod(DecodedEntityClass entityInfo)
+        {
+            var methodsWithParams = MatchedSetterMethods.Where(x => !x.IsParameterlessMethod).ToList();
+            if (methodsWithParams.Count == 1)
+                return methodsWithParams.Single();
+
+            if (methodsWithParams.Any())
+                throw new InvalidOperationException($"There are multiple methods, so you need to define which one you want used via the methodName parameter. "+
+                                                    "The possible options are:\n" +
+                                                    string.Join("\n", MatchedSetterMethods.Select(x => x.ToStringShort())));
+            throw new InvalidOperationException($"The entity class {entityInfo.EntityType.GetNameForClass()} did not have an methods linked to this DTO/VM."+
+                                                " It only links methods where all the method's parameters can be forfilled by the DTO/VM non-read-only properties.");
+        }
+
+        //------------------------------------------------------------------
+        //private methods
 
         private List<MethodCtorMatch> MatchUpdateMethods(DecodedEntityClass entityInfo, string updateMethods)
         {
