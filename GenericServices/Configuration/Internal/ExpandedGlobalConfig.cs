@@ -36,7 +36,7 @@ namespace GenericServices.Configuration.Internal
         public PropertyMatch InternalPropertyMatch(string name, Type type, PropertyInfo propertyInfo)
         {
             if (type == typeof(DbContext) || type.IsSubclassOf(typeof(DbContext)))
-                return new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, null, MatchSources.DbContext);
+                return new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, null, MatchSources.DbContext, type);
 
             return PublicConfig.NameMatcher(name, type, propertyInfo);
         }

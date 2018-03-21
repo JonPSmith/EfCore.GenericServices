@@ -32,6 +32,7 @@ namespace GenericServices.Configuration
         public PropertyInfo PropertyInfo { get; }
 
         public MatchSources MatchSource { get; }
+        public Type NonPropertyMatchType { get; }
 
         /// <summary>
         /// A Score of 1 means a perfect match. 
@@ -39,9 +40,10 @@ namespace GenericServices.Configuration
         public double Score => (NameMatched ? 0.7 : 0.0) + ((int) TypeMatch / 10.0);
 
         public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) 
-            : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property) { }
+            : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property, null) { }
 
-        internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, MatchSources matchSource)
+        internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, 
+            MatchSources matchSource, Type nonPropertyMatchType)
         {
             NameMatched = nameMatched;
             TypeMatch = typeMatch;
@@ -49,6 +51,7 @@ namespace GenericServices.Configuration
                 throw new InvalidOperationException("The TypeMatchLevels must run from 0 to 3, 3 being a perfect match.");
             PropertyInfo = propertyInfo;
             MatchSource = matchSource;
+            NonPropertyMatchType = nonPropertyMatchType;
         }
 
         public override string ToString()

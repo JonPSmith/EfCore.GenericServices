@@ -44,33 +44,7 @@ namespace GenericServices.Internal.MappingCode
                 return null;
             }
 
-            var bestMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfos.Select(x => x.PropertyInfo).ToImmutableList(), 
-                _entityInfo.PublicStaticFactoryMethods);
-            if (bestMatch == null || bestMatch.Score < 1)
-            {
-                var bestCtorMatch = BestMethodCtorMatch.FindMatch(dtoInfo.PropertyInfos.Select(x => x.PropertyInfo).ToImmutableList(),
-                    _entityInfo.PublicCtors);
-                if (bestCtorMatch != null && bestCtorMatch.Score > bestMatch.Score)
-                    bestMatch = bestCtorMatch;
-            }
-
-            if (bestMatch?.Score >= PropertyMatch.PerfectMatchValue)
-            {
-                if (bestMatch.Constructor != null)
-                {
-                    var ctor = bestMatch.Constructor.CallConstructor(typeof(TDto),
-                        bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
-                    return ctor.Invoke(dto);
-                }
-                else
-                {
-                    var staticFactory = bestMatch.Method.CallStaticFactory(typeof(TDto),
-                        bestMatch.DtoPropertiesInOrder.Select(x => x.PropertyInfo).ToArray());
-                    var factoryStatus = staticFactory.Invoke(dto);
-                    CombineStatuses((IStatusGeneric)factoryStatus);
-                    return IsValid ? factoryStatus.Result : null;
-                }
-            }
+            throw new NotImplementedException();
 
             if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
@@ -80,10 +54,10 @@ namespace GenericServices.Internal.MappingCode
                 return entityInstance;
             }
 
-            var messagePart = bestMatch == null
-                ? "no ctors or static factories and it couldn't update via properties."
-                : $"no matching ctors/static factories:\n closest match was {bestMatch}.";
-            AddError("Could not create and update a new entity because there where " + messagePart);
+            //var messagePart = bestMatch == null
+            //    ? "no ctors or static factories and it couldn't update via properties."
+            //    : $"no matching ctors/static factories:\n closest match was {bestMatch}.";
+            //AddError("Could not create and update a new entity because there where " + messagePart);
 
             return null;
 

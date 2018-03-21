@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using GenericServices;
+using GenericServices.Configuration;
+using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
+using Tests.EfClasses;
+using Tests.EfCode;
+using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -36,6 +41,12 @@ namespace Tests.UnitTests.GenericServicesInternal
                 MyInt = myInt;
             }
 
+            public void SetMyIntAndAddEntityToDb(int myInt, TestDbContext context)
+            {
+                MyInt = myInt;
+                context.Add(new NormalEntity {MyInt = myInt});
+            }
+
             public IStatusGeneric SetMyString(string myString)
             {
                 MyString = myString;
@@ -58,13 +69,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestBuildCallMethodNoReturn()
         {
             //SETUP 
-            var prop = typeof(Dto).GetProperty(nameof(Dto.MyInt));
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
             var method = typeof(Target1).GetMethod(nameof(Target1.SetMyInt));
             var dto = new Dto {MyInt = 123};
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), prop);
+            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] {prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -75,13 +86,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestBuildCallMethodNoReturnAgain()
         {
             //SETUP 
-            var prop = typeof(Dto).GetProperty(nameof(Dto.MyInt));
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
             var method = typeof(Target1).GetMethod(nameof(Target1.SetMyInt));
             var dto = new Dto { MyInt = 123 };
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), prop);
+            var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new[] {prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -89,16 +100,42 @@ namespace Tests.UnitTests.GenericServicesInternal
         }
 
         [Fact]
+        public void TestBuildCallMethodNoReturnWithDbContext()
+        {
+            //SETUP 
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var prop1 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
+                var prop2 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, null, MatchSources.DbContext, context.GetType());
+                var method = typeof(Target1).GetMethod(nameof(Target1.SetMyIntAndAddEntityToDb));
+                var dto = new Dto {MyInt = 123};
+                var target = new Target1();
+
+                //ATTEMPT
+                var action = method.CallMethodReturnVoid(typeof(Dto), typeof(Target1), new []{ prop1, prop2});
+                action.Invoke(dto, target, context);
+                context.SaveChanges();
+
+                //VERIFY
+                target.MyInt.ShouldEqual(123);
+                context.NormalEntities.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
         public void TestBuildCallMethodWithReturn()
         {
             //SETUP 
-            var prop = typeof(Dto).GetProperty(nameof(Dto.MyString));
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyString)));
             var method = typeof(Target1).GetMethod(nameof(Target1.SetMyString));
             var dto = new Dto { MyString = "Hello" };
             var target = new Target1();
 
             //ATTEMPT
-            var action = method.CallMethodReturnStatus(typeof(Dto), typeof(Target1), prop);
+            var action = method.CallMethodReturnStatus(typeof(Dto), typeof(Target1), new[] {prop});
             var status = action.Invoke(dto, target);
 
             //VERIFY
@@ -110,13 +147,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestBuildCallStaticFactory()
         {
             //SETUP 
-            var prop1 = typeof(Dto).GetProperty(nameof(Dto.MyInt));
-            var prop2 = typeof(Dto).GetProperty(nameof(Dto.MyString));
+            var prop1 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
+            var prop2 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyString)));
             var method = typeof(Target1).GetMethod(nameof(Target1.CreateFactory));
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = method.CallStaticFactory(typeof(Dto), prop1, prop2);
+            var action = method.CallStaticFactory(typeof(Dto), new []{ prop1, prop2});
             var status = action.Invoke(dto);
 
             //VERIFY
@@ -129,13 +166,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestBuildCallCtor()
         {
             //SETUP 
-            var prop1 = typeof(Dto).GetProperty(nameof(Dto.MyInt));
-            var prop2 = typeof(Dto).GetProperty(nameof(Dto.MyString));
+            var prop1 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
+            var prop2 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyString)));
             var ctor = typeof(Target1).GetConstructors().Single(x => x.GetParameters().Length == 2);
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = ctor.CallConstructor(typeof(Dto), prop1, prop2);
+            var action = ctor.CallConstructor(typeof(Dto), new[] { prop1, prop2 });
             var newInstance = action.Invoke(dto);
 
             //VERIFY
