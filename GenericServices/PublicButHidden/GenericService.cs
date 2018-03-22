@@ -94,7 +94,7 @@ namespace GenericServices.PublicButHidden
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
-        public void AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             Header = "AddNewAndSave";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
@@ -112,10 +112,12 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                 {
                     _context.Add(entity);
-                    _context.SaveChanges();
-                    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));
+                    if (IsValid)
+                        entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
+            return IsValid ? entityOrDto : null;
         }
 
         public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
@@ -134,7 +136,7 @@ namespace GenericServices.PublicButHidden
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _config);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
-                    _context.SaveChanges();        
+                    CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
             }
         }
 

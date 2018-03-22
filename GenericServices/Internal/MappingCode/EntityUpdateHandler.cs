@@ -33,6 +33,10 @@ namespace GenericServices.Internal.MappingCode
             var keys = _config.CurrentContext.GetKeysFromDtoInCorrectOrder(dto, _entityInfo.EntityType, _dtoInfo);
             var mapper = new CreateMapper(_config.CurrentContext, _wrapperMapperConfigs, typeof(TDto), _entityInfo);
             var entity = mapper.Accessor.ReturnExistingEntity(keys);
+            if (entity == null)
+                return new StatusGenericHandler()
+                    .AddError(
+                        $"Sorry, I could not find the {_entityInfo.EntityType.GetNameForClass()} you were trying to update.");
 
             //we look for methods to update a new entity in the following order
             //1. DDD-styled entity: A public access method that fits the DTO

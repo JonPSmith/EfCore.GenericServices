@@ -104,6 +104,30 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
+        [Fact]
+        public void TestUpdateAddReviewOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.AddReviewDto>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var dto = new Tests.Dtos.AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
+                service.UpdateAndSave(dto, nameof(Book.AddReview));
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                context.Set<Review>().Count().ShouldEqual(3);
+            }
+        }
+
         public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
         {
             public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
