@@ -19,7 +19,9 @@ namespace GenericServices
         {          
             Header = string.IsNullOrEmpty(prefix)
                 ? existingError.Header
-                : prefix + HeaderSeparator + existingError.Header;
+                : string.IsNullOrEmpty(existingError.Header) 
+                    ? prefix
+                    : prefix + HeaderSeparator + existingError.Header;
             ErrorResult = existingError.ErrorResult;
         }
 

@@ -2,7 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using GenericServices;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Tests.EfClasses
 {
@@ -10,12 +9,11 @@ namespace Tests.EfClasses
     {
         private DddStaticFactEntity() { }
 
-        public static IStatusGeneric<DddStaticFactEntity> CreateFactory(int id, int myInt, string myString)
+        public static IStatusGeneric<DddStaticFactEntity> CreateFactory(int myInt, string myString)
         {
             var status = new StatusGenericHandler<DddStaticFactEntity>();
             var result = new DddStaticFactEntity
             {
-                Id = id,
                 MyInt = myInt,
                 MyString = myString,
             };

@@ -20,7 +20,7 @@ namespace GenericServices.Configuration
         /// - static method: use MethodName, e.g. "CreateBookFactory" 
         /// - AutoMapper: "AutoMapper"
         /// </summary>
-        public string CreateMethod { get; } = null;
+        public virtual string CreateMethod { get; } = null;
 
         /// <summary>
         /// This allows you to specify the exact method or AutoMapper that can be used to update the entity
@@ -28,7 +28,7 @@ namespace GenericServices.Configuration
         /// - Method: use MethodName, e.g. "AddReview" 
         /// - AutoMapper: "AutoMapper"
         /// </summary>
-        public string UpdateMethod { get; } = null;
+        public virtual string UpdateMethod { get; } = null;
 
         //------------------------------------------------------
         //Misc

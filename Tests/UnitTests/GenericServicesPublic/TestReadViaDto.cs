@@ -5,7 +5,6 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
@@ -14,7 +13,7 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesPublic
 {
-    public class TestDtoAccess
+    public class TestReadViaDto
     {
         [Fact]
         public void TestProjectBookTitleSingleOk()
@@ -33,7 +32,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var dto = service.GetSingle<BookTitle>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 dto.BookId.ShouldEqual(1);
                 dto.Title.ShouldEqual("Refactoring");
             }
@@ -56,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var dto = service.GetSingle<BookTitleAndCount>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 dto.BookId.ShouldEqual(1);
                 dto.Title.ShouldEqual("Refactoring");
             }
@@ -79,70 +78,13 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var list = service.GetManyNoTracked<BookTitle>().ToList();
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 list.Count.ShouldEqual(4);
                 list.Select(x => x.Title).ShouldEqual(new []{ "Refactoring", "Patterns of Enterprise Application Architecture", "Domain-Driven Design", "Quantum Networking" });
             }
         }
 
-        [Fact]
-        public void TestCreateEntityUsingDefaults_AutoMapperOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
-                context.SetupSingleDtoAndEntities<AuthorNameDto>(false);
-                var service = new GenericService<EfCoreContext>(context, mapper);
-
-                //ATTEMPT
-                var dto = new AuthorNameDto { Name = "New Name" };
-                service.Create(dto);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                context.Authors.Count().ShouldEqual(1);
-                context.Authors.Single().Name.ShouldEqual("New Name");
-                context.Authors.Single().Email.ShouldBeNull();
-            }
-        }
-
-        [Fact]
-        public void TestCreateEntityUsingDefaults_AutoMapperMappingSetOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                var mapper = context.SetupSingleDtoAndEntities<AuthorNameDto>(true);
-                var service = new GenericService<EfCoreContext>(context, mapper);
-
-                //ATTEMPT
-                var dto = new AuthorNameDto { Name = "New Name" };
-                service.Create(dto);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                context.Authors.Count().ShouldEqual(1);
-                context.Authors.Single().Name.ShouldEqual("New Name");
-                context.Authors.Single().Email.ShouldBeNull();
-            }
-        }
+ 
 
         //[Fact]
         //public void TestUpdateEntityOk()
@@ -164,7 +106,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //        service.Update(dto);
 
         //        //VERIFY
-        //        service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+        //        service.IsValid.ShouldBeTrue(service.GetAllErrors());
         //    }
         //    using (var context = new EfCoreContext(options))
         //    {

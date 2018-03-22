@@ -71,9 +71,9 @@ namespace GenericServices.PublicButHidden
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
-        public void Create<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public void AddNew<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            Header = "Create";
+            Header = "AddNew";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {

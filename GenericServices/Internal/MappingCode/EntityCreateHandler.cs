@@ -2,13 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Immutable;
-using System.Linq;
-using AutoMapper;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
-using Microsoft.EntityFrameworkCore;
 using GenericServices.Internal.LinqBuilders;
 using GenericServices.PublicButHidden;
 

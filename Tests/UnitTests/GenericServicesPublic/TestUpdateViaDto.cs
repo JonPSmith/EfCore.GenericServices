@@ -3,12 +3,15 @@
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
+using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
+using Microsoft.AspNetCore.Mvc;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
@@ -93,6 +96,41 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
                 service.Update(dto, nameof(Book.RemovePromotion));
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                var entity = context.Books.Find(4);
+                entity.ActualPrice.ShouldEqual(220);
+            }
+        }
+
+        public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
+        {
+            public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
+        }
+
+        public class DtoWithConfig : ILinkToEntity<Book>, IConfigFoundIn<ConfigSettingMethod>
+        {
+            public int BookId { get; set; }
+            public string Title { get; set; }
+        }
+
+        [Fact]
+        public void TestUpdateViaStatedMethodInPerDtoConfigOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var wrapped = context.SetupSingleDtoAndEntities<DtoWithConfig>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var dto = new DtoWithConfig { BookId = 4 };
+                service.Update(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

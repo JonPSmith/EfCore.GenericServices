@@ -10,9 +10,8 @@ namespace Tests.EfClasses
     {
         private DddCtorEntity() { }
 
-        public DddCtorEntity(int id, int myInt, string myString)
+        public DddCtorEntity(int myInt, string myString)
         {
-            Id = id;
             MyInt = myInt;
             MyString = myString;
         }

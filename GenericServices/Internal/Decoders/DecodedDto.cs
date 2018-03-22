@@ -134,7 +134,7 @@ namespace GenericServices.Internal.Decoders
             {
                 //name as been defined in perDtoConfig
                 return new List<MethodCtorMatch>{FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams,
-                    allPossibleMatches, errorString + "(PerDtoConfig)")};
+                    allPossibleMatches, (errorString == null ? null : errorString + "(PerDtoConfig)"))};
             }
             //Nothing defined so try via the DTO name
             var nameFromDto = ExtractPossibleMethodNameFromDtoTypeName();

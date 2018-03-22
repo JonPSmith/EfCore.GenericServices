@@ -37,7 +37,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var book = service.GetSingle<Book>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 book.BookId.ShouldEqual(1);
                 context.Entry(book).State.ShouldEqual(EntityState.Unchanged);
             }
@@ -82,7 +82,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var books = service.GetManyNoTracked<Book>();
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 books.Count().ShouldEqual(4);
                 context.Entry(books.ToList().First()).State.ShouldEqual(EntityState.Detached);
             }
@@ -104,9 +104,9 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
-                service.Create(author);
+                service.AddNew(author);
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
             using (var context = new EfCoreContext(options))
             {
@@ -135,7 +135,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 author.Email = unique;
                 service.Update(author);
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
             using (var context = new EfCoreContext(options))
             {
@@ -164,7 +164,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Update(author);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
             using (var context = new EfCoreContext(options))
             {
@@ -190,7 +190,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.Delete<Book>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(string.Join("\n", service.Errors));
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
             using (var context = new EfCoreContext(options))
             {
