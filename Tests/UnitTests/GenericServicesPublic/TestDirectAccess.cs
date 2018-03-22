@@ -44,6 +44,28 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
+        public void TestGetSingleOnEntityWhereOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                var book = service.GetSingle<Book>(x => x.BookId == 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                book.BookId.ShouldEqual(1);
+                context.Entry(book).State.ShouldEqual(EntityState.Unchanged);
+            }
+        }
+
+        [Fact]
         public void TestGetSingleOnEntityNotFound()
         {
             //SETUP

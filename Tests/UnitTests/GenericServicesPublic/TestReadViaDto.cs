@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
@@ -58,6 +59,72 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 dto.BookId.ShouldEqual(1);
                 dto.Title.ShouldEqual("Refactoring");
+            }
+        }
+
+        [Fact]
+        public void TestProjectSingleWhereOk()
+        {
+            //SETUP
+            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService<EfCoreContext>(context, mapper);
+
+                //ATTEMPT
+                var dto = service.GetSingle<BookTitleAndCount>(x => x.BookId == 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Title.ShouldEqual("Refactoring");
+            }
+        }
+
+        [Fact]
+        public void TestProjectSingleBad()
+        {
+            //SETUP
+            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService<EfCoreContext>(context, mapper);
+
+                //ATTEMPT
+                var dto = service.GetSingle<BookTitleAndCount>(999);
+
+                //VERIFY
+                service.IsValid.ShouldBeFalse(service.GetAllErrors());
+                service.GetAllErrors().ShouldEqual("GetSingle>Find: Sorry, I could not find the Book Title And Count you were looking for.");
+            }
+        }
+
+        [Fact]
+        public void TestProjectSingleWhereBad()
+        {
+            //SETUP
+            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService<EfCoreContext>(context, mapper);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => service.GetSingle<BookTitleAndCount>(x => true));
+
+                //VERIFY
+                ex.Message.ShouldEqual("Sequence contains more than one element");
             }
         }
 
