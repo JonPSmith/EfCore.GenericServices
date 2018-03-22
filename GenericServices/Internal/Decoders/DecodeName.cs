@@ -52,7 +52,9 @@ namespace GenericServices.Internal.Decoders
 
         public override string ToString()
         {
-            return NumParams < 0 ? Name : $"{Name}({NumParams})";
+            return NameType == DecodedNameTypes.NoNameGiven
+                ? null
+                : NumParams < 0 ? Name : $"{Name}({NumParams})";
         }
     }
 }

@@ -48,17 +48,19 @@ namespace GenericServices.Internal.MappingCode
                 var methodToUse = _dtoInfo.GetMethodToRun(decodedName, _entityInfo);
 
                 //This runs the method via LINQ
-                var action = BuildCall.CallMethodReturnVoid(methodToUse.Method, typeof(TDto), _entityInfo.EntityType,
-                    methodToUse.PropertiesMatch.MatchedPropertiesInOrder);
-                action(dto, entity);
-
                 return BuildCall.RunMethodViaLinq(methodToUse.Method, 
                     dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder, _config.CurrentContext);
             }
 
-            //2. Normal styled entity: using AutoMapper to update the entity
-            mapper.Accessor.MapDtoToEntity(dto, entity);
-            return new StatusGenericHandler();
+            if (_entityInfo.CanBeUpdatedViaProperties && _entityInfo.HasPublicParameterlessCtor)
+            {
+                //2. Normal styled entity: using AutoMapper to update the entity
+                mapper.Accessor.MapDtoToEntity(dto, entity);
+                return new StatusGenericHandler();
+            }
+
+            throw new InvalidOperationException(
+                $"There was no way to update the entity class {_entityInfo.EntityType.Name} using {decodedName.ToString() ?? "any approach"}.");
         }
     }
 }
