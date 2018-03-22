@@ -3,7 +3,7 @@
 
 using System;
 using System.Linq;
-using AutoMapper;
+using System.Linq.Expressions;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal;
@@ -37,7 +37,7 @@ namespace GenericServices.PublicButHidden
 
         public T GetSingle<T>(params object[] keys) where T : class
         {
-            Header = "GetSingle";
+            Header = "GetSingle>Find";
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -49,6 +49,29 @@ namespace GenericServices.PublicButHidden
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
                 var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
                 result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
+            }
+
+            if (result == null)
+            {
+                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you were looking for.");
+            }
+            return result;
+        }
+
+        public T GetSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
+        {
+            Header = "GetSingle>Where";
+            T result = null;
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            if (entityInfo.EntityType == typeof(T))
+            {
+                result = _context.Set<T>().Where(whereExpression).SingleOrDefault();
+            }
+            else
+            {
+                //else its a DTO, so we need to project the entity to the DTO and select the single element
+                var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
+                result = ((IQueryable<T>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression)).SingleOrDefault();
             }
 
             if (result == null)

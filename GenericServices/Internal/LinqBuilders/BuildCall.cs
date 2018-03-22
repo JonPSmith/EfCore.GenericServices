@@ -23,27 +23,44 @@ namespace GenericServices.Internal.LinqBuilders
         //Also the dto and entity properties cannit be object, but dynamic works
 
         public static IStatusGeneric RunMethodViaLinq(MethodInfo methodInfo, dynamic dto, dynamic entity,
-            ImmutableList<PropertyMatch> propertyMatches, DbContext context)
+            List<PropertyMatch> propertyMatches, DbContext context)
         {
             if (methodInfo.ReturnType == typeof(IStatusGeneric))
             {
                 var func = CallMethodReturnStatus(methodInfo, dto.GetType(), entity.GetType(), propertyMatches);
-                return propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext)
-                    ? (IStatusGeneric)func(dto, entity, context)
-                    : (IStatusGeneric)func(dto, entity);
+                if (propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext))
+                {
+                    if (propertyMatches.Any())
+                        return (IStatusGeneric) func(dto, entity, context);
+                    return (IStatusGeneric)func(entity, context);
+                }
+
+                if (propertyMatches.Any())
+                    return (IStatusGeneric)func(dto, entity);
+                return (IStatusGeneric)func(entity);
             }
 
             //Otherwise its an action
             var action = CallMethodReturnVoid(methodInfo, dto.GetType(), entity.GetType(), propertyMatches);
             if (propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext))
-                action(dto, entity, context);
+            {
+                if (propertyMatches.Any())
+                    action(dto, entity, context);
+                else
+                    action(entity, context);
+            }
             else
-                action(dto, entity);
+            {
+                if (propertyMatches.Any())
+                    action(dto, entity);
+                else
+                    action(entity);
+            }
             return new StatusGenericHandler();
         }
 
         public static IStatusGeneric<object> RunMethodOrCtorViaLinq(MethodCtorMatch ctorOrMethod, dynamic dto, 
-            ImmutableList<PropertyMatch> propertyMatches, DbContext context)
+            List<PropertyMatch> propertyMatches, DbContext context)
         {
             var result = new StatusGenericHandler<dynamic>();
             if (ctorOrMethod.Constructor != null)
@@ -63,13 +80,13 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(), 
                 type => PrivateCallMethodReturnVoid(methodInfo, tDto, tEntity, propertyMatches));
         }
 
-        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {         
             var pIn = Expression.Parameter(tDto, "dto");
             var pCall = Expression.Parameter(tEntity, "method");
@@ -87,20 +104,24 @@ namespace GenericServices.Internal.LinqBuilders
             }
             var call = Expression.Call(pCall, methodInfo, args);
             var built = pContext == null
-                ? Expression.Lambda(call, false, pIn, pCall)
-                : Expression.Lambda(call, false, pIn, pCall, pContext);
+                ? propertyMatches.Any()
+                    ? Expression.Lambda(call, false, pIn, pCall)
+                    : Expression.Lambda(call, false, pCall)
+                : propertyMatches.Any()
+                    ? Expression.Lambda(call, false, pIn, pCall, pContext)
+                    : Expression.Lambda(call, false, pCall, pContext);
             return built.Compile();
         }
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnStatusCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
                 type => PrivateCallMethodReturnStatus(methodInfo, tDto, tEntity, propertyMatches));
         }
 
-        private static dynamic PrivateCallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, IEnumerable<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
             var pIn = Expression.Parameter(tDto, "dto");
             var pCall = Expression.Parameter(tEntity, "call");
@@ -118,21 +139,28 @@ namespace GenericServices.Internal.LinqBuilders
             }
             var call = Expression.Call(pCall, methodInfo, args);
             var built = pContext == null
-                ? Expression.Lambda(call, false, pIn, pCall)
-                : Expression.Lambda(call, false, pIn, pCall, pContext);
+                ? propertyMatches.Any()
+                    ? Expression.Lambda(call, false, pIn, pCall)
+                    : Expression.Lambda(call, false, pCall)
+                : propertyMatches.Any()
+                    ? Expression.Lambda(call, false, pIn, pCall, pContext)
+                    : Expression.Lambda(call, false, pCall, pContext);
             return built.Compile();
         }
 
         private static readonly ConcurrentDictionary<string, dynamic> CallStaticFactoryCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallStaticFactory(MethodInfo methodInfo, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
                 type => PrivateCallStaticFactory(methodInfo, tDto, propertyMatches));
         }
 
-        private static dynamic PrivateCallStaticFactory(MethodInfo methodInfo, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
+            if (!propertyMatches.Any())
+                throw new InvalidOperationException("I have not written this to handle static methods that take no parameters. I can do that but is it likely?");
+
             var pIn = Expression.Parameter(tDto, "dto");
             ParameterExpression pContext = null;
             var args = new List<Expression>();
@@ -155,14 +183,17 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallConstructorCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallConstructor(ConstructorInfo ctor, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic CallConstructor(ConstructorInfo ctor, Type tDto, List<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnStatusCache.GetOrAdd(ctor.GenerateKey(),
                 type => PrivateCallConstructor(ctor, tDto, propertyMatches));
         }
 
-        public static dynamic PrivateCallConstructor(ConstructorInfo ctor, Type tDto, IEnumerable<PropertyMatch> propertyMatches)
+        public static dynamic PrivateCallConstructor(ConstructorInfo ctor, Type tDto, List<PropertyMatch> propertyMatches)
         {
+            if (!propertyMatches.Any())
+                throw new InvalidOperationException("I have not written this to handle constuctors that take no parameters. I can do that but is it likely?");
+
             var pIn = Expression.Parameter(tDto, "dto");
             ParameterExpression pContext = null;
             var args = new List<Expression>();

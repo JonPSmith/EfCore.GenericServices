@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
@@ -44,7 +45,7 @@ namespace GenericServices.Internal.MappingCode
             {
                 var ctorStaticToRun = _dtoInfo.GetCtorStaticFactoryToRun(decodedName, _entityInfo);
                 var runStatus = BuildCall.RunMethodOrCtorViaLinq(ctorStaticToRun,
-                    dto, ctorStaticToRun.PropertiesMatch.MatchedPropertiesInOrder, _config.CurrentContext);
+                    dto, ctorStaticToRun.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _config.CurrentContext);
                 CombineStatuses(runStatus);
                 return runStatus.Result;
             }

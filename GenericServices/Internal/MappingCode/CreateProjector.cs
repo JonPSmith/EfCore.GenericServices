@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal.Decoders;
@@ -41,6 +42,11 @@ namespace GenericServices.Internal.MappingCode
             {
                 var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
                 return _context.Set<TEntity>().Where(predicate).ProjectTo<TDto>(_mapperConfig);
+            }
+
+            public IQueryable<TDto> ProjectAndThenApplyWhereExpression(Expression<Func<TDto, bool>> whereExpression)
+            {
+                return _context.Set<TEntity>().ProjectTo<TDto>(_mapperConfig).Where(whereExpression);
             }
 
             public IQueryable<TDto> GetManyProjectedNoTracking()

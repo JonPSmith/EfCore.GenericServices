@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
@@ -50,7 +51,7 @@ namespace GenericServices.Internal.MappingCode
 
                 //This runs the method via LINQ
                 return BuildCall.RunMethodViaLinq(methodToUse.Method, 
-                    dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder, _config.CurrentContext);
+                    dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _config.CurrentContext);
             }
 
             if (_entityInfo.CanBeUpdatedViaProperties && _entityInfo.HasPublicParameterlessCtor)

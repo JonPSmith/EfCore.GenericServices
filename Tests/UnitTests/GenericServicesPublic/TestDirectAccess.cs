@@ -60,7 +60,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.Errors.First().ToString().ShouldEqual("GetSingle: Sorry, I could not find the Book you were looking for.");
+                service.Errors.First().ToString().ShouldEqual("GetSingle>Find: Sorry, I could not find the Book you were looking for.");
                 book.ShouldBeNull();
 
             }

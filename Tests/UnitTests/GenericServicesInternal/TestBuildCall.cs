@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -111,11 +111,26 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = DddEfTestData.CreateDummyBooks(1).Single();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new[] { prop });
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>{prop});
             action.Invoke(dto, target);
 
             //VERIFY
             target.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
+        }
+
+        [Fact]
+        public void TestBuildCallNoParameters()
+        {
+            //SETUP 
+            var method = typeof(Book).GetMethod(nameof(Book.RemovePromotion));
+            var target = DddEfTestData.CreateFourBooks().Last();
+
+            //ATTEMPT
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>());
+            action.Invoke(target);
+
+            //VERIFY
+            target.ActualPrice.ShouldEqual(target.OrgPrice);
         }
 
         [Fact]
@@ -134,7 +149,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var target = new Target1();
 
                 //ATTEMPT
-                var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new []{ prop1, prop2});
+                var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch> { prop1, prop2});
                 action.Invoke(dto, target, context);
                 context.SaveChanges();
 
@@ -155,7 +170,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnStatus(method, typeof(Dto), typeof(Target1), new[] {prop});
+            var action = BuildCall.CallMethodReturnStatus(method, typeof(Dto), typeof(Target1), new List<PropertyMatch> {prop});
             var status = action.Invoke(dto, target);
 
             //VERIFY
@@ -173,7 +188,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = BuildCall.CallStaticFactory(method, typeof(Dto), new []{ prop1, prop2});
+            var action = BuildCall.CallStaticFactory(method, typeof(Dto), new List<PropertyMatch> { prop1, prop2});
             var status = action.Invoke(dto);
 
             //VERIFY
@@ -192,7 +207,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = BuildCall.CallConstructor(ctor, typeof(Dto), new[] { prop1, prop2 });
+            var action = BuildCall.CallConstructor(ctor, typeof(Dto), new List<PropertyMatch> { prop1, prop2 });
             var newInstance = action.Invoke(dto);
 
             //VERIFY
