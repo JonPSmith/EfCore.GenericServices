@@ -71,9 +71,9 @@ namespace GenericServices.PublicButHidden
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
-        public void AddNew<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public void AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            Header = "AddNew";
+            Header = "AddNewAndSave";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -94,9 +94,9 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        public void Update<T>(T entityOrDto, string methodName = null) where T : class
+        public void UpdateAndsave<T>(T entityOrDto, string methodName = null) where T : class
         {
-            Header = "Update";
+            Header = "UpdateAndsave";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -113,9 +113,9 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        public void Delete<T>(params object[] keys) where T : class
+        public void DeleteAndSave<T>(params object[] keys) where T : class
         {
-            Header = "Delete";
+            Header = "DeleteAndSave";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {

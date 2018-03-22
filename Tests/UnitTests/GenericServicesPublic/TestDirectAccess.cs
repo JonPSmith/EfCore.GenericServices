@@ -104,7 +104,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
-                service.AddNew(author);
+                service.AddNewAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
@@ -133,7 +133,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //ATTEMPT
                 var author = service.GetSingle<Author>(1);
                 author.Email = unique;
-                service.Update(author);
+                service.UpdateAndsave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
@@ -161,7 +161,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new Author {AuthorId = 1, Name = "New Name", Email = unique};
-                service.Update(author);
+                service.UpdateAndsave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -187,7 +187,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                service.Delete<Book>(1);
+                service.DeleteAndSave<Book>(1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

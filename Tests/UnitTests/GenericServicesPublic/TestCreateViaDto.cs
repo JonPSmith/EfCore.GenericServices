@@ -42,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNew(author);
+                service.AddNewAndSave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -68,7 +68,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNew(author);
+                service.AddNewAndSave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNew(dto);
+                service.AddNewAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -126,7 +126,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNew(dto, "AutoMapper");
+                service.AddNewAndSave(dto, "AutoMapper");
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -164,7 +164,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 1, MyString = "Hello"};
-                service.AddNew(dto);
+                service.AddNewAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -199,7 +199,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
-                service.AddNew(dto);
+                service.AddNewAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -228,11 +228,11 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };
-                service.AddNew(dto);
+                service.AddNewAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("AddNew: The string should not be null.");
+                service.GetAllErrors().ShouldEqual("AddNewAndSave: The string should not be null.");
                 context.DddStaticFactEntities.Count().ShouldEqual(0);
             }
         }

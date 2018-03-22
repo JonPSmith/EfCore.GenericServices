@@ -46,7 +46,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorDto { AuthorId = 1, Name = "New Name", Email = "you@gmail.com" };
-                service.Update(dto);
+                service.UpdateAndsave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000,1,1) };
-                service.Update(dto);
+                service.UpdateAndsave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                service.Update(dto, nameof(Book.RemovePromotion));
+                service.UpdateAndsave(dto, nameof(Book.RemovePromotion));
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -130,7 +130,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoWithConfig { BookId = 4 };
-                service.Update(dto);
+                service.UpdateAndsave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -154,7 +154,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                var ex = Assert.Throws<InvalidOperationException>(() => service.Update(dto, nameof(Book.AddReview)));
+                var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndsave(dto, nameof(Book.AddReview)));
 
                 //VERIFY
                 ex.Message.ShouldStartWith("Could not find a method of name AddReview. The method that fit the properties in the DTO/VM are:");
@@ -176,7 +176,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                var ex = Assert.Throws<InvalidOperationException>(() => service.Update(dto, "AutoMapper"));
+                var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndsave(dto, "AutoMapper"));
 
                 //VERIFY
                 ex.Message.ShouldStartWith("There was no way to update the entity class Book using AutoMapper.");
