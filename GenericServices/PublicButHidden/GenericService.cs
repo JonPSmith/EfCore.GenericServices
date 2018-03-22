@@ -117,9 +117,9 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        public void UpdateAndsave<T>(T entityOrDto, string methodName = null) where T : class
+        public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
         {
-            Header = "UpdateAndsave";
+            Header = "UpdateAndSave";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {

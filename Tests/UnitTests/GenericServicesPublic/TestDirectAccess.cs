@@ -133,7 +133,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //ATTEMPT
                 var author = service.GetSingle<Author>(1);
                 author.Email = unique;
-                service.UpdateAndsave(author);
+                service.UpdateAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }
@@ -161,7 +161,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new Author {AuthorId = 1, Name = "New Name", Email = unique};
-                service.UpdateAndsave(author);
+                service.UpdateAndSave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

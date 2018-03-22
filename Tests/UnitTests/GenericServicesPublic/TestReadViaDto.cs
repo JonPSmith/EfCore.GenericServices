@@ -103,7 +103,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
         //        //ATTEMPT
         //        var dto = new AuthorNameDto { Name = "New Name" };
-        //        service.UpdateAndsave(dto);
+        //        service.UpdateAndSave(dto);
 
         //        //VERIFY
         //        service.IsValid.ShouldBeTrue(service.GetAllErrors());
