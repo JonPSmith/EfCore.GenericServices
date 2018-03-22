@@ -34,9 +34,9 @@ namespace GenericServices.Internal.MappingCode
                 _wrapperMapperConfigs = wrapperMapperConfigs ?? throw new ArgumentNullException(nameof(wrapperMapperConfigs));
             }
                 
-            public void MapDtoToEntity(TDto dto, TEntity entity)
+            public void MapDtoToEntity(TDto dto, object entity)
             {
-                var output = _wrapperMapperConfigs.MapperSaveConfig.CreateMapper().Map(dto, entity);
+                _wrapperMapperConfigs.MapperSaveConfig.CreateMapper().Map(dto, entity);
             }
 
             public TEntity ReturnExistingEntity(object[] keys)

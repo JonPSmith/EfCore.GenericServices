@@ -46,7 +46,7 @@ namespace GenericServices.Internal.Decoders
             if (entityInfo.CanBeUpdatedViaMethods)
                 _matchedSetterMethods = PreloadPossibleMethodCtorMatches(MatchMethodsToProperties(entityInfo), 
                     new DecodeName(_perDtoConfig?.UpdateMethod), null);
-            if (entityInfo.CanBeCreated)
+            if (entityInfo.CanBeCreatedByCtorOrStaticMethod)
                 _matchedCtorsAndStaticMethods = PreloadPossibleMethodCtorMatches(MatchCtorsAndStaticMethodsToProperties(entityInfo),
                     new DecodeName(_perDtoConfig?.UpdateMethod), null);
         }
@@ -79,6 +79,14 @@ namespace GenericServices.Internal.Decoders
                 return GetDefaultSetterMethod(entityInfo, _matchedSetterMethods, "method");
 
             return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedSetterMethods, "method");
+        }
+
+        public MethodCtorMatch GetCtorStaticFactoryToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
+        {
+            if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
+                return GetDefaultSetterMethod(entityInfo, _matchedCtorsAndStaticMethods, "ctor/static method");
+
+            return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedCtorsAndStaticMethods, "ctor/static method");
         }
 
         //---------------------------------------------------------------------------------

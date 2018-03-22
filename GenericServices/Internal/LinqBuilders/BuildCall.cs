@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
+using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Tests")]
@@ -39,6 +40,25 @@ namespace GenericServices.Internal.LinqBuilders
             else
                 action(dto, entity);
             return new StatusGenericHandler();
+        }
+
+        public static IStatusGeneric<object> RunMethodOrCtorViaLinq(MethodCtorMatch ctorOrMethod, dynamic dto, 
+            ImmutableList<PropertyMatch> propertyMatches, DbContext context)
+        {
+            var result = new StatusGenericHandler<dynamic>();
+            if (ctorOrMethod.Constructor != null)
+            {
+                var ctor = CallConstructor(ctorOrMethod.Constructor, dto.GetType(), propertyMatches);
+                return propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext)
+                    ? result.SetResult(ctor(dto, context))
+                    : result.SetResult(ctor(dto));
+            }
+
+            //Otherwise its static method 
+            var staticFunc = CallStaticFactory(ctorOrMethod.Method, dto.GetType(), propertyMatches);
+            return propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext)
+                ? staticFunc(dto, context)
+                : staticFunc(dto);
         }
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();

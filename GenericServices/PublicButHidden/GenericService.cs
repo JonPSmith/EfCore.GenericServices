@@ -71,7 +71,7 @@ namespace GenericServices.PublicButHidden
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
-        public void Create<T>(T entityOrDto) where T : class
+        public void Create<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             Header = "Create";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
@@ -82,16 +82,15 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                throw new NotImplementedException();
-                //var creator = new EntityCreateHandler<T>(_context, _wrapperMapperConfigs, entityInfo);
-                //var entity = creator.CreateEntityAndFillFromDto(entityOrDto);
-                //CombineStatuses(creator);
-                //if(IsValid)
-                //{
-                //    _context.Add(entity);
-                //    _context.SaveChanges();
-                //    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
-                //}
+                var creator = new EntityCreateHandler<T>(entityInfo, _wrapperMapperConfigs, _config);
+                var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
+                CombineStatuses(creator);
+                if (IsValid)
+                {
+                    _context.Add(entity);
+                    _context.SaveChanges();
+                    entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                }
             }
         }
 

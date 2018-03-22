@@ -24,10 +24,11 @@ namespace GenericServices.Internal.MappingCode
             _wrapperMapperConfigs = wapper ?? throw new ArgumentNullException(nameof(wapper));
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _dtoInfo = typeof(TDto).GetRegisteredDtoInfo() ??
-                       throw new NullReferenceException("DTO type doesn't exist in the list of registered DTOs");
+                       throw new NullReferenceException($"The DTO/ViewModel class {typeof(TDto).Name} is not registered as a valid GenericService DTO."+
+                                                        " Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
         }
 
-        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName = null)
+        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName)
         {
             //first we need to load it 
             var keys = _config.CurrentContext.GetKeysFromDtoInCorrectOrder(dto, _entityInfo.EntityType, _dtoInfo);

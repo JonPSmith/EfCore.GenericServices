@@ -25,10 +25,11 @@ namespace GenericServices.Internal.Decoders
         public MethodInfo[] PublicSetterMethods { get; }
         public PropertyInfo[] PropertiesWithPublicSetter { get; }
 
+        public bool CanBeCreatedViaAutoMapper => HasPublicParameterlessCtor && CanBeUpdatedViaProperties;
         public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
         public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
-        public bool CanBeCreated => PublicCtors.Any() || PublicStaticFactoryMethods.Any();
+        public bool CanBeCreatedByCtorOrStaticMethod => PublicCtors.Any(x => x.GetParameters().Length > 0) || PublicStaticFactoryMethods.Any();
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
@@ -74,7 +75,7 @@ namespace GenericServices.Internal.Decoders
                 EntityStyle = EntityStyles.Normal;
             else 
             {
-                if (CanBeCreated)
+                if (CanBeCreatedByCtorOrStaticMethod)
                 {
                     EntityStyle = CanBeUpdatedViaMethods ? EntityStyles.DDDStyled : EntityStyles.NotUpdatable;
                 }
