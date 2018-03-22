@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
@@ -37,13 +38,14 @@ namespace GenericServices.Internal.MappingCode
             //1. DDD-styled entity: A public access method that fits the DTO
             //2. Normal styled entity: using AutoMapper to update the entity
 
-            if (_entityInfo.CanBeUpdatedViaMethods)
+            var decodedName = _dtoInfo.GetSpecifiedName(methodName, CrudTypes.Update);
+
+            if (_entityInfo.CanBeUpdatedViaMethods && decodedName.NameType != DecodedNameTypes.AutoMapper)
             {
                 //1. DDD-styled entity: A public access method that fits the DTO
 
-                var methodToUse = methodName != null 
-                    ? _dtoInfo.FindSetterMethod(new DecodeName(methodName)) 
-                    : _dtoInfo.GetDefaultSetterMethod(_entityInfo);
+                //This gets one method to run. If it can't be found, or there are too many matches it throws an exception
+                var methodToUse = _dtoInfo.GetMethodToRun(decodedName, _entityInfo);
 
                 //This runs the method via LINQ
                 var action = BuildCall.CallMethodReturnVoid(methodToUse.Method, typeof(TDto), _entityInfo.EntityType,

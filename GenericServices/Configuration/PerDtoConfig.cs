@@ -15,23 +15,20 @@ namespace GenericServices.Configuration
         //Control of (CRUD) Create, Read Update and Delete methods
 
         /// <summary>
-        /// This allows you to specify the exact constructor, static method or AutoMapper that can be used to update the entity
-        /// The options are:
+        /// This allows you to specify the exact constructor, static method or AutoMapper to create/fill the entity:
         /// - use constructor: "ctor(n)", where n is the number of parameters the ctor has
         /// - static method: use MethodName, e.g. "CreateBookFactory" 
         /// - AutoMapper: "AutoMapper"
-        /// If there are multiple options then provide as comma delimited list, e.g. "ctor(4), CreateBookFactory"
         /// </summary>
-        public string CreateMethodsCtors { get; } = null;
+        public string CreateMethod { get; } = null;
 
         /// <summary>
         /// This allows you to specify the exact method or AutoMapper that can be used to update the entity
         /// The options are:
         /// - Method: use MethodName, e.g. "AddReview" 
         /// - AutoMapper: "AutoMapper"
-        /// If there are multiple options then provide as comma delimited list, e.g. "AddPromotion, RemovePromotion"
         /// </summary>
-        public string UpdateMethods { get; } = null;
+        public string UpdateMethod { get; } = null;
 
         //------------------------------------------------------
         //Misc

@@ -7,52 +7,52 @@ using System.Linq;
 
 namespace GenericServices.Internal.Decoders
 {
-    internal enum NameTypes { Method, Ctor, AutoMapper}
+    internal enum DecodedNameTypes { NoNameGiven, Method, Ctor, AutoMapper}
 
     internal class DecodeName
     {
-        public string Name { get; private set; }
-        public NameTypes NameType { get; private set; }
-        public int NumParams { get; private set; } = -1;  //This means number of parameters was not defined
+        public string Name { get; }
+        public DecodedNameTypes NameType { get; }
+        public int NumParams { get;  } = -1;  //This means number of parameters was not defined
 
         public DecodeName(string nameToDecode)
         {
-            if (nameToDecode.Contains(","))
-                throw new InvalidOperationException("In this case we only expect one name, not a comma-delimited list. "+
-                                                    $"You string was {nameToDecode}.");
+            if (string.IsNullOrEmpty(nameToDecode))
+            {
+                NameType = DecodedNameTypes.NoNameGiven;
+                return;
+            }
+            Name = nameToDecode.Trim();
 
-            var bracketIndex = nameToDecode.IndexOf('(');
+            if (Name.Contains(","))
+                throw new InvalidOperationException("You should only provide one name, not a comma-delimited list. "+
+                                                    $"You string was {Name}.");
+
+            var bracketIndex = Name.IndexOf('(');
             if (bracketIndex > 0)
             {
-                var closeIndex = nameToDecode.IndexOf(')');
+                var closeIndex = Name.IndexOf(')');
                 if (closeIndex < 0)
                     throw new InvalidOperationException("The method/ctor string is of the wrong format. It should be of the form <Name>(<num params>), "+
-                                                        $"e.g. MyMethod(4). Yours was {nameToDecode}, which isnt correct.");
-                NumParams = int.Parse(nameToDecode.Substring(bracketIndex + 1, closeIndex - bracketIndex - 1));
-                nameToDecode = nameToDecode.Substring(0, bracketIndex);
+                                                        $"e.g. MyMethod(4). Yours was {Name}, which isnt correct.");
+                NumParams = int.Parse(Name.Substring(bracketIndex + 1, closeIndex - bracketIndex - 1));
+                Name = Name.Substring(0, bracketIndex);
             }
 
-            Name = nameToDecode.Trim();
-            NameType = NameTypes.Method;
-            if (nameToDecode.Equals(NameTypes.Ctor.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                NameType = NameTypes.Ctor;
-            else if (nameToDecode.Equals(NameTypes.AutoMapper.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                NameType = NameTypes.AutoMapper;
+            NameType = DecodedNameTypes.Method;
+            if (Name.Equals(DecodedNameTypes.Ctor.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                NameType = DecodedNameTypes.Ctor;
+                //I do this because the DecodedDto methods use exact match of name. MethodCtorMatch sets the name of a ctor in this way too
+                Name = DecodedNameTypes.Ctor.ToString();      
+            }
+            else if (Name.Equals(DecodedNameTypes.AutoMapper.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                NameType = DecodedNameTypes.AutoMapper;
         }
 
         public override string ToString()
         {
             return NumParams < 0 ? Name : $"{Name}({NumParams})";
-        }
-
-        /// <summary>
-        /// This handles a comma delimited list of names
-        /// </summary>
-        /// <param name="namesToDecode"></param>
-        /// <returns></returns>
-        public static IEnumerable<DecodeName> ProcessPossibleListOfNames(string namesToDecode)
-        {
-            return namesToDecode.Split(',').Select(x => new DecodeName(x.Trim()));
         }
     }
 }
