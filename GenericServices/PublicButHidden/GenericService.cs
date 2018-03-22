@@ -105,7 +105,8 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var creator = new EntityCreateHandler<T>(entityInfo, _wrapperMapperConfigs, _config);
+                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _config);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
                 CombineStatuses(creator);
                 if (IsValid)
@@ -129,7 +130,8 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var updater = new EntityUpdateHandler<T>(entityInfo, _wrapperMapperConfigs, _config);
+                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _config);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
                     _context.SaveChanges();        
@@ -153,7 +155,7 @@ namespace GenericServices.PublicButHidden
                 return;
             }
 
-            throw new NotImplementedException();
+            throw new NotImplementedException("You cannot delete a DTO/ViewModel. You must provide a real entity class.");
         }
 
     }

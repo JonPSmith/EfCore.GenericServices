@@ -14,19 +14,17 @@ namespace GenericServices.Internal.MappingCode
     internal class EntityUpdateHandler<TDto> : StatusGenericHandler
         where TDto : class
     {
+        private readonly DecodedDto _dtoInfo;
         private readonly DecodedEntityClass _entityInfo;
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
         private readonly IExpandedGlobalConfig _config;
-        private readonly DecodedDto _dtoInfo;
 
-        public EntityUpdateHandler(DecodedEntityClass entityInfo, IWrappedAutoMapperConfig wapper, IExpandedGlobalConfig config)
+        public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedAutoMapperConfig wrapperMapperConfigs, IExpandedGlobalConfig config)
         {
+            _dtoInfo = dtoInfo ?? throw new ArgumentNullException(nameof(dtoInfo));
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
-            _wrapperMapperConfigs = wapper ?? throw new ArgumentNullException(nameof(wapper));
+            _wrapperMapperConfigs = wrapperMapperConfigs ?? throw new ArgumentNullException(nameof(wrapperMapperConfigs));
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _dtoInfo = typeof(TDto).GetRegisteredDtoInfo() ??
-                       throw new NullReferenceException($"The DTO/ViewModel class {typeof(TDto).Name} is not registered as a valid GenericService DTO."+
-                                                        " Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
         }
 
         public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName)

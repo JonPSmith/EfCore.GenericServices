@@ -38,6 +38,15 @@ namespace GenericServices.Internal.Decoders
             return DecodedDtoCache.ContainsKey(dtoType) ? DecodedDtoCache[dtoType] : null;
         }
 
+        public static DecodedDto GetDtoInfoThrowExceptionIfNotThere(this Type dtoType)
+        {
+            if (!DecodedDtoCache.TryGetValue(dtoType, out var result))
+                   throw new NullReferenceException(
+                       $"The DTO/ViewModel class {dtoType} is not registered as a valid GenericService DTO." +
+                       $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
+            return result;
+        }
+
         public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo,
             IExpandedGlobalConfig overallConfig, PerDtoConfig perDtoConfig)
         {

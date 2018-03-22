@@ -33,12 +33,12 @@ namespace GenericServices.Configuration
         //------------------------------------------------------
         //Misc
 
-        ///// <summary>
-        ///// The default SaveChanges doesn't validate any entities written to the database (it assumes the front-end has validated it)
-        ///// By default the normal SaveChanges (non-validation) method  is used, but that can be overridden globally in the GenericServicesConfig class. 
-        ///// Setting this to true/false will override everything so that you can set validation on/off just the methods in this DTO.
-        ///// </summary>
-        //public virtual bool? UseSaveChangesWithValidation { get; } = null;
+        /// <summary>
+        /// The default SaveChanges doesn't validate any entities written to the database (it assumes the front-end has validated it)
+        /// By default the normal SaveChanges (non-validation) method  is used, but that can be overridden globally in the GenericServicesConfig class. 
+        /// Setting this to true/false will override everything so that you can set validation on/off just the methods in this DTO.
+        /// </summary>
+        public virtual bool? UseSaveChangesWithValidation { get; } = null;
 
 
     }

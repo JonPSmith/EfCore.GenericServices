@@ -25,5 +25,12 @@ namespace GenericServices.Configuration
         /// </summary>
         public bool TurnOffAuthoMapperSaveFilter { get; } = false;
 
+        /// <summary>
+        /// This allows you to make all CRUD SaveChanges to call the extention method SaveChangesWithValidation
+        /// It is unlikely you will want that, as your front-end should validate data. 
+        /// You can turn on validation on a per-DTO basis using the PerDtoConfig and the IConfigFoundIn interface
+        /// </summary>
+        public bool CrudSaveUseValidation { get; } = false;
+
     }
 }
