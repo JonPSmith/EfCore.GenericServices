@@ -6,6 +6,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
+using GenericServices.Startup;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
@@ -151,7 +152,31 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
- 
+        [Fact]
+        public void TestProjectBookTitleManyWithConfigOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var wrapped = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var list = service.GetManyNoTracked<BookTitleAndCount>().ToList();
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                list.Count.ShouldEqual(4);
+                list.Select(x => x.Title).ShouldEqual(new[] { "Refactoring", "Patterns of Enterprise Application Architecture", "Domain-Driven Design", "Quantum Networking" });
+                list.Select(x => x.ReviewsCount).ShouldEqual(new []{0,0,0,2});
+            }
+        }
+
+
 
         //[Fact]
         //public void TestUpdateEntityOk()

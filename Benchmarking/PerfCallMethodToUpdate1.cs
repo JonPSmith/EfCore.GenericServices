@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
+using TestSupport.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -19,6 +20,7 @@ namespace Benchmarking
     public class PerfCallMethodToUpdate1
     {
         private WrappedAutoMapperConfig _wrapped;
+        private DbContextOptions<EfCoreContext> _options;
 
         [Fact]
         public void AddReviewToBook()
@@ -29,9 +31,11 @@ namespace Benchmarking
         [GlobalSetup]
         public void Setup()
         {
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            _options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(_options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
                 _wrapped = context.SetupSingleDtoAndEntities<AddReviewDto>(true);
             }
         }
@@ -40,13 +44,10 @@ namespace Benchmarking
         public void RunGenericService()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            using (var context = new EfCoreContext(_options))
             {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
                 var service = new GenericService<EfCoreContext>(context, _wrapped);
+                var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.AddReviewDto { BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
@@ -54,7 +55,7 @@ namespace Benchmarking
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                context.Set<Review>().Count().ShouldEqual(3);
+                context.Set<Review>().Count().ShouldEqual(numReviews+1);
             }
         }
 
@@ -62,19 +63,17 @@ namespace Benchmarking
         public void RunHandCoded()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            using (var context = new EfCoreContext(_options))
             {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
+                var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT
-                var book = context.Books.First();
-                book.AddReview(5, "comment", "user");
+                var book = context.Find<Book>(1);
+                book.AddReview(5, "comment", "user", context);
                 context.SaveChanges();
 
                 //VERIFY
-                context.Set<Review>().Count().ShouldEqual(3);
+                context.Set<Review>().Count().ShouldEqual(numReviews + 1);
             }
         }
 

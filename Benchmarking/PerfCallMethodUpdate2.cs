@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using AutoMapper;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using DataLayer.EfClasses;
@@ -8,7 +7,6 @@ using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
 using Microsoft.EntityFrameworkCore;
-using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -19,6 +17,8 @@ namespace Benchmarking
     public class PerfCallMethodUpdate2
     {
         private WrappedAutoMapperConfig _wrapped;
+        private DbContextOptions<EfCoreContext> _options;
+        private int _incdDay = 0;
 
         [Fact]
         public void ChangePublicationDate()
@@ -29,56 +29,94 @@ namespace Benchmarking
         [GlobalSetup]
         public void Setup()
         {
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            _options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(_options))
             {
+                context.Database.EnsureCreated();
+                if (!context.Books.Any())
+                    context.SeedDatabaseFourBooks();
                 _wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+            }
+
+        }
+
+        [Benchmark]
+        public void RunHandCodedPropetyUpdate()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
+                var book = context.Books.Find(4);
+                book.PublishedOn = newDate;
+                context.SaveChanges();
+
+                //VERIFY
+                var entity = context.Books.Find(4);
+                entity.PublishedOn.ShouldEqual(newDate);
             }
         }
 
         [Benchmark]
-        public void RunGenericService()
+        public void RunGenericServicePropertyUpdate()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            using (var context = new EfCoreContext(_options))
             {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
                 var service = new GenericService<EfCoreContext>(context, _wrapped);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
+                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = newDate };
+                service.UpdateAndSave(dto, "AutoMapper");
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                var entity = context.Books.Find(4);
+                entity.PublishedOn.ShouldEqual(newDate);
+            }
+        }
+
+        [Benchmark]
+        public void RunHandCodedMethodAccess()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
+                var book = context.Books.Find(4);
+                book.UpdatePublishedOn(newDate);
+                context.SaveChanges();
+
+                //VERIFY
+                var entity = context.Books.Find(4);
+                entity.PublishedOn.ShouldEqual(newDate);
+            }
+        }
+
+        [Benchmark]
+        public void RunGenericServiceMethodAccess()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                var service = new GenericService<EfCoreContext>(context, _wrapped);
+
+                //ATTEMPT
+                var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
+                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = newDate };
                 service.UpdateAndSave(dto, nameof(Book.UpdatePublishedOn));
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 var entity = context.Books.Find(4);
-                entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
+                entity.PublishedOn.ShouldEqual(newDate);
             }
         }
 
-        [Benchmark]
-        public void RunHandCoded()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
 
-                //ATTEMPT
-                var book = context.Books.Find(4);
-                book.UpdatePublishedOn(new DateTime(2000, 1, 1));
-                context.SaveChanges();
-
-                //VERIFY
-                var entity = context.Books.Find(4);
-                entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
-            }
-        }
 
 
     }

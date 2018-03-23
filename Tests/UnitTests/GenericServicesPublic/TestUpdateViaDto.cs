@@ -81,6 +81,30 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
+        public void TestUpdatePublicationDateViaAutoMapperOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+                var service = new GenericService<EfCoreContext>(context, wrapped);
+
+                //ATTEMPT
+                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                service.UpdateAndSave(dto, "AutoMapper");
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                var entity = context.Books.Find(4);
+                entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
+            }
+        }
+
+        [Fact]
         public void TestUpdateViaStatedMethodOk()
         {
             //SETUP

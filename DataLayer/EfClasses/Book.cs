@@ -50,7 +50,7 @@ namespace DataLayer.EfClasses
         public int BookId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public DateTime PublishedOn { get; private set; }
+        public DateTime PublishedOn { get; set; }
         public string Publisher { get; private set; }
         public decimal OrgPrice { get; private set; }
         public decimal ActualPrice { get; private set; }

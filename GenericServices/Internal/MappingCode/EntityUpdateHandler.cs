@@ -56,7 +56,7 @@ namespace GenericServices.Internal.MappingCode
                     dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _config.CurrentContext);
             }
 
-            if (_entityInfo.CanBeUpdatedViaProperties && _entityInfo.HasPublicParameterlessCtor)
+            if (_entityInfo.CanBeUpdatedViaProperties)
             {
                 //2. Normal styled entity: using AutoMapper to update the entity
                 mapper.Accessor.MapDtoToEntity(dto, entity);
