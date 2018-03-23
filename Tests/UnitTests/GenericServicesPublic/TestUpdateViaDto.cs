@@ -209,27 +209,27 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        [Fact]
-        public void TestUpdateViaAutoMapperBad()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
+        //[Fact]
+        //public void TestUpdateViaAutoMapperBad()
+        //{
+        //    //SETUP
+        //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+        //    using (var context = new EfCoreContext(options))
+        //    {
+        //        context.Database.EnsureCreated();
+        //        context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+        //        var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+        //        var service = new GenericService<EfCoreContext>(context, wrapped);
 
-                //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(dto, "AutoMapper"));
+        //        //ATTEMPT
+        //        var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+        //        var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(dto, "AutoMapper"));
 
-                //VERIFY
-                ex.Message.ShouldStartWith("There was no way to update the entity class Book using AutoMapper.");
-            }
-        }
+        //        //VERIFY
+        //        ex.Message.ShouldStartWith("There was no way to update the entity class Book using AutoMapper.");
+        //    }
+        //}
 
     }
 }

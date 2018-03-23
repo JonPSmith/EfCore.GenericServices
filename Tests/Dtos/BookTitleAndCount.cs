@@ -5,10 +5,12 @@ using System.Linq;
 using AutoMapper;
 using DataLayer.EfClasses;
 using GenericServices;
+using GenericServices.Configuration;
+using Tests.Configs;
 
 namespace Tests.Dtos
 {
-    public class BookTitleAndCount : ILinkToEntity<Book>
+    public class BookTitleAndCount : ILinkToEntity<Book>, IConfigFoundIn<BookTitleAndCountConfig>
     {
         public int BookId { get; set; }
         public string Title { get; set; }

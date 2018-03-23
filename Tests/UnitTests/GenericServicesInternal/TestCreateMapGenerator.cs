@@ -55,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, null, new BookTitleWithCountConfig());
+            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, null, new BookTitleAndCountConfig());
             mapCreator.Accessor.BuildReadMapping(maps);
 
             //VERIFY

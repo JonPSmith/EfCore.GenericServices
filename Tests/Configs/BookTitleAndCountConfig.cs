@@ -10,11 +10,11 @@ using Tests.Dtos;
 
 namespace Tests.Configs
 {
-    public class BookTitleWithCountConfig : PerDtoConfig<BookTitleAndCount, Book>
+    public class BookTitleAndCountConfig : PerDtoConfig<BookTitleAndCount, Book>
     {
-        //public override Action<IMappingExpression<Book, BookTitleAndCount>> AlterReadMapping
-        //{
-        //    get { return cfg => cfg.ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count())); }
-        //}
+        public override Action<IMappingExpression<Book, BookTitleAndCount>> AlterReadMapping
+        {
+            get { return cfg => cfg.ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count())); }
+        }
     }
 }

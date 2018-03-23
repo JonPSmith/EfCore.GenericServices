@@ -10,9 +10,7 @@ using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
 using Microsoft.EntityFrameworkCore;
-using Tests.Dtos;
 using Tests.Helpers;
-using TestSupport.EfHelpers;
 using TestSupport.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -25,9 +23,9 @@ namespace Benchmarking
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]
-        public void AddReviewToBook()
+        public void ProjectToBookListDto()
         {
-            var summary = BenchmarkRunner.Run<PerfCallMethodToUpdate1>();
+            var summary = BenchmarkRunner.Run<PerfListMany>();
         }
 
         [GlobalSetup]
@@ -58,11 +56,10 @@ namespace Benchmarking
             }
         }
 
-        [Fact]
+        [Benchmark]
         public void RunGenericService()
         {
             //SETUP
-            Setup();
             using (var context = new EfCoreContext(_options))
             {
                 var service = new GenericService<EfCoreContext>(context, _wrapped);
@@ -71,12 +68,13 @@ namespace Benchmarking
                 var books = service.GetManyNoTracked<LocalBookListDto>().ToList();
 
                 //VERIFY
+                service.IsValid.ShouldBeTrue();
                 books.Count.ShouldEqual(100);
             }
         }
 
 
-        public class LocalBookListDto : ILinkToEntity<Book>
+        public class LocalBookListDto : ILinkToEntity<Book>, IConfigFoundIn<LocalBookListDtoConfig>
         {
             public int BookId { get; set; }
             public string Title { get; set; }
@@ -109,19 +107,18 @@ namespace Benchmarking
             }
         }
 
-        class BookListDtoConfig : PerDtoConfig<LocalBookListDto, Book>
+        class LocalBookListDtoConfig : PerDtoConfig<LocalBookListDto, Book>
         {
             public override Action<IMappingExpression<Book, LocalBookListDto>> AlterReadMapping
             {
                 get
                 {
-                    return cfg => cfg.ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count()))
+                    return cfg => cfg
+                        .ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count()))
                         .ForMember(x => x.AuthorsOrdered, y => y.MapFrom(p => string.Join(", ",
-                            p.AuthorsLink
-                                .OrderBy(q => q.Order)
-                                .Select(q => q.Author.Name))))
-                        .ForMember(x => x.ReviewsCount,
-                            x => x.MapFrom(p => p.Reviews.Select(y => (double?) y.NumStars).Average()));
+                            p.AuthorsLink.OrderBy(q => q.Order).Select(q => q.Author.Name))))
+                    .ForMember(x => x.ReviewsAverageVotes,
+                        x => x.MapFrom(p => p.Reviews.Select(y => (double?)y.NumStars).Average()));
                 }
             }
         }

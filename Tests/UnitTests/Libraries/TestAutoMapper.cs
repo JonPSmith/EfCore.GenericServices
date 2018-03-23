@@ -52,7 +52,7 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitleAndCount()
         {
             //SETUP
-            var genSerConfig = new BookTitleWithCountConfig();
+            var genSerConfig = new BookTitleAndCountConfig();
             var mapperConfig = AutoMapperHelpers.CreateReadConfig<Book, BookTitleAndCount>(genSerConfig.AlterReadMapping);
 
             //ATTEMPT

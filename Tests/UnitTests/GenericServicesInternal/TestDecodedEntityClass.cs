@@ -76,12 +76,12 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Book.BookId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
-                decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
+                decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(1);
                 decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
                 decoded.PublicSetterMethods.Length.ShouldEqual(5);
-                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(1);
             }
         }
 
