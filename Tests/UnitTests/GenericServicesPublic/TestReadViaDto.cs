@@ -21,13 +21,14 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectBookTitleSingleOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
+
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -44,13 +45,13 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleOk()
         {
             //SETUP
-            var mapper = new WrappedAutoMapperConfig ( BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -67,13 +68,13 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleWhereOk()
         {
             //SETUP
-            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -90,13 +91,13 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleBad()
         {
             //SETUP
-            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -112,13 +113,13 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectSingleWhereBad()
         {
             //SETUP
-            var mapper = new WrappedAutoMapperConfig(BookTitleAndCount.Config, AutoMapperHelpers.CreateSaveConfig<BookTitleAndCount, Book>());
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -133,13 +134,13 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestProjectBookTitleManyOk()
         {
             //SETUP
-            var mapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>(true);
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT

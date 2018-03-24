@@ -158,7 +158,6 @@ namespace GenericServices.Internal.Decoders
             var nonReadOnlyPropertyInfo = PropertyInfos.Where(y => y.PropertyType != DtoPropertyTypes.ReadOnly)
                 .Select(x => x.PropertyInfo).ToList();
 
-            var result = new List<MethodCtorMatch>();
             var matches = MethodCtorMatch.GradeAllMethods(entityInfo.PublicSetterMethods,
                 nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties,
                 _overallConfig.InternalPropertyMatch);

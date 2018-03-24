@@ -74,7 +74,7 @@ namespace Benchmarking
         }
 
 
-        public class LocalBookListDto : ILinkToEntity<Book>, IConfigFoundIn<LocalBookListDtoConfig>
+        public class LocalBookListDto : ILinkToEntity<Book>
         {
             public int BookId { get; set; }
             public string Title { get; set; }

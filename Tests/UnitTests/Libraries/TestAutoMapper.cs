@@ -68,7 +68,8 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleAndCount()
         {
             //SETUP
-            var mapperConfig = BookTitleAndCount.Config;
+            var genSerConfig = new BookTitleAndCountConfig();
+            var mapperConfig = AutoMapperHelpers.CreateReadConfig<Book, BookTitleAndCount>(genSerConfig.AlterReadMapping);
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();

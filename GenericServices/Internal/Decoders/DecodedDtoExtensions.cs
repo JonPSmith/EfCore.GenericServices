@@ -16,21 +16,17 @@ namespace GenericServices.Internal.Decoders
         public static readonly string HumanReadableILinkToEntity =
             InterfaceNameILinkToEntity.Substring(0, InterfaceNameILinkToEntity.Length - 2);
 
-        private class ClassWithIConfigInterface : IConfigFoundIn<ClassWithIConfigInterface> { }
-        public static readonly string InterfaceNameIConfigFoundIn = typeof(ClassWithIConfigInterface).GetInterfaces().Single().Name;
-        public static readonly string HumanReadableIConfigFoundIn =
-            InterfaceNameIConfigFoundIn.Substring(0, InterfaceNameILinkToEntity.Length - 2);
-
         public static Type GetLinkedEntityFromDto(this Type entityOrDto)
         {
             var linkInterface = entityOrDto.GetInterface(InterfaceNameILinkToEntity);
             return linkInterface?.GetGenericArguments().Single();
         }
 
-        public static Type GetConfigTypeFromDto(this Type entityOrDto)
+        public static Type FormPerDtoConfigType(this Type dtoType, Type entityType)
         {
-            var linkInterface = entityOrDto.GetInterface(InterfaceNameIConfigFoundIn);
-            return linkInterface?.GetGenericArguments().Single();
+            var perDtoConfigBase = typeof(PerDtoConfig<,>);
+            Type[] typeArgs = { dtoType, entityType };
+            return perDtoConfigBase.MakeGenericType(typeArgs);
         }
     }
 }

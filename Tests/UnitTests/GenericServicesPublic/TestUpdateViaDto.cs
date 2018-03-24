@@ -3,7 +3,6 @@
 
 using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
@@ -11,8 +10,6 @@ using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
-using Microsoft.AspNetCore.Mvc;
-using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -157,7 +154,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
         }
 
-        public class DtoWithConfig : ILinkToEntity<Book>, IConfigFoundIn<ConfigSettingMethod>
+        public class DtoWithConfig : ILinkToEntity<Book>
         {
             public int BookId { get; set; }
             public string Title { get; set; }

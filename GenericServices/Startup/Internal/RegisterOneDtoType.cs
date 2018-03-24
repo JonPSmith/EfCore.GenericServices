@@ -2,6 +2,8 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Linq;
+using System.Reflection;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
@@ -28,7 +30,8 @@ namespace GenericServices.Startup.Internal
                     $"The entity {entityType} found in the  {DecodedDtoExtensions.HumanReadableILinkToEntity} interface of the DTO/VM {dtoType.Name} " +
                     "cannot be found. The class must be one that EF Core maps to the database.");
 
-            var configInfo = CreateConfigInfoIfPresent(dtoType);
+            var assemblyThatDtoIsIn = dtoType.Assembly;
+            var configInfo = FindConfigInfoIfPresent(dtoType, entityType, assemblyThatDtoIsIn);
             MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, configInfo);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
@@ -38,12 +41,16 @@ namespace GenericServices.Startup.Internal
             CombineStatuses(DtoInfo);
         }
 
-        private object CreateConfigInfoIfPresent(Type dtoType)
+        private static object FindConfigInfoIfPresent(Type dtoType, Type entityType, Assembly assemblyToScan)
         {
-            var configType = dtoType.GetConfigTypeFromDto();
-            return configType == null
-                ? null
-                : Activator.CreateInstance(configType);
+            var perDtoConfigType = dtoType.FormPerDtoConfigType(entityType);
+            var types = assemblyToScan.GetTypes().Where(x => x.IsSubclassOf(perDtoConfigType)).ToList();
+            if (!types.Any())
+                return null;        //no config found
+            if (types.Count > 1)
+                throw new InvalidOperationException($"I found multiple classes based on PerDtoConfig<{dtoType.Name},{entityType.Name}>, but you are only allowed one."+
+                                                    $" They are: {string.Join(", ", types.Select(x => x.Name))}. ");
+            return Activator.CreateInstance(types.First());
         }
     }
 }
