@@ -11,18 +11,6 @@ namespace Tests.Helpers
     public static class AutoMapperHelpers
     {
 
-        public static MapperConfiguration CreateSaveConfig<TDto, TEntity>()
-        {
-
-            var saveProfile = new MappingProfile(true);
-            saveProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-            var saveConfig = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(saveProfile);
-            });
-            return saveConfig;
-        }
-
         public static MapperConfiguration CreateReadConfig<TEntity, TDto>(Action<IMappingExpression<TEntity, TDto>> alterMapping)
         {
             var readProfile = new MappingProfile(false);

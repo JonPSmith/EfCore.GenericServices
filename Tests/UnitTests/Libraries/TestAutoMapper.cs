@@ -24,11 +24,11 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitle>();
+            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().First();
-            var data = mapperConfig.CreateMapper().Map<BookTitle>(input);
+            var data = wrappedMapper.MapperSaveConfig.CreateMapper().Map<BookTitle>(input);
 
             //VERIFY
             data.Title.ShouldEqual("Refactoring");
@@ -38,11 +38,11 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitle>();
+            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();
-            var list = input.ProjectTo<BookTitle>(mapperConfig).ToList();
+            var list = input.ProjectTo<BookTitle>(wrappedMapper.MapperReadConfig).ToList();
 
             //VERIFY
             list.First().Title.ShouldEqual("Refactoring");
@@ -84,10 +84,10 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitleBadType()
         {
             //SETUP
-            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<Book, BookTitleBadType>();
+            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitleBadType>();
 
             //ATTEMPT
-            mapperConfig.AssertConfigurationIsValid();
+            wrappedMapper.MapperSaveConfig.AssertConfigurationIsValid();
 
             //VERIFY
             //Doesn't error on name fit but different 
@@ -97,13 +97,12 @@ namespace Tests.UnitTests.Libraries
         public void TestDirectMappingToBookNotSetPrivateSetter()
         {
             //SETUP
-
-            var mapperConfig = AutoMapperHelpers.CreateSaveConfig<BookTitle, Book>();
+            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<BookTitle, Book>();
             var entity = DddEfTestData.CreateFourBooks().First();
 
             //ATTEMPT
             var dto = new BookTitle {Title = "New Title"};
-            var data = mapperConfig.CreateMapper().Map(dto, entity);
+            var data = wrappedMapper.MapperSaveConfig.CreateMapper().Map(dto, entity);
 
             //VERIFY
             data.Title.ShouldEqual("Refactoring");
