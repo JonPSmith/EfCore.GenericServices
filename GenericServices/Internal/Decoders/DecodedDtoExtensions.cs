@@ -2,9 +2,10 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using GenericServices.Configuration;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
@@ -18,8 +19,15 @@ namespace GenericServices.Internal.Decoders
 
         public static Type GetLinkedEntityFromDto(this Type entityOrDto)
         {
-            var linkInterface = entityOrDto.GetInterface(InterfaceNameILinkToEntity);
-            return linkInterface?.GetGenericArguments().Single();
+            try
+            {
+                var linkInterface = entityOrDto.GetInterface(InterfaceNameILinkToEntity);
+                return linkInterface?.GetGenericArguments().Single();
+            }
+            catch (AmbiguousMatchException e)
+            {
+                throw new InvalidOperationException($"You had multiple {HumanReadableILinkToEntity} interfaces on the DTO/VM {entityOrDto.Name}. That isn't allowed.");
+            }
         }
 
         public static Type FormPerDtoConfigType(this Type dtoType, Type entityType)

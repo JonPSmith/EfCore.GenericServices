@@ -36,8 +36,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
 
-                var wrapped = AutoMapperHelpers.CreateWrapperMapper<AuthorDto, Author>();
-                context.SetupSingleDtoAndEntities<AuthorDto>(false);
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>(true);
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT

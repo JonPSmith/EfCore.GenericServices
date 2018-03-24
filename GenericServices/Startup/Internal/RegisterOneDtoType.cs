@@ -24,11 +24,11 @@ namespace GenericServices.Startup.Internal
         {
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
+            if (entityType == null)
+                throw new InvalidOperationException(
+                    $"The DTO/ViewModel class {dtoType.Name} is not registered as a valid GenericService DTO." +
+                    $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
             EntityInfo = entityType.GetRegisteredEntityInfo();
-            if (EntityInfo == null)
-                AddError(
-                    $"The entity {entityType} found in the  {DecodedDtoExtensions.HumanReadableILinkToEntity} interface of the DTO/VM {dtoType.Name} " +
-                    "cannot be found. The class must be one that EF Core maps to the database.");
 
             var assemblyThatDtoIsIn = dtoType.Assembly;
             var configInfo = FindConfigInfoIfPresent(dtoType, entityType, assemblyThatDtoIsIn);
@@ -49,7 +49,7 @@ namespace GenericServices.Startup.Internal
                 return null;        //no config found
             if (types.Count > 1)
                 throw new InvalidOperationException($"I found multiple classes based on PerDtoConfig<{dtoType.Name},{entityType.Name}>, but you are only allowed one."+
-                                                    $" They are: {string.Join(", ", types.Select(x => x.Name))}. ");
+                                                    $" They are: {string.Join(", ", types.Select(x => x.Name))}.");
             return Activator.CreateInstance(types.First());
         }
     }
