@@ -40,7 +40,7 @@ namespace GenericServices.Internal.MappingCode
 
             //we look for methods to update a new entity in the following order
             //1. DDD-styled entity: A public access method that fits the DTO
-            //2. Normal styled entity: using AutoMapper to update the entity
+            //2. Standard styled entity: using AutoMapper to update the entity
 
             var decodedName = _dtoInfo.GetSpecifiedName(methodName, CrudTypes.Update);
 
@@ -58,7 +58,7 @@ namespace GenericServices.Internal.MappingCode
 
             if (_entityInfo.CanBeUpdatedViaProperties)
             {
-                //2. Normal styled entity: using AutoMapper to update the entity
+                //2. Standard styled entity: using AutoMapper to update the entity
                 mapper.Accessor.MapDtoToEntity(dto, entity);
                 return new StatusGenericHandler();
             }

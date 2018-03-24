@@ -5,16 +5,6 @@ using System;
 
 namespace GenericServices.Configuration
 {
-    [Flags]
-    public enum CrudTypes
-    {
-        None = 0,
-        Create = 1,
-        Read = 2,
-        Update = 4,
-        Delete = 8,
-    }
-
     public interface IGenericServicesConfig
     {
         /// <summary>

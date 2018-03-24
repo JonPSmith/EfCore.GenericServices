@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace GenericServices.Internal.Decoders
 {
     // ReSharper disable once InconsistentNaming
-    internal enum EntityStyles { Normal, DDDStyled, NotUpdatable, ReadOnly}
+    internal enum EntityStyles
+    {
+        [Display(Description = "An entity with a parameterless constructor and some, or all, parameters with a public setter.")]
+        Standard,
+        [Display(Description = "An entity where all the parameters have private setters and there are public methods, constructors and/or static methods.")]
+        DDDStyled,
+        [Display(Description = "Is is a DDD-styled entity, but with some standard features, such as some properties with public setters.")]
+        Hybrid,
+        [Display(Description = "The entity cannot be update, but is can be created, read or deleted")]
+        NotUpdatable,
+        [Display(Description = "The entity cannot be created or updated, but it can be read or deleted.")]
+        ReadOnly
+    }
 
     internal class DecodedEntityClass
     {
@@ -71,8 +84,12 @@ namespace GenericServices.Internal.Decoders
             }
             PropertiesWithPublicSetter = allPublicProperties.Where(x => x.SetMethod?.IsPublic ?? false).ToArray();
 
-            if (HasPublicParameterlessCtor && CanBeUpdatedViaProperties)
-                EntityStyle = EntityStyles.Normal;
+            var possStandard = CanBeCreatedViaAutoMapper || CanBeUpdatedViaProperties;
+            var possDddStyled = CanBeCreatedByCtorOrStaticMethod || CanBeUpdatedViaMethods;
+            if (possStandard && !possDddStyled)
+                EntityStyle = EntityStyles.Standard;
+            else if (possStandard)
+                EntityStyle = EntityStyles.Hybrid;
             else 
             {
                 if (CanBeCreatedByCtorOrStaticMethod)
@@ -89,7 +106,7 @@ namespace GenericServices.Internal.Decoders
 
         public override string ToString()
         {
-            return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitPascalCase()} " + (EntityStyle == EntityStyles.Normal
+            return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitPascalCase()} " + (EntityStyle == EntityStyles.Standard
                        ? $"with {PropertiesWithPublicSetter.Length} settable properties"
                        : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
         }

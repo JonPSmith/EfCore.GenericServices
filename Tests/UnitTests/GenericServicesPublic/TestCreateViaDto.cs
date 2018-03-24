@@ -232,7 +232,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("AddNewAndSave: The string should not be null.");
+                service.GetAllErrors().ShouldEqual("AddNew: The string should not be null.");
                 context.DddStaticFactEntities.Count().ShouldEqual(0);
             }
         }

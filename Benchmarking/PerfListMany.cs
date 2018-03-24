@@ -65,7 +65,7 @@ namespace Benchmarking
                 var service = new GenericService<EfCoreContext>(context, _wrapped);
 
                 //ATTEMPT
-                var books = service.GetManyNoTracked<LocalBookListDto>().ToList();
+                var books = service.ReadManyNoTracked<LocalBookListDto>().ToList();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue();

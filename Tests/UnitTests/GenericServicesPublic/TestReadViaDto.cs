@@ -31,7 +31,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var dto = service.GetSingle<BookTitle>(1);
+                var dto = service.ReadSingle<BookTitle>(1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -54,7 +54,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var dto = service.GetSingle<BookTitleAndCount>(1);
+                var dto = service.ReadSingle<BookTitleAndCount>(1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -77,7 +77,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var dto = service.GetSingle<BookTitleAndCount>(x => x.BookId == 1);
+                var dto = service.ReadSingle<BookTitleAndCount>(x => x.BookId == 1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -100,11 +100,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var dto = service.GetSingle<BookTitleAndCount>(999);
+                var dto = service.ReadSingle<BookTitleAndCount>(999);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse(service.GetAllErrors());
-                service.GetAllErrors().ShouldEqual("GetSingle>Find: Sorry, I could not find the Book Title And Count you were looking for.");
+                service.GetAllErrors().ShouldEqual("ReadSingle>Find: Sorry, I could not find the Book Title And Count you were looking for.");
             }
         }
 
@@ -122,7 +122,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var ex = Assert.Throws<InvalidOperationException>(() => service.GetSingle<BookTitleAndCount>(x => true));
+                var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<BookTitleAndCount>(x => true));
 
                 //VERIFY
                 ex.Message.ShouldEqual("Sequence contains more than one element");
@@ -143,7 +143,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
-                var list = service.GetManyNoTracked<BookTitle>().ToList();
+                var list = service.ReadManyNoTracked<BookTitle>().ToList();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -166,7 +166,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT
-                var list = service.GetManyNoTracked<BookTitleAndCount>().ToList();
+                var list = service.ReadManyNoTracked<BookTitleAndCount>().ToList();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

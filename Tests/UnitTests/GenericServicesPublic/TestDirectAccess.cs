@@ -34,7 +34,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var book = service.GetSingle<Book>(1);
+                var book = service.ReadSingle<Book>(1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -56,7 +56,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var book = service.GetSingle<Book>(x => x.BookId == 1);
+                var book = service.ReadSingle<Book>(x => x.BookId == 1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -78,11 +78,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var book = service.GetSingle<Book>(99);
+                var book = service.ReadSingle<Book>(99);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.Errors.First().ToString().ShouldEqual("GetSingle>Find: Sorry, I could not find the Book you were looking for.");
+                service.Errors.First().ToString().ShouldEqual("ReadSingle>Find: Sorry, I could not find the Book you were looking for.");
                 book.ShouldBeNull();
 
             }
@@ -101,7 +101,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var books = service.GetManyNoTracked<Book>();
+                var books = service.ReadManyNoTracked<Book>();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -153,7 +153,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var author = service.GetSingle<Author>(1);
+                var author = service.ReadSingle<Author>(1);
                 author.Email = unique;
                 service.UpdateAndSave(author);
                 //VERIFY

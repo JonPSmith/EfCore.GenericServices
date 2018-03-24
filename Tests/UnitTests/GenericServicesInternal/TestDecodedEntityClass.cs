@@ -26,7 +26,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Author), context);
 
                 //VERIFY
-                decoded.EntityStyle.ShouldEqual(EntityStyles.Normal);
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Standard);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Author.AuthorId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
@@ -73,7 +73,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(Book), context);
 
                 //VERIFY
-                decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Hybrid);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(Book.BookId));
                 decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
@@ -122,7 +122,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var decoded = new DecodedEntityClass(typeof(NormalEntity), context);
 
                 //VERIFY
-                decoded.EntityStyle.ShouldEqual(EntityStyles.Normal);
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Standard);
                 decoded.CanBeCreatedViaAutoMapper.ShouldBeTrue();
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
                 decoded.HasPublicParameterlessCtor.ShouldBeTrue();

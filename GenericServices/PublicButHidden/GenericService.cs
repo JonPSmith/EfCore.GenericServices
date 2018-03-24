@@ -35,9 +35,9 @@ namespace GenericServices.PublicButHidden
             _config = new ExpandedGlobalConfig(config ?? new GenericServicesConfig(), context);
         }
 
-        public T GetSingle<T>(params object[] keys) where T : class
+        public T ReadSingle<T>(params object[] keys) where T : class
         {
-            Header = "GetSingle>Find";
+            Header = "ReadSingle>Find";
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -58,9 +58,9 @@ namespace GenericServices.PublicButHidden
             return result;
         }
 
-        public T GetSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
+        public T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
-            Header = "GetSingle>Where";
+            Header = "ReadSingle>Where";
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -81,8 +81,9 @@ namespace GenericServices.PublicButHidden
             return result;
         }
 
-        public IQueryable<T> GetManyNoTracked<T>() where T : class
+        public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
+            Header = "ReadMany";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -96,7 +97,7 @@ namespace GenericServices.PublicButHidden
 
         public T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            Header = "AddNewAndSave";
+            Header = "AddNew";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -122,7 +123,7 @@ namespace GenericServices.PublicButHidden
 
         public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
         {
-            Header = "UpdateAndSave";
+            Header = "Update";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -142,7 +143,7 @@ namespace GenericServices.PublicButHidden
 
         public void DeleteAndSave<T>(params object[] keys) where T : class
         {
-            Header = "DeleteAndSave";
+            Header = "Delete";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
