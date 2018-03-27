@@ -96,7 +96,7 @@
                 </div>
             </td>
             <td class="vert-align">
-                @if (item.ActualPrice >= 0)
+                @*@if (item.ActualPrice >= 0)
                 {
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -109,7 +109,7 @@
                             <li>@Html.ActionLink("Buy 3 books", "Buy", "Checkout", new { bookId = item.BookId, numBooks = 3 })</li>
                         </ul>
                     </div>
-                }
+                }*@
             </td>
         </tr>
     }
