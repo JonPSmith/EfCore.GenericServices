@@ -2,8 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Startup.Internal;
 using GenericServices.PublicButHidden;
@@ -21,6 +19,7 @@ namespace GenericServices.Startup
         {
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
+            context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), new ExpandedGlobalConfig( publicConfig, context));
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
