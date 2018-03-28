@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
+
 namespace GenericServices
 {
     /// <summary>
@@ -9,5 +11,6 @@ namespace GenericServices
     /// NOTE: a nested map can also have a IConfigFoundIn interface if it needs to alter AutoMapper Read mapping
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
+    [Obsolete("The handling of nested maps has not been implemented yet!")]
     public interface INestedMap<TEntity> where TEntity : class {}
 }

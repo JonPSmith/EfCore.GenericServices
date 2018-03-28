@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Startup.Internal;
@@ -9,6 +10,7 @@ using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using GenericServices.Configuration.Internal;
+using GenericServices.Internal.Decoders;
 
 namespace GenericServices.Startup
 {
@@ -19,12 +21,11 @@ namespace GenericServices.Startup
         {
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
-            context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), new ExpandedGlobalConfig( publicConfig, context));
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
-                throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count}. Errors are:\n" 
-                                                    + string.Join("\n", status.Errors.Select(x => x.ToString())));
+                throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n" 
+                                                    + status.GetAllErrors());
 
             var readProfile = new MappingProfile(false);
             dtoRegister.MapGenerator.Accessor.BuildReadMapping(readProfile);
@@ -33,7 +34,12 @@ namespace GenericServices.Startup
                 cfg.AddProfile(readProfile);
             });
             var saveProfile = new MappingProfile(true);
-            dtoRegister.MapGenerator.Accessor.BuildSaveMapping(saveProfile);
+            //Only add a mapping if AutoMapper can be used to update/create the entity
+            if (dtoRegister.EntityInfo.EntityStyle != EntityStyles.DDDStyled && 
+                dtoRegister.EntityInfo.EntityStyle != EntityStyles.ReadOnly)
+            {
+                dtoRegister.MapGenerator.Accessor.BuildSaveMapping(saveProfile);
+            }
             var saveConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(saveProfile);

@@ -30,8 +30,8 @@ namespace GenericServices.Startup.Internal
                     $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
             EntityInfo = entityType.GetRegisteredEntityInfo();
 
-            var assemblyThatDtoIsIn = dtoType.Assembly;
-            var configInfo = FindConfigInfoIfPresent(dtoType, entityType, assemblyThatDtoIsIn);
+            var classesInThisAssembly = dtoType.Assembly.GetTypes();
+            var configInfo = FindConfigInfoIfPresent(dtoType, entityType, classesInThisAssembly);
             MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, configInfo);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
@@ -41,10 +41,10 @@ namespace GenericServices.Startup.Internal
             CombineStatuses(DtoInfo);
         }
 
-        private static object FindConfigInfoIfPresent(Type dtoType, Type entityType, Assembly assemblyToScan)
+        private static object FindConfigInfoIfPresent(Type dtoType, Type entityType, Type[] typesToScan)
         {
             var perDtoConfigType = dtoType.FormPerDtoConfigType(entityType);
-            var types = assemblyToScan.GetTypes().Where(x => x.IsSubclassOf(perDtoConfigType)).ToList();
+            var types = typesToScan.Where(x => x.IsSubclassOf(perDtoConfigType)).ToList();
             if (!types.Any())
                 return null;        //no config found
             if (types.Count > 1)

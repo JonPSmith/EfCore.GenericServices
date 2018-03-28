@@ -2,10 +2,12 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration;
+using GenericServices.Startup.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
@@ -16,6 +18,9 @@ namespace GenericServices.Internal.Decoders
         public static readonly string InterfaceNameILinkToEntity = typeof(ClassWithILinkInterface).GetInterfaces().Single().Name;
         public static readonly string HumanReadableILinkToEntity =
             InterfaceNameILinkToEntity.Substring(0, InterfaceNameILinkToEntity.Length - 2);
+
+        private class ClassWithNestedMapInterface : INestedMap<ClassWithNestedMapInterface> { }
+        public static readonly string InterfaceNameINestedMap = typeof(ClassWithNestedMapInterface).GetInterfaces().Single().Name;
 
         public static Type GetLinkedEntityFromDto(this Type entityOrDto)
         {
