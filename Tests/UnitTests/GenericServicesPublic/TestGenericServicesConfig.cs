@@ -38,5 +38,32 @@ namespace Tests.UnitTests.GenericServicesPublic
             Math.Abs( result.Score - score).ShouldBeInRange(0, 0.001);
             _output.WriteLine(result.ToString());
         }
+
+        private PropertyMatch ForceLeadingUnderscore(string name, Type type, PropertyInfo propertyInfo)
+        {
+            return new PropertyMatch(name.Length > 1 && name[0] == '_' &&
+                              name.Substring(1).Equals(propertyInfo.Name, StringComparison.InvariantCultureIgnoreCase),
+                PropertyMatch.TypeMatchLevels.Match, propertyInfo);
+        }
+
+        [Theory]
+        [InlineData("_MyInt", 1.0)]
+        [InlineData("_myInt", 1.0)]
+        [InlineData("myInt", 0.3)]
+        public void TestDifferntNamesOnNewNameMatcher(string name, double score)
+        {
+            //SETUP
+            var globalConfig = new GenericServicesConfig
+            {
+                NameMatcher = ForceLeadingUnderscore
+            };
+
+            //ATTEMPT
+            var result = globalConfig.NameMatcher(name, typeof(int), MyIntProp);
+
+            //VERIFY
+            Math.Abs(result.Score - score).ShouldBeInRange(0, 0.001);
+            _output.WriteLine(result.ToString());
+        }
     }
 }
