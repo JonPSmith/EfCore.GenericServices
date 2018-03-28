@@ -36,7 +36,7 @@ namespace Benchmarking
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-                _wrapped = context.SetupSingleDtoAndEntities<AddReviewDto>(true);
+                _wrapped = context.SetupSingleDtoAndEntities<AddReviewDto>();
             }
         }
 

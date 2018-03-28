@@ -38,7 +38,7 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseDummyBooks(100);
-                _wrapped = context.SetupSingleDtoAndEntities<LocalBookListDto>(true);
+                _wrapped = context.SetupSingleDtoAndEntities<LocalBookListDto>();
             }
         }
 

@@ -14,7 +14,8 @@ namespace GenericServices.Startup
 {
     public static class UnitTestSetup
     {
-        public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context, bool withMapping, IGenericServicesConfig publicConfig = null)
+        public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
+            IGenericServicesConfig publicConfig = null)
         {
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
@@ -24,9 +25,6 @@ namespace GenericServices.Startup
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count}. Errors are:\n" 
                                                     + string.Join("\n", status.Errors.Select(x => x.ToString())));
-
-            if (!withMapping)
-                return null;
 
             var readProfile = new MappingProfile(false);
             dtoRegister.MapGenerator.Accessor.BuildReadMapping(readProfile);

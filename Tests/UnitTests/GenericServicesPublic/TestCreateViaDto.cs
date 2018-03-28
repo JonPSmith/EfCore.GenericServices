@@ -36,7 +36,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
 
-                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>(true);
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT
@@ -62,7 +62,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>(true);
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT
@@ -91,7 +91,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
-                context.SetupSingleDtoAndEntities<AuthorNameDto>(false);
+                context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -120,7 +120,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<AuthorNameDto>(true);
+                var mapper = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -158,7 +158,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoCtorCreate>(true);
+                var mapper = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
                 var service = new GenericService<TestDbContext>(context, mapper);
 
                 //ATTEMPT
@@ -193,7 +193,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>(true);
+                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
                 var service = new GenericService<TestDbContext>(context, mapper);
 
                 //ATTEMPT
@@ -222,7 +222,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>(true);
+                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
                 var service = new GenericService<TestDbContext>(context, mapper);
 
                 //ATTEMPT

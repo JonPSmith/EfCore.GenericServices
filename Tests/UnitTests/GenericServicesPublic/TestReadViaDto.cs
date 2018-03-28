@@ -28,7 +28,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -51,7 +51,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -74,7 +74,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -119,7 +119,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -140,7 +140,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>(true);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
                 var service = new GenericService<EfCoreContext>(context, mapper);
 
                 //ATTEMPT
@@ -163,7 +163,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<BookTitleAndCount>(true);
+                var wrapped = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new GenericService<EfCoreContext>(context, wrapped);
 
                 //ATTEMPT

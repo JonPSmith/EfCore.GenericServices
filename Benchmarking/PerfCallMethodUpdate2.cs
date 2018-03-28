@@ -35,7 +35,7 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseFourBooks();
-                _wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
+                _wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
             }
 
         }
