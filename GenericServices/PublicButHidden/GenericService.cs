@@ -141,24 +141,45 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        public void DeleteAndSave<T>(params object[] keys) where T : class
+        public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
         {
             Header = "Delete";
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
-            if (entityInfo.EntityType == typeof(T))
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
+            if (entityInfo.EntityType != typeof(TEntity))
+                throw new NotImplementedException(
+                    "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
+
+            var entity = _context.Set<TEntity>().Find(keys);
+            if (entity == null)
             {
-                var entity = _context.Set<T>().Find(keys);
-                if (entity == null)
-                {
-                    AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you wanted to delete.");
-                    return;
-                }
-                _context.Remove(entity);
-                _context.SaveChanges();
+                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
+                return;
+            }
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void DeleteWithActionAndSave<TEntity>(Func<TContext, TEntity, IStatusGeneric> runBeforeDelete,
+            params object[] keys) where TEntity : class
+        {
+            Header = "Delete";
+            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
+            if (entityInfo.EntityType != typeof(TEntity))
+                throw new NotImplementedException(
+                    "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
+
+            var entity = _context.Set<TEntity>().Find(keys);
+            if (entity == null)
+            {
+                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
                 return;
             }
 
-            throw new NotImplementedException("You cannot delete a DTO/ViewModel. You must provide a real entity class.");
+            CombineStatuses(runBeforeDelete(_context, entity));
+            if (!IsValid) return;
+
+            _context.Remove(entity);
+            _context.SaveChanges();
         }
 
     }

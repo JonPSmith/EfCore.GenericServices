@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericServices;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
@@ -217,6 +218,43 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Books.Count().ShouldEqual(3);
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestDeleteWithActionEntityOk(bool stopDelete)
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                var service = new GenericService<EfCoreContext>(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                service.DeleteWithActionAndSave<Book>( (c,e) =>
+                {
+                    var status = new StatusGenericHandler();
+                    if (stopDelete)
+                        status.AddError("Stop delete");
+                    return status;
+                }, 1);
+
+                //VERIFY
+                if (stopDelete)
+                    service.IsValid.ShouldBeFalse();
+                else
+                    service.IsValid.ShouldBeTrue(service.GetAllErrors());
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                context.Books.Count().ShouldEqual(stopDelete ? 4 : 3);
             }
         }
     }

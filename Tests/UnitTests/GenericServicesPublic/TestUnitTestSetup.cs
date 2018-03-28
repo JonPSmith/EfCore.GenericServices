@@ -2,17 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
-using GenericServices.PublicButHidden;
 using GenericServices.Startup;
-using Tests.Dtos;
-using Tests.EfClasses;
-using Tests.EfCode;
-using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
