@@ -5,20 +5,6 @@ using System;
 
 namespace GenericServices.Configuration
 {
-    [Flags]
-    public enum CrudTypes
-    {
-        None = 0,
-        Create = 1,
-        ReadOne = 2,
-        ReadMany = 4,
-        Update = 8,
-        Delete = 16,
-
-        AllCrud = Create | ReadOne | ReadMany | Update | Delete,
-        AllCrudButList = Create | ReadOne | Update | Delete
-    }
-
     /// <summary>
     /// This provides a per-DTO/ViewModel configuation source. This part is the part that doesn't need Generics
     /// </summary>
@@ -26,13 +12,6 @@ namespace GenericServices.Configuration
     {
         //--------------------------------------------------
         //Control of (CRUD) Create, Read Update and Delete methods
-
-
-        /// <summary>
-        /// This defines what CRUD operations the DTO/ViewModel can do. By default it can be used in any GenericService command,
-        /// but sometimes its useful to state that it can't do something - for instance many create/update methods aren't really useful in a ReadMany
-        /// </summary>
-        public virtual CrudTypes WhatCanThisDtoDo { get; } = CrudTypes.AllCrud;
 
         /// <summary>
         /// This allows you to specify the exact constructor, static method or AutoMapper to create/fill the entity:

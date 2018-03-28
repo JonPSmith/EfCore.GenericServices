@@ -43,7 +43,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var decoded = new DecodedDto(typeof(Dto1), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
 
             //VERIFY
-            decoded.LinkedToType.ShouldEqual(typeof(Book));
+            decoded.LinkedEntityInfo.EntityType.ShouldEqual(typeof(Book));
             decoded.PropertyInfos.Single(x => x.PropertyType.HasFlag(DtoPropertyTypes.KeyProperty)).PropertyInfo.Name.ShouldEqual(nameof(Dto1.BookId));
             decoded.PropertyInfos.Single(x => x.PropertyType == DtoPropertyTypes.Normal).PropertyInfo.Name.ShouldEqual(nameof(Dto1.ImageUrl));
             var names = decoded.PropertyInfos.Where(x => x.PropertyType.HasFlag(DtoPropertyTypes.ReadOnly)).Select(x => x.PropertyInfo.Name).ToArray();

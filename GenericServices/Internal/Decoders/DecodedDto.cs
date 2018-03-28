@@ -18,10 +18,10 @@ namespace GenericServices.Internal.Decoders
         private readonly List<MethodCtorMatch> _matchedCtorsAndStaticMethods;
 
         private readonly IExpandedGlobalConfig _overallConfig;
-        private readonly PerDtoConfig _perDtoConfig;
+        private readonly PerDtoConfig _perDtoConfig; //can be null
 
         public Type DtoType { get; }
-        public Type LinkedToType { get; }
+        public DecodedEntityClass LinkedEntityInfo { get; }
         public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
         /// <summary>
         /// This is true if the the validating SaveChanges extention method should be called 
@@ -40,7 +40,7 @@ namespace GenericServices.Internal.Decoders
             DtoType = dtoType ?? throw new ArgumentNullException(nameof(dtoType));
             _overallConfig = overallConfig ?? throw new ArgumentNullException(nameof(overallConfig));
             _perDtoConfig = perDtoConfig; //can be null
-            LinkedToType = entityInfo.EntityType;
+            LinkedEntityInfo = entityInfo;
 
             ValidateOnSave = _overallConfig.PublicConfig.CrudSaveUseValidation;
             if (_perDtoConfig?.UseSaveChangesWithValidation != null)
