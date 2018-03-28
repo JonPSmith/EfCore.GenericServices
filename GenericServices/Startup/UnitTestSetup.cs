@@ -14,14 +14,20 @@ namespace GenericServices.Startup
 {
     public static class UnitTestSetup
     {
+        /// <summary>
+        /// This is designed to set up the system for using one DTO in a unit test of a service
+        /// </summary>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="publicConfig">WARNING: you MUST use a consistant GenericServicesConfig across ALL your tests.
+        /// This is because the configuration is used in cached values. If you want to test a different configuration then
+        /// make the test ONLY runnable by hand.</param>
+        /// <returns></returns>
         public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)
         {
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
-
-            //I have to do this as the golabl config can change
-            DecodedDataCache.ClearDictionaryCaches();
             context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), new ExpandedGlobalConfig( publicConfig, context));
             status.CombineStatuses(dtoRegister);

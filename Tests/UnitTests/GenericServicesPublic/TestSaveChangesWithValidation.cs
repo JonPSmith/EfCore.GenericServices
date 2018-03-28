@@ -8,6 +8,7 @@ using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
+using TestSupport.Attributes;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -77,7 +78,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        [Fact]
+        // This CANNOT be run with other tests because of caching 
+        [RunnableInDebugOnly]
         public void TestCreateAuthorNameNullGlobalValidationOk()
         {
             //SETUP

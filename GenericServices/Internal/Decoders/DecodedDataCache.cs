@@ -58,15 +58,6 @@ namespace GenericServices.Internal.Decoders
             return status;
         }
 
-        /// <summary>
-        /// This is called by the UnitTestSetup that developers can use to set up a test environment for their unit tests
-        /// </summary>
-        public static void ClearDictionaryCaches()
-        {
-            EntityInfoCache.Clear();
-            DecodedDtoCache.Clear();
-        }
-
         //-----------------------------------------------------
         //private methods/dicts
 
