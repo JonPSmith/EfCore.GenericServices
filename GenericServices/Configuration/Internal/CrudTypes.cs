@@ -13,9 +13,6 @@ namespace GenericServices.Configuration.Internal
         ReadOne = 2,
         ReadMany = 4,
         Update = 8,
-        Delete = 16,
-
-        AllCrud = Create | ReadOne | ReadMany | Update | Delete,
-        AllCrudButList = Create | ReadOne | Update | Delete
+        Delete = 16
     }
 }
