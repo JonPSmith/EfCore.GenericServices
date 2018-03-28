@@ -15,7 +15,7 @@ namespace GenericServices.Configuration
         /// This holds the code that will match the Name and Type to the Name/Type of a PropertyInfo
         /// The DefaultNameMatcher only handles names that are exactly the same, apart from the given name can be camelCase
         /// </summary>
-        public MatchNameAndType NameMatcher { get; } = DefaultNameMatcher.MatchCamelAndPascalName;
+        public MatchNameAndType NameMatcher { get; set; } = DefaultNameMatcher.MatchCamelAndPascalName;
 
         /// <summary>
         /// By default the properties in the DTO/VM call that are null or have a [ReadOnly(true)] attribute will NOT be
@@ -23,14 +23,14 @@ namespace GenericServices.Configuration
         /// You can set this to true to turn off that feature.
         /// NOTE: This flag does NOT affect the use of the [ReadOnly(true)] attribute in DDD access methods  
         /// </summary>
-        public bool TurnOffAuthoMapperSaveFilter { get; } = false;
+        public bool TurnOffAuthoMapperSaveFilter { get; set; } = false;
 
         /// <summary>
         /// This allows you to make all CRUD SaveChanges to call the extention method SaveChangesWithValidation
         /// It is unlikely you will want that, as your front-end should validate data. 
         /// You can turn on validation on a per-DTO basis using the PerDtoConfig and the IConfigFoundIn interface
         /// </summary>
-        public bool CrudSaveUseValidation { get; } = false;
+        public bool CrudSaveUseValidation { get; set; } = false;
 
     }
 }

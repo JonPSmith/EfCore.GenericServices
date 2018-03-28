@@ -19,6 +19,9 @@ namespace GenericServices.Startup
         {
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
+
+            //I have to do this as the golabl config can change
+            DecodedDataCache.ClearDictionaryCaches();
             context.RegisterEntityClasses();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), new ExpandedGlobalConfig( publicConfig, context));
             status.CombineStatuses(dtoRegister);

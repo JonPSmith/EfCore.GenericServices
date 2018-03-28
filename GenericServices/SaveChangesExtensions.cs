@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericServices.Internal;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
@@ -56,8 +57,7 @@ namespace GenericServices
         /// <returns>List of errors, empty if there were no errors</returns>
         public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context)
         {
-            var status = new StatusGenericHandler();
-            status.AddValidationResults(context.ExecuteValidation());
+            var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
 
             context.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -84,8 +84,7 @@ namespace GenericServices
         /// <returns>List of errors, empty if there were no errors</returns>
         public static IStatusGeneric SaveChangesWithValidation(this DbContext context)
         {
-            var status = new StatusGenericHandler();
-            status.AddValidationResults(context.ExecuteValidation());
+            var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
 
             context.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -101,9 +100,9 @@ namespace GenericServices
             return status;
         }
 
-        private static ImmutableList<ValidationResult> ExecuteValidation(this DbContext context)
+        private static IStatusGeneric ExecuteValidation(this DbContext context)
         {
-            var result = new List<ValidationResult>();
+            var status = new StatusGenericHandler();
             foreach (var entry in
                 context.ChangeTracker.Entries()
                     .Where(e =>
@@ -111,17 +110,18 @@ namespace GenericServices
                         (e.State == EntityState.Modified)))
             {
                 var entity = entry.Entity;
+                status.Header = entity.GetType().GetNameForClass();
                 var valProvider = new ValidationDbContextServiceProvider(context);
                 var valContext = new ValidationContext(entity, valProvider, null);
                 var entityErrors = new List<ValidationResult>();
                 if (!Validator.TryValidateObject(
                     entity, valContext, entityErrors, true))
                 {
-                    result.AddRange(entityErrors);
+                    status.AddValidationResults(entityErrors);
                 }
             }
 
-            return result.ToImmutableList();
+            return status;
         }
     }
 }

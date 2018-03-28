@@ -19,7 +19,6 @@ namespace GenericServices.PublicButHidden
     {
         private readonly TContext _context;
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
-        private readonly IExpandedGlobalConfig _config;
 
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the GenericService is using.
@@ -28,11 +27,10 @@ namespace GenericServices.PublicButHidden
         /// </summary>
         public TContext CurrentContext => _context;
 
-        public GenericService(TContext context, IWrappedAutoMapperConfig wapper, IGenericServicesConfig config = null)
+        public GenericService(TContext context, IWrappedAutoMapperConfig wapper)
         {
             _context = context;
             _wrapperMapperConfigs = wapper ?? throw new ArgumentException(nameof(wapper));
-            _config = new ExpandedGlobalConfig(config ?? new GenericServicesConfig(), context);
         }
 
         public T ReadSingle<T>(params object[] keys) where T : class
@@ -107,7 +105,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _config);
+                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
                 CombineStatuses(creator);
                 if (IsValid)
@@ -134,7 +132,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _config);
+                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
