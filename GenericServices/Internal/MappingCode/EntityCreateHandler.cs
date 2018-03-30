@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
