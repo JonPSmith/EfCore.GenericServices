@@ -3,11 +3,8 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
-using GenericServices.Internal.MappingCode;
 
 namespace GenericServices.Startup.Internal
 {

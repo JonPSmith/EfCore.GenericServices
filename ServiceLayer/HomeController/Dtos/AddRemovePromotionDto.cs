@@ -2,11 +2,13 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.ComponentModel;
+using DataLayer.EfClasses;
+using GenericServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceLayer.HomeController.Dtos
 {
-    public class AddRemovePromotionDto 
+    public class AddRemovePromotionDto : ILinkToEntity<Book>
     {
         [HiddenInput]
         public int BookId { get; set; }

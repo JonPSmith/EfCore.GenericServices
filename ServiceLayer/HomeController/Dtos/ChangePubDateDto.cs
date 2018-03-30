@@ -4,11 +4,13 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using DataLayer.EfClasses;
+using GenericServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceLayer.HomeController.Dtos
 {
-    public class ChangePubDateDto
+    public class ChangePubDateDto : ILinkToEntity<Book>
     {
         [HiddenInput]
         public int BookId { get; set; }

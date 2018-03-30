@@ -8,7 +8,6 @@ using AutoMapper;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Startup.Internal
 {
@@ -31,7 +30,7 @@ namespace GenericServices.Startup.Internal
                 RegisterDtosInAssemblyAndBuildMaps(assembly);
             }
 
-            if (IsValid)
+            if (!IsValid)
                 //If errors then don't set up the mappings
                 return null;
 

@@ -10,6 +10,8 @@ using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
 using Microsoft.EntityFrameworkCore;
+using ServiceLayer.HomeController.Dtos;
+using ServiceLayer.HomeController.QueryObjects;
 using Tests.Helpers;
 using TestSupport.Helpers;
 using Xunit;
@@ -38,7 +40,7 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseDummyBooks(100);
-                _wrapped = context.SetupSingleDtoAndEntities<LocalBookListDto>();
+                _wrapped = context.SetupSingleDtoAndEntities<BookListDto>();
             }
         }
 
@@ -49,7 +51,7 @@ namespace Benchmarking
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
-                var books = LocalBookListDto.MapBookToDto(context.Books).ToList();
+                var books = context.Books.MapBookToDto().ToList();
 
                 //VERIFY
                 books.Count.ShouldEqual(100);
@@ -65,7 +67,7 @@ namespace Benchmarking
                 var service = new GenericService<EfCoreContext>(context, _wrapped);
 
                 //ATTEMPT
-                var books = service.ReadManyNoTracked<LocalBookListDto>().ToList();
+                var books = service.ReadManyNoTracked<BookListDto>().ToList();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue();
@@ -73,55 +75,6 @@ namespace Benchmarking
             }
         }
 
-
-        public class LocalBookListDto : ILinkToEntity<Book>
-        {
-            public int BookId { get; set; }
-            public string Title { get; set; }
-            public DateTime PublishedOn { get; set; }
-            public decimal OrgPrice { get; set; }
-            public decimal ActualPrice { get; set; }
-            public string PromotionalText { get; set; }
-            public string AuthorsOrdered { get; set; }
-
-            public int ReviewsCount { get; set; }
-            public double? ReviewsAverageVotes { get; set; }
-
-            public static IQueryable<LocalBookListDto> MapBookToDto( IQueryable<Book> books)
-            {
-                return books.Select(p => new LocalBookListDto
-                {
-                    BookId = p.BookId,
-                    Title = p.Title,
-                    PublishedOn = p.PublishedOn,
-                    ActualPrice = p.ActualPrice,
-                    OrgPrice = p.OrgPrice,
-                    PromotionalText = p.PromotionalText,
-                    AuthorsOrdered = string.Join(", ",
-                        p.AuthorsLink
-                            .OrderBy(q => q.Order)
-                            .Select(q => q.Author.Name)),
-                    ReviewsCount = p.Reviews.Count(),
-                    ReviewsAverageVotes = p.Reviews.Select(y =>(double?)y.NumStars).Average()
-                });
-            }
-        }
-
-        class LocalBookListDtoConfig : PerDtoConfig<LocalBookListDto, Book>
-        {
-            public override Action<IMappingExpression<Book, LocalBookListDto>> AlterReadMapping
-            {
-                get
-                {
-                    return cfg => cfg
-                        .ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count()))
-                        .ForMember(x => x.AuthorsOrdered, y => y.MapFrom(p => string.Join(", ",
-                            p.AuthorsLink.OrderBy(q => q.Order).Select(q => q.Author.Name))))
-                    .ForMember(x => x.ReviewsAverageVotes,
-                        x => x.MapFrom(p => p.Reviews.Select(y => (double?)y.NumStars).Average()));
-                }
-            }
-        }
 
     }
 }

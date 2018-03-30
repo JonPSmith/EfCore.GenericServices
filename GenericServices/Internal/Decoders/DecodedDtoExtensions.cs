@@ -2,12 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration;
-using GenericServices.Startup.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
