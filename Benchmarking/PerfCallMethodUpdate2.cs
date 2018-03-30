@@ -16,7 +16,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodUpdate2
     {
-        private WrappedAutoMapperConfig _wrapped;
+        private IWrappedAutoMapperConfig _wrapped;
         private DbContextOptions<EfCoreContext> _options;
         private int _incdDay = 0;
 

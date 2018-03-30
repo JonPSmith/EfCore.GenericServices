@@ -23,7 +23,7 @@ namespace GenericServices.Startup
         /// This is because the configuration is used in cached values. If you want to test a different configuration then
         /// make the test ONLY runnable by hand.</param>
         /// <returns></returns>
-        public static WrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
+        public static IWrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)
         {
             var status = new StatusGenericHandler();
@@ -37,24 +37,16 @@ namespace GenericServices.Startup
                                                     + status.GetAllErrors());
 
             var readProfile = new MappingProfile(false);
-            dtoRegister.MapGenerator.Accessor.BuildReadMapping(readProfile);
-            var readConfig = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(readProfile);
-            });
+            dtoRegister.ConfigGenerator.Accessor.AddReadMappingToProfile(readProfile);
             var saveProfile = new MappingProfile(true);
             //Only add a mapping if AutoMapper can be used to update/create the entity
             if (dtoRegister.EntityInfo.EntityStyle != EntityStyles.DDDStyled && 
                 dtoRegister.EntityInfo.EntityStyle != EntityStyles.ReadOnly)
             {
-                dtoRegister.MapGenerator.Accessor.BuildSaveMapping(saveProfile);
+                dtoRegister.ConfigGenerator.Accessor.AddSaveMappingToProfile(saveProfile);
             }
-            var saveConfig = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(saveProfile);
-            });
 
-            return new WrappedAutoMapperConfig(readConfig, saveConfig);
+            return SetupAllDtosAndMappings.CreateWrappedAutoMapperConfig(readProfile, saveProfile);
         }
     }
 }

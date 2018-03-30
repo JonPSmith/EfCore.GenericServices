@@ -9,6 +9,7 @@ using GenericServices;
 using Xunit;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
+using GenericServices.Startup.Internal;
 using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -38,8 +39,8 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(typeof(AuthorNameDto), _bookInfo, null);
-            mapCreator.Accessor.BuildReadMapping(maps);
+            var mapCreator = new CreateConfigGenerator(typeof(AuthorNameDto), _bookInfo, null);
+            mapCreator.Accessor.AddReadMappingToProfile(maps);
 
             //VERIFY
             var config = new MapperConfiguration(maps);
@@ -55,8 +56,8 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, new BookTitleAndCountConfig());
-            mapCreator.Accessor.BuildReadMapping(maps);
+            var mapCreator = new CreateConfigGenerator(typeof(BookTitleAndCount), _bookInfo, new BookTitleAndCountConfig());
+            mapCreator.Accessor.AddReadMappingToProfile(maps);
 
             //VERIFY
             var config = new MapperConfiguration(maps);

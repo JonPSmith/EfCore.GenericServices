@@ -4,34 +4,33 @@
 using System;
 using AutoMapper;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 
-namespace GenericServices.Internal.MappingCode
+namespace GenericServices.Startup.Internal
 {
-    internal class CreateMapGenerator
+    internal class CreateConfigGenerator
     {
         public dynamic Accessor { get; }
 
-        public CreateMapGenerator(Type dtoType, DecodedEntityClass entityInfo, object configInfo)
+        public CreateConfigGenerator(Type dtoType, DecodedEntityClass entityInfo, object configInfo)
         {
-            var myGeneric = typeof(MapGenerator<,>);
+            var myGeneric = typeof(ConfigGenerator<,>);
             var copierType = myGeneric.MakeGenericType(dtoType, entityInfo.EntityType);
             Accessor = Activator.CreateInstance(copierType, new object[]{ configInfo});
         }
 
-        public class MapGenerator<TDto, TEntity>
+        public class ConfigGenerator<TDto, TEntity>
             where TDto : class
             where TEntity : class
         {
             private readonly PerDtoConfig<TDto, TEntity> _config;
 
-            public MapGenerator(PerDtoConfig<TDto, TEntity> config)
+            public ConfigGenerator(PerDtoConfig<TDto, TEntity> config)
             {
                 _config = config;
             }
 
-            public void BuildReadMapping(Profile readProfile)
+            public void AddReadMappingToProfile(Profile readProfile)
             {
                 if (_config?.AlterReadMapping == null)
                     readProfile.CreateMap<TEntity, TDto>();
@@ -41,7 +40,7 @@ namespace GenericServices.Internal.MappingCode
                 }
             }
 
-            public void BuildSaveMapping(Profile writeProfile)
+            public void AddSaveMappingToProfile(Profile writeProfile)
             {
                 if (_config?.AlterSaveMapping == null)
                     writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();

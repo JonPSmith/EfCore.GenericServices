@@ -18,7 +18,7 @@ namespace GenericServices.Startup.Internal
 
         public PerDtoConfig PerDtoConfig { get; }
 
-        public CreateMapGenerator MapGenerator { get; }
+        public CreateConfigGenerator ConfigGenerator { get; }
 
         public RegisterOneDtoType(Type dtoType, Type[] typesInAssembly, IGenericServicesConfig configuration)
         {
@@ -36,8 +36,8 @@ namespace GenericServices.Startup.Internal
             var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, typesInAssembly);
             if (!IsValid)
                 return;
-            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, perDtoConfig);
-            PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
+            ConfigGenerator = new CreateConfigGenerator(dtoType, EntityInfo, perDtoConfig);
+            PerDtoConfig = (PerDtoConfig)ConfigGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineStatuses(decodeStatus);

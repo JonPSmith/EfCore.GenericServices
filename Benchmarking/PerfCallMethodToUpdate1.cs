@@ -19,7 +19,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodToUpdate1
     {
-        private WrappedAutoMapperConfig _wrapped;
+        private IWrappedAutoMapperConfig _wrapped;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]

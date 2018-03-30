@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
@@ -16,6 +17,9 @@ namespace GenericServices.Startup.Internal
     {
         private readonly IGenericServicesConfig _publicConfig;
         private Type[] _contextTypes;
+
+        MappingProfile _readProfile = new MappingProfile(false);
+        MappingProfile _saveProfile = new MappingProfile(true);
 
         public IWrappedAutoMapperConfig AutoMapperConfig { get;}
         public IServiceCollection Services { get; }
@@ -34,8 +38,31 @@ namespace GenericServices.Startup.Internal
             {
                 RegisterDtosInAssemblyAndBuildMaps(assembly);
             }
+
+            if (IsValid)
+                //If errors then don't set up the mappings
+                return;
+
+            AutoMapperConfig = CreateWrappedAutoMapperConfig(_readProfile, _saveProfile);
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile(_readProfile);
+                cfg.AddProfile(_saveProfile);
+            });
         }
 
+        public static IWrappedAutoMapperConfig CreateWrappedAutoMapperConfig(MappingProfile readProfile, MappingProfile saveProfile)
+        {
+            var mapperReadConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(readProfile);
+            });
+            var mapperSaveConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(saveProfile);
+            });
+            return new WrappedAutoMapperConfig(mapperReadConfig, mapperSaveConfig);
+        }
 
         private void RegisterDtosInAssemblyAndBuildMaps(Assembly assemblyToScan)
         {
@@ -46,19 +73,22 @@ namespace GenericServices.Startup.Internal
 
             foreach (var dtoType in allLinkToEntityClasses)
             {
-                var register = new RegisterOneDtoType(dtoType, allTypesInAssembly, _publicConfig);
-                if (!register.IsValid)
+                var dtoRegister = new RegisterOneDtoType(dtoType, allTypesInAssembly, _publicConfig);
+                if (!dtoRegister.IsValid)
                 {
-                    CombineStatuses(register);
+                    CombineStatuses(dtoRegister);
                     continue;
                 }
 
-                //Now build the mapping using the MapGenerator in the register
+                //Now build the mapping using the ConfigGenerator in the register
+                dtoRegister.ConfigGenerator.Accessor.AddReadMappingToProfile(_readProfile);
+                //Only add a mapping if AutoMapper can be used to update/create the entity
+                if (dtoRegister.EntityInfo.EntityStyle != EntityStyles.DDDStyled &&
+                    dtoRegister.EntityInfo.EntityStyle != EntityStyles.ReadOnly)
+                {
+                    dtoRegister.ConfigGenerator.Accessor.AddSaveMappingToProfile(_saveProfile);
+                }
             }
-
-            //Now scan for next maps and set up the mapping for them too
-            throw new NotImplementedException();
-            //Don't forget to look at the TurnOffAuthoMapperSaveFilter in the GenericServicesConfig
         }
 
 
