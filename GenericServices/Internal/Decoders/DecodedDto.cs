@@ -11,7 +11,7 @@ using GenericServices.Configuration.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
-    internal class DecodedDto : StatusGenericHandler
+    internal class DecodedDto
     {
         private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
         private readonly List<MethodCtorMatch> _matchedSetterMethods;

@@ -20,36 +20,42 @@ namespace GenericServices.Startup.Internal
 
         public CreateMapGenerator MapGenerator { get; }
 
-        public RegisterOneDtoType(Type dtoType, IGenericServicesConfig configuration)
+        public RegisterOneDtoType(Type dtoType, Type[] typesInAssembly, IGenericServicesConfig configuration)
         {
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
+            
             if (entityType == null)
-                throw new InvalidOperationException(
-                    $"The DTO/ViewModel class {dtoType.Name} is not registered as a valid GenericService DTO." +
-                    $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
+            {
+                AddError($"The DTO/ViewModel class {dtoType.Name} is not registered as a valid GenericService DTO." +
+                         $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
+                return;
+            }
             EntityInfo = entityType.GetRegisteredEntityInfo();
 
-            var classesInThisAssembly = dtoType.Assembly.GetTypes();
-            var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, classesInThisAssembly);
+            var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, typesInAssembly);
+            if (!IsValid)
+                return;
             MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, perDtoConfig);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineStatuses(decodeStatus);
             DtoInfo = decodeStatus.Result;
-            CombineStatuses(DtoInfo);
         }
 
-        private static object FindConfigInfoIfPresent(Type dtoType, Type entityType, Type[] typesToScan)
+        private object FindConfigInfoIfPresent(Type dtoType, Type entityType, Type[] typesToScan)
         {
             var perDtoConfigType = dtoType.FormPerDtoConfigType(entityType);
             var types = typesToScan.Where(x => x.IsSubclassOf(perDtoConfigType)).ToList();
             if (!types.Any())
                 return null;        //no config found
             if (types.Count > 1)
-                throw new InvalidOperationException($"I found multiple classes based on PerDtoConfig<{dtoType.Name},{entityType.Name}>, but you are only allowed one."+
-                                                    $" They are: {string.Join(", ", types.Select(x => x.Name))}.");
+            {
+                AddError($"I found multiple classes based on PerDtoConfig<{dtoType.Name},{entityType.Name}>, but you are only allowed one."+
+                         $" They are: {string.Join(", ", types.Select(x => x.Name))}.");
+                return null;
+            }
             return Activator.CreateInstance(types.First());
         }
     }

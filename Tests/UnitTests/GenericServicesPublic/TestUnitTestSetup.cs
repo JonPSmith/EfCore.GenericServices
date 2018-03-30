@@ -49,7 +49,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoWithoutILink>());
 
                 //VERIFY
-                ex.Message.ShouldEqual("The DTO/ViewModel class DtoWithoutILink is not registered as a valid GenericService DTO. Have you left off the ILinkToEntity interface?");
+                ex.Message.ShouldEndWith("The DTO/ViewModel class DtoWithoutILink is not registered as a valid GenericService DTO. Have you left off the ILinkToEntity interface?");
             }
         }
 
@@ -64,7 +64,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoWithTwoConfigs>());
 
                 //VERIFY
-                ex.Message.ShouldEqual("I found multiple classes based on PerDtoConfig<DtoWithTwoConfigs,Book>, but you are only allowed one. They are: Congfig1, Congfig2.");
+                ex.Message.ShouldEndWith("I found multiple classes based on PerDtoConfig<DtoWithTwoConfigs,Book>, but you are only allowed one. They are: Congfig1, Congfig2.");
             }
         }
 

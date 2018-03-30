@@ -14,7 +14,7 @@ namespace GenericServices.Startup.Internal
 {
     internal class SetupAllDtosAndMappings : StatusGenericHandler, IGenericServicesSetupPart2
     {
-        private IGenericServicesConfig _publicConfig;
+        private readonly IGenericServicesConfig _publicConfig;
         private Type[] _contextTypes;
 
         public IWrappedAutoMapperConfig AutoMapperConfig { get;}
@@ -37,7 +37,7 @@ namespace GenericServices.Startup.Internal
         }
 
 
-        public void RegisterDtosInAssemblyAndBuildMaps(Assembly assemblyToScan)
+        private void RegisterDtosInAssemblyAndBuildMaps(Assembly assemblyToScan)
         {
             Header = $"Scanning {assemblyToScan.GetName()}";
             var allTypesInAssembly = assemblyToScan.GetTypes();
@@ -46,7 +46,7 @@ namespace GenericServices.Startup.Internal
 
             foreach (var dtoType in allLinkToEntityClasses)
             {
-                var register = new RegisterOneDtoType(dtoType, _publicConfig);
+                var register = new RegisterOneDtoType(dtoType, allTypesInAssembly, _publicConfig);
                 if (!register.IsValid)
                 {
                     CombineStatuses(register);

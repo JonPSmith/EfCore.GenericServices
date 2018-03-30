@@ -29,7 +29,8 @@ namespace GenericServices.Startup
             var status = new StatusGenericHandler();
             publicConfig = publicConfig ?? new GenericServicesConfig();
             context.RegisterEntityClasses();
-            var dtoRegister = new RegisterOneDtoType(typeof(TDto), publicConfig);
+            var typesInAssembly = typeof(TDto).Assembly.GetTypes();
+            var dtoRegister = new RegisterOneDtoType(typeof(TDto), typesInAssembly, publicConfig);
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n" 
