@@ -43,7 +43,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
+                var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
                 result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
             }
 
@@ -66,7 +66,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
+                var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
                 result = ((IQueryable<T>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression)).SingleOrDefault();
             }
 
@@ -87,7 +87,7 @@ namespace GenericServices.PublicButHidden
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
-            var projector = new CreateProjector(_context, _wrapperMapperConfigs.MapperReadConfig, typeof(T), entityInfo);
+            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
