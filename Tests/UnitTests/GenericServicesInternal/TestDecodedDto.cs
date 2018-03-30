@@ -4,6 +4,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
+using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using Xunit;
 using GenericServices.Internal.Decoders;
@@ -40,7 +41,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
 
             //ATTEMPT
-            var decoded = new DecodedDto(typeof(Dto1), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Dto1), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //VERIFY
             decoded.LinkedEntityInfo.EntityType.ShouldEqual(typeof(Book));
@@ -57,7 +58,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethod()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn"), _bookEntityInfo);
@@ -70,7 +71,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodWithGivenNumParams()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn(1)"), _bookEntityInfo);
@@ -83,7 +84,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodBadName()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var ex = Assert.Throws<InvalidOperationException>(() => decoded.GetMethodToRun(new DecodeName("badname"), _bookEntityInfo));
@@ -96,7 +97,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodNumParamsBad()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var ex = Assert.Throws<InvalidOperationException>(() => decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn(2)"), _bookEntityInfo));
@@ -109,7 +110,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestGetDefaultSetterMethod()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new ExpandedGlobalConfig(null, null), null);
+            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName(null), _bookEntityInfo);

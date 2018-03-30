@@ -2,40 +2,36 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
-using GenericServices.Internal.Decoders;
-using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Startup.Internal
 {
-    internal class SetupAllEntities : IGenericServicesSetup
+    internal class SetupAllEntities : IGenericServicesSetupPart1
     {
-        private IGenericServicesConfig _publicConfig;
-
+        public IGenericServicesConfig PublicConfig { get; }
+        public Type[] ContextTypes { get; }
         public IServiceCollection Services { get; }
-        public WrappedAutoMapperConfig AutoMapperConfig { get;}
 
         public SetupAllEntities(IServiceCollection services, IGenericServicesConfig publicConfig, Type[] contextTypes)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
-            _publicConfig = publicConfig ?? new GenericServicesConfig();
-            if (contextTypes == null || contextTypes.Length < 0)
+            PublicConfig = publicConfig ?? new GenericServicesConfig();
+            if (contextTypes == null || contextTypes.Length <= 0)
                 throw new ArgumentException(nameof(contextTypes));
+            ContextTypes = contextTypes;
 
             var serviceProvider = services.BuildServiceProvider();
             var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
             using (var serviceScope = serviceScopeFactory.CreateScope())
             {
-                foreach (var contextType in contextTypes)
+                foreach (var contextType in ContextTypes)
                 {
                     using (var context = serviceScope.ServiceProvider.GetService(contextType) as DbContext)
                     {
                         if (context == null)
-                            throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered. Have you forgotten to register it?");
+                            throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered, or is a DbContext. Have you forgotten to register it?");
                         context.RegisterEntityClasses();
                     }
                 }

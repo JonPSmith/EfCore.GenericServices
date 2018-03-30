@@ -17,7 +17,7 @@ namespace GenericServices.Internal.Decoders
         private readonly List<MethodCtorMatch> _matchedSetterMethods;
         private readonly List<MethodCtorMatch> _matchedCtorsAndStaticMethods;
 
-        private readonly IExpandedGlobalConfig _overallConfig;
+        private readonly MethodCtorMatcher _matcher;
         private readonly PerDtoConfig _perDtoConfig; //can be null
 
         public Type DtoType { get; }
@@ -35,14 +35,13 @@ namespace GenericServices.Internal.Decoders
             _matchedCtorsAndStaticMethods.ToImmutableList();
         
         public DecodedDto(Type dtoType, DecodedEntityClass entityInfo,
-            IExpandedGlobalConfig overallConfig, PerDtoConfig perDtoConfig)
+            IGenericServicesConfig publicConfig, PerDtoConfig perDtoConfig)
         {
             DtoType = dtoType ?? throw new ArgumentNullException(nameof(dtoType));
-            _overallConfig = overallConfig ?? throw new ArgumentNullException(nameof(overallConfig));
+            _matcher = new MethodCtorMatcher(publicConfig.NameMatcher);
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
 
-            ValidateOnSave = _overallConfig.PublicConfig.CrudSaveUseValidation;
             if (_perDtoConfig?.UseSaveChangesWithValidation != null)
                 ValidateOnSave = (bool) _perDtoConfig?.UseSaveChangesWithValidation;
 
@@ -158,9 +157,8 @@ namespace GenericServices.Internal.Decoders
             var nonReadOnlyPropertyInfo = PropertyInfos.Where(y => y.PropertyType != DtoPropertyTypes.ReadOnly)
                 .Select(x => x.PropertyInfo).ToList();
 
-            var matches = MethodCtorMatch.GradeAllMethods(entityInfo.PublicSetterMethods,
-                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties,
-                _overallConfig.InternalPropertyMatch);
+            var matches = _matcher.GradeAllMethods(entityInfo.PublicSetterMethods,
+                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties);
             return matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
 
@@ -170,9 +168,8 @@ namespace GenericServices.Internal.Decoders
                 .Select(x => x.PropertyInfo).ToList();
 
             var result = new List<MethodCtorMatch>();
-            var matches = MethodCtorMatch.GradeAllCtorsAndStaticMethods(entityInfo.PublicStaticFactoryMethods, entityInfo.PublicCtors,
-                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties,
-                _overallConfig.InternalPropertyMatch);
+            var matches = _matcher.GradeAllCtorsAndStaticMethods(entityInfo.PublicStaticFactoryMethods, entityInfo.PublicCtors,
+                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties);
             return matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
 

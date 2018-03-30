@@ -3,10 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Startup
 {
-    public interface IGenericServicesSetup
+    public interface IGenericServicesSetupPart2 
     {
         IServiceCollection Services { get; }
-
-        WrappedAutoMapperConfig AutoMapperConfig { get; }
+        IWrappedAutoMapperConfig AutoMapperConfig { get; }
     }
 }

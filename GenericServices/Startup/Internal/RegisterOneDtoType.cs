@@ -20,7 +20,7 @@ namespace GenericServices.Startup.Internal
 
         public CreateMapGenerator MapGenerator { get; }
 
-        public RegisterOneDtoType(Type dtoType, IExpandedGlobalConfig configuration)
+        public RegisterOneDtoType(Type dtoType, IGenericServicesConfig configuration)
         {
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
@@ -31,8 +31,8 @@ namespace GenericServices.Startup.Internal
             EntityInfo = entityType.GetRegisteredEntityInfo();
 
             var classesInThisAssembly = dtoType.Assembly.GetTypes();
-            var configInfo = FindConfigInfoIfPresent(dtoType, entityType, classesInThisAssembly);
-            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, configInfo);
+            var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, classesInThisAssembly);
+            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, perDtoConfig);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);

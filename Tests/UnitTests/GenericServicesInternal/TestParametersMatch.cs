@@ -71,15 +71,16 @@ namespace Tests.UnitTests.GenericServicesInternal
             //SETUP
             var props = new List<PropertyInfo> { _myIntProp, _myStringProp };
             var method = typeof(TestParametersMatch).GetMethod(nameof(MyMethodWithDb));
-            var internalConf = new ExpandedGlobalConfig(null, null);
+            var matcher = new MethodCtorMatcher(new GenericServicesConfig().NameMatcher);
 
             //ATTEMPT
-            var match = new ParametersMatch(method.GetParameters(), props, internalConf.InternalPropertyMatch);
+            var match = matcher.GradeAllMethods(new[] {method}, props, HowTheyWereAskedFor.Unset).Single();
+
 
             //VERIFY
-            match.Score.ShouldEqual(1);
-            match.MatchedPropertiesInOrder.First().MatchSource.ShouldEqual(MatchSources.Property);
-            match.MatchedPropertiesInOrder.Last().MatchSource.ShouldEqual(MatchSources.DbContext);
+            match.PropertiesMatch.Score.ShouldEqual(1);
+            match.PropertiesMatch.MatchedPropertiesInOrder.First().MatchSource.ShouldEqual(MatchSources.Property);
+            match.PropertiesMatch.MatchedPropertiesInOrder.Last().MatchSource.ShouldEqual(MatchSources.DbContext);
         }
     }
 }

@@ -78,34 +78,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        // This CANNOT be run with other tests because of caching 
-        [RunnableInDebugOnly]
-        public void TestCreateAuthorNameNullGlobalValidationOk()
-        {
-            //SETUP
-            var unique = Guid.NewGuid().ToString();
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                var globalConfig = new GenericServicesConfig
-                {
-                    CrudSaveUseValidation = true
-                };
-
-                var wrapped = context.SetupSingleDtoAndEntities<LocalAuthorDto>(globalConfig);
-                var service = new GenericService<EfCoreContext>(context, wrapped);
-
-                //ATTEMPT
-                var author = new LocalAuthorDto { Name = null, Email = unique };
-                service.AddNewAndSave(author);
-
-                //VERIFY
-                service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("AddNew>Author: The Name field is required.");
-            }
-        }
-
         [Fact]
         public void TestCreateAuthorNameNullPerDtoConfigValidationOk()
         {

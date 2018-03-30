@@ -8,18 +8,26 @@ using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericServices.Startup.Internal
 {
-    internal class SetupAllDtosAndMappings : StatusGenericHandler
+    internal class SetupAllDtosAndMappings : StatusGenericHandler, IGenericServicesSetupPart2
     {
-        private readonly IExpandedGlobalConfig _configuration;
+        private IGenericServicesConfig _publicConfig;
+        private Type[] _contextTypes;
 
-        WrappedAutoMapperConfig AutoMapperConfig { get; set; }
+        public IWrappedAutoMapperConfig AutoMapperConfig { get;}
+        public IServiceCollection Services { get; }
 
-        public SetupAllDtosAndMappings(IExpandedGlobalConfig configuration, Assembly[] assembliesToScan)
+        public SetupAllDtosAndMappings(IGenericServicesSetupPart1 part1Data, Assembly[] assembliesToScan)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _publicConfig = part1Data?.PublicConfig ??
+                           throw new NullReferenceException($"{nameof(part1Data)}.{nameof(IGenericServicesSetupPart1.PublicConfig)}");
+            _contextTypes = part1Data?.ContextTypes ??
+                           throw new NullReferenceException($"{nameof(part1Data)}.{nameof(IGenericServicesSetupPart1.ContextTypes)}");
+            Services = part1Data?.Services ??
+                       throw new NullReferenceException($"{nameof(part1Data)}.{nameof(Services)}");
 
             //Add ForAllPropertyMaps to start the Mapping
             foreach (var assembly in assembliesToScan)
@@ -38,7 +46,7 @@ namespace GenericServices.Startup.Internal
 
             foreach (var dtoType in allLinkToEntityClasses)
             {
-                var register = new RegisterOneDtoType(dtoType, _configuration);
+                var register = new RegisterOneDtoType(dtoType, _publicConfig);
                 if (!register.IsValid)
                 {
                     CombineStatuses(register);
@@ -52,7 +60,6 @@ namespace GenericServices.Startup.Internal
             throw new NotImplementedException();
             //Don't forget to look at the TurnOffAuthoMapperSaveFilter in the GenericServicesConfig
         }
-
 
 
 

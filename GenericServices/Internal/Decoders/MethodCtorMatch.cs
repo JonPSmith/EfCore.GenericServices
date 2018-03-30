@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -40,35 +41,6 @@ namespace GenericServices.Internal.Decoders
                 Name = DecodedNameTypes.Ctor.ToString();
             PropertiesMatch = propertiesMatch ?? throw new ArgumentNullException(nameof(propertiesMatch));
             HowDefined = howDefined;
-        }
-
-        /// <summary>
-        /// This takes a set of methods and grades them by how well they fit to the parameters available in the DTO
-        /// </summary>
-        /// <param name="methods"></param>
-        /// <param name="propertiesToCheck"></param>
-        /// <param name="propMatcher"></param>
-        /// <param name="howDefined"></param>
-        /// <returns>It returns a collection of MethodCtorMatch, with the best scores first, with secondary sort order with longest number of params first</returns>
-        public static IEnumerable<MethodCtorMatch> GradeAllMethods(MethodInfo[] methods, 
-            List<PropertyInfo> propertiesToCheck, HowTheyWereAskedFor howDefined, MatchNameAndType propMatcher)
-        {
-            var result = methods.Select(method => new MethodCtorMatch(method, 
-                new ParametersMatch(method.GetParameters(), propertiesToCheck, propMatcher), howDefined));
-
-            return result.OrderByDescending(x => x.PropertiesMatch.MatchedPropertiesInOrder.Count);
-        }
-
-        public static IEnumerable<MethodCtorMatch> GradeAllCtorsAndStaticMethods(MethodInfo[] staticFactoryMethods,
-            ConstructorInfo[] publicCtors, List<PropertyInfo> propertiesToCheck,
-            HowTheyWereAskedFor howDefined, MatchNameAndType propMatcher)
-        {
-            var result = staticFactoryMethods.Select(method => new MethodCtorMatch(method,
-                new ParametersMatch(method.GetParameters(), propertiesToCheck, propMatcher), howDefined)).ToList();
-            result.AddRange(publicCtors.Select(method => new MethodCtorMatch(method,
-                new ParametersMatch(method.GetParameters(), propertiesToCheck, propMatcher), howDefined)));
-
-            return result.OrderByDescending(x => x.PropertiesMatch.MatchedPropertiesInOrder.Count);
         }
 
         public override string ToString()

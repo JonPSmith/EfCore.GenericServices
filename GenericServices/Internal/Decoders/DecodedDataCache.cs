@@ -48,11 +48,11 @@ namespace GenericServices.Internal.Decoders
         }
 
         public static IStatusGeneric<DecodedDto> GetOrCreateDtoInfo(this Type classType, DecodedEntityClass entityInfo,
-            IExpandedGlobalConfig overallConfig, PerDtoConfig perDtoConfig)
+            IGenericServicesConfig publicConfig, PerDtoConfig perDtoConfig)
         {
             var status = new StatusGenericHandler<DecodedDto>();
             if (classType.IsPublic || classType.IsNestedPublic)
-                return status.SetResult(DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo, overallConfig, perDtoConfig)));
+                return status.SetResult(DecodedDtoCache.GetOrAdd(classType, type => new DecodedDto(classType, entityInfo, publicConfig, perDtoConfig)));
 
             status.AddError($"Sorry, but the DTO/ViewModel class '{classType.Name}' must be public for GenericServices to work.");
             return status;

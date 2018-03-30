@@ -17,53 +17,61 @@ namespace GenericServices.Startup
         /// This will configure GenericServices if you are using one DbContext and you are happy to use the default GenericServices configuration.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="assemblies"></param>
+        /// <param name="assemblies">You can define the assemblies to scan for DTOs/ViewModels. Otherwise it will scan all assemblies (slower, but simple)</param>
         /// <returns></returns>
-        public static IServiceCollection GenericServicesSimpleSetup(this IServiceCollection services,
-            params Assembly[] assemblies)
+        public static IServiceCollection GenericServicesSimpleSetup<TContext>(this IServiceCollection services,
+            params Assembly[] assemblies) where TContext : DbContext
         {
-            return services.ConfigureGenericServicesEntities()
+            return services.ConfigureGenericServicesEntities(typeof(TContext))
                 .ScanAssemblesForDtos(assemblies)
-                .RegisterGenericServices();
+                .RegisterGenericServices(true);
         }
 
-        public static IGenericServicesSetup ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
+        public static IGenericServicesSetupPart1 ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
             params Type[] contextTypes)
         {
             return serviceCollection.ConfigureGenericServicesEntities(null, contextTypes);
         }
 
-        public static IGenericServicesSetup ConfigureGenericServicesEntities(this IServiceCollection services,
+        public static IGenericServicesSetupPart1 ConfigureGenericServicesEntities(this IServiceCollection services,
             IGenericServicesConfig configuration, params Type[] contextTypes)
         {
-            if (contextTypes.Length == 0)
-            {
-                contextTypes = new[] { typeof(DbContext) };
-            }
-
             var setupEntities = new SetupAllEntities(services, configuration, contextTypes);
 
             return setupEntities;
         }
 
-        public static IGenericServicesSetup ScanAssemblesForDtos(this IGenericServicesSetup genericServicesSetup,
+        public static IGenericServicesSetupPart1 ScanAssemblesForDtos(this IGenericServicesSetupPart1 genericServicesSetupPart1,
             params Assembly[] assemblies)
         {
             assemblies = assemblies ?? AppDomain.CurrentDomain.GetAssemblies();
 
-            return genericServicesSetup;
+            return genericServicesSetupPart1;
         }
 
-        public static IServiceCollection RegisterGenericServices(this IGenericServicesSetup genericServicesSetup)
+        /// <summary>
+        /// This registers all the services needed to run GenericServices. You will be able to access GenericServices
+        /// via its interfaces: IGenericService and cref="IGenericService<TContext>">
+        /// </summary>
+        /// <param name="genericServicesSetupPart1"></param>
+        /// <param name="registerDbContext">If you have one DbContext and you want to use the non-generic IGenericService
+        /// then GenericServices has to register DbContext against your application's DbContext</param>
+        /// <returns></returns>
+        public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart1 genericServicesSetupPart1, 
+            bool registerDbContext = false)
         {
             //services.AddScoped<IGenericService, GenericService>();
-            genericServicesSetup.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+            genericServicesSetupPart1.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             //Async to go here
 
             //Register AutoMapper configuration goes here
 
 
-            return genericServicesSetup.Services;
+            return genericServicesSetupPart1.Services;
         }
+
+
+
+
     }
 }
