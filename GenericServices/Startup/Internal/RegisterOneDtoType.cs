@@ -38,10 +38,7 @@ namespace GenericServices.Startup.Internal
             if (!IsValid)
                 return;
             ConfigGenerator = new CreateConfigGenerator(dtoType, EntityInfo, perDtoConfig);
-            PerDtoConfig = perDtoConfig != null
-                ? (PerDtoConfig) ConfigGenerator.Accessor.GetRestOfPerDtoConfig()
-                : null;
-        
+            PerDtoConfig = perDtoConfig as PerDtoConfig;            
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineStatuses(decodeStatus);
             DtoInfo = decodeStatus.Result;

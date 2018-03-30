@@ -49,11 +49,6 @@ namespace GenericServices.Startup.Internal
                     _config.AlterSaveMapping(writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
                 }
             }
-
-            public PerDtoConfig GetRestOfPerDtoConfig()
-            {
-                return _config;
-            }
         }
     }
 }
