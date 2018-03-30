@@ -10,6 +10,8 @@ using GenericServices.Startup;
 using GenericServices.Startup.Internal;
 using ServiceLayer.HomeController.Dtos;
 using Tests.Dtos;
+using Tests.EfCode;
+using TestSupport.Attributes;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -55,6 +57,51 @@ namespace Tests.UnitTests.GenericServicesSetup
                 setupDtos.IsValid.ShouldBeTrue(setupDtos.GetAllErrors());
                 wrappedMappings.ShouldNotBeNull();
             }
+        }
+
+        // This relies on only the EfCoreContext entities being registered
+        [RunnableInDebugOnly]
+        public void TestSetupSingleDtoAndEntitiesTestAssemblyEfCoreContextOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.RegisterEntityClasses();
+
+                //ATTEMPT
+                var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
+                setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, true);
+
+                //VERIFY
+                setupDtos.IsValid.ShouldBeFalse();
+                setupDtos.Errors.Count.ShouldEqual(4);
+            }
+        }
+
+        [Fact]
+        public void TestSetupSingleDtoAndEntitiesTestAssemblyEfCoreContextAndTestDbContextOk()
+        {
+            //SETUP
+            var options1 = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options1))
+            {
+                context.RegisterEntityClasses();
+            }
+            var options2 = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options2))
+            {
+                context.RegisterEntityClasses();
+            }
+
+            //ATTEMPT
+            var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
+            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, true);
+
+            //VERIFY
+            setupDtos.IsValid.ShouldBeFalse();
+            setupDtos.Errors.Count.ShouldEqual(2);
+            
         }
 
 

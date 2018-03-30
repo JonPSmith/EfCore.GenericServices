@@ -3,11 +3,8 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
-using GenericServices.Internal.MappingCode;
 
 namespace GenericServices.Startup.Internal
 {
@@ -25,14 +22,20 @@ namespace GenericServices.Startup.Internal
 
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
-            
             if (entityType == null)
             {
                 AddError($"The DTO/ViewModel class {dtoType.Name} is not registered as a valid GenericService DTO." +
                          $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
                 return;
             }
+
             EntityInfo = entityType.GetRegisteredEntityInfo();
+            if (EntityInfo == null)
+            {
+                AddError($"The DTO/ViewModel class {dtoType.Name} is linked to a entity class {entityType.Name}," +
+                         $" but I couldn't find that class in the application's DbContext(s) you gave me to scan");
+                return;
+            }
 
             var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, typesInAssembly);
             if (!IsValid)

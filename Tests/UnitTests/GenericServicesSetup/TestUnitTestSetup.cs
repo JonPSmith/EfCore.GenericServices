@@ -16,10 +16,10 @@ namespace Tests.UnitTests.GenericServicesSetup
 {
     public class TestUnitTestSetup
     {
-        public class DtoWithTwoIlinks : ILinkToEntity<Book>, ILinkToEntity<Author> {}
+        //public class DtoWithTwoIlinks : ILinkToEntity<Book>, ILinkToEntity<Author> {}
 
         public class DtoWithTwoConfigs : ILinkToEntity<Book> { }
-        public class Congfig1 : PerDtoConfig<DtoWithTwoConfigs, Book> {}
+        public class Congfig1 : PerDtoConfig<DtoWithTwoConfigs, Book> { }
         public class Congfig2 : PerDtoConfig<DtoWithTwoConfigs, Book> { }
 
         public class DtoWithoutILink { }
@@ -41,20 +41,20 @@ namespace Tests.UnitTests.GenericServicesSetup
             }
         }
 
-        [Fact]
-        public void TestSetupDtoWithTwoILinksBad()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                //ATTEMPT
-                var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoWithTwoIlinks>());
+        //[Fact]
+        //public void TestSetupDtoWithTwoILinksBad()
+        //{
+        //    //SETUP
+        //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+        //    using (var context = new EfCoreContext(options))
+        //    {
+        //        //ATTEMPT
+        //        var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoWithTwoIlinks>());
 
-                //VERIFY
-                ex.Message.ShouldEqual("You had multiple ILinkToEntity interfaces on the DTO/VM DtoWithTwoIlinks. That isn't allowed.");
-            }
-        }
+        //        //VERIFY
+        //        ex.Message.ShouldEqual("You had multiple ILinkToEntity interfaces on the DTO/VM DtoWithTwoIlinks. That isn't allowed.");
+        //    }
+        //}
 
         [Fact]
         public void TestSetupDtoWithoutLinkBad()
