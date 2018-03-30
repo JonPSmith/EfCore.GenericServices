@@ -13,11 +13,8 @@ namespace GenericServices.Internal.MappingCode
     {
         public dynamic Accessor { get; }
 
-        private IGenericServicesConfig _publicConfig;
-
-        public CreateMapGenerator(Type dtoType, DecodedEntityClass entityInfo, IGenericServicesConfig publicConfig, object configInfo)
+        public CreateMapGenerator(Type dtoType, DecodedEntityClass entityInfo, object configInfo)
         {
-            _publicConfig = publicConfig;
             var myGeneric = typeof(MapGenerator<,>);
             var copierType = myGeneric.MakeGenericType(dtoType, entityInfo.EntityType);
             Accessor = Activator.CreateInstance(copierType, new object[]{ configInfo});

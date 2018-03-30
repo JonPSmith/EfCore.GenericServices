@@ -38,7 +38,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(typeof(AuthorNameDto), _bookInfo, null, null);
+            var mapCreator = new CreateMapGenerator(typeof(AuthorNameDto), _bookInfo, null);
             mapCreator.Accessor.BuildReadMapping(maps);
 
             //VERIFY
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, null, new BookTitleAndCountConfig());
+            var mapCreator = new CreateMapGenerator(typeof(BookTitleAndCount), _bookInfo, new BookTitleAndCountConfig());
             mapCreator.Accessor.BuildReadMapping(maps);
 
             //VERIFY

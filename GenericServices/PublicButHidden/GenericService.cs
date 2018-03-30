@@ -4,8 +4,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;

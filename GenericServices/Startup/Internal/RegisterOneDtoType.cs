@@ -32,7 +32,7 @@ namespace GenericServices.Startup.Internal
 
             var classesInThisAssembly = dtoType.Assembly.GetTypes();
             var perDtoConfig = FindConfigInfoIfPresent(dtoType, entityType, classesInThisAssembly);
-            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, configuration, perDtoConfig);
+            MapGenerator = new CreateMapGenerator(dtoType, EntityInfo, perDtoConfig);
             PerDtoConfig = (PerDtoConfig)MapGenerator.Accessor.GetRestOfPerDtoConfig();
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
