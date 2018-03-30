@@ -3,8 +3,11 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using GenericServices.Configuration;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
+using GenericServices.Internal.MappingCode;
 
 namespace GenericServices.Startup.Internal
 {
@@ -19,6 +22,7 @@ namespace GenericServices.Startup.Internal
 
         public RegisterOneDtoType(Type dtoType, Type[] typesInAssembly, IGenericServicesConfig configuration)
         {
+
             Header = dtoType.Name;
             var entityType = dtoType.GetLinkedEntityFromDto();
             
@@ -34,7 +38,9 @@ namespace GenericServices.Startup.Internal
             if (!IsValid)
                 return;
             ConfigGenerator = new CreateConfigGenerator(dtoType, EntityInfo, perDtoConfig);
-            PerDtoConfig = (PerDtoConfig)ConfigGenerator.Accessor.GetRestOfPerDtoConfig();
+            PerDtoConfig = perDtoConfig != null
+                ? (PerDtoConfig) ConfigGenerator.Accessor.GetRestOfPerDtoConfig()
+                : null;
         
             var decodeStatus = dtoType.GetOrCreateDtoInfo(EntityInfo, configuration, PerDtoConfig);
             CombineStatuses(decodeStatus);

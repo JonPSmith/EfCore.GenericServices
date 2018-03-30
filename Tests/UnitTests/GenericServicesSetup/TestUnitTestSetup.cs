@@ -24,6 +24,8 @@ namespace Tests.UnitTests.GenericServicesSetup
 
         public class DtoWithoutILink { }
 
+        private class PrivateDto : ILinkToEntity<Book> { }
+
         [Fact]
         public void TestSetupSingleDtoAndEntitiesOk()
         {
@@ -84,6 +86,19 @@ namespace Tests.UnitTests.GenericServicesSetup
             }
         }
 
+        [Fact]
+        public void TestSetupPrivateDto()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<PrivateDto>());
 
+                //VERIFY
+                ex.Message.ShouldEndWith("PrivateDto: Sorry, but the DTO/ViewModel class 'PrivateDto' must be public for GenericServices to work.");
+            }
+        }
     }
 }
