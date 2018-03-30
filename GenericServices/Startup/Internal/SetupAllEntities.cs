@@ -11,7 +11,6 @@ namespace GenericServices.Startup.Internal
     internal class SetupAllEntities : IGenericServicesSetupPart1
     {
         public IGenericServicesConfig PublicConfig { get; }
-        public Type[] ContextTypes { get; }
         public IServiceCollection Services { get; }
 
         public SetupAllEntities(IServiceCollection services, IGenericServicesConfig publicConfig, Type[] contextTypes)
@@ -20,13 +19,12 @@ namespace GenericServices.Startup.Internal
             PublicConfig = publicConfig ?? new GenericServicesConfig();
             if (contextTypes == null || contextTypes.Length <= 0)
                 throw new ArgumentException(nameof(contextTypes));
-            ContextTypes = contextTypes;
 
             var serviceProvider = services.BuildServiceProvider();
             var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
             using (var serviceScope = serviceScopeFactory.CreateScope())
             {
-                foreach (var contextType in ContextTypes)
+                foreach (var contextType in contextTypes)
                 {
                     using (var context = serviceScope.ServiceProvider.GetService(contextType) as DbContext)
                     {

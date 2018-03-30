@@ -41,33 +41,38 @@ namespace GenericServices.Startup
             return setupEntities;
         }
 
-        public static IGenericServicesSetupPart1 ScanAssemblesForDtos(this IGenericServicesSetupPart1 genericServicesSetupPart1,
+        public static IGenericServicesSetupPart2 ScanAssemblesForDtos(this IGenericServicesSetupPart1 setupPart1,
             params Assembly[] assemblies)
         {
             assemblies = assemblies ?? AppDomain.CurrentDomain.GetAssemblies();
+            var dtosRegister = new SetupDtosAndMappings(setupPart1.PublicConfig);
+            var wrappedMapping = dtosRegister.ScanAllAssemblies(assemblies, true);
+            if (!dtosRegister.IsValid)
+                throw new InvalidOperationException($"SETUP FAILED with {dtosRegister.Errors.Count} errors. Errors are:\n"
+                                                    + dtosRegister.GetAllErrors());
 
-            return genericServicesSetupPart1;
+            return new GenericServicesSetupPart2(setupPart1.Services, setupPart1.PublicConfig, wrappedMapping);
         }
 
         /// <summary>
         /// This registers all the services needed to run GenericServices. You will be able to access GenericServices
         /// via its interfaces: IGenericService and cref="IGenericService<TContext>">
         /// </summary>
-        /// <param name="genericServicesSetupPart1"></param>
+        /// <param name="setupPart2"></param>
         /// <param name="registerDbContext">If you have one DbContext and you want to use the non-generic IGenericService
         /// then GenericServices has to register DbContext against your application's DbContext</param>
         /// <returns></returns>
-        public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart1 genericServicesSetupPart1, 
+        public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
             bool registerDbContext = false)
         {
             //services.AddScoped<IGenericService, GenericService>();
-            genericServicesSetupPart1.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+            setupPart2.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             //Async to go here
 
             //Register AutoMapper configuration goes here
 
 
-            return genericServicesSetupPart1.Services;
+            return setupPart2.Services;
         }
 
 

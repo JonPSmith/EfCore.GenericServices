@@ -8,8 +8,6 @@ namespace GenericServices.Startup
     {
         IGenericServicesConfig PublicConfig { get; }
 
-        Type[] ContextTypes { get; }
-
         IServiceCollection Services { get; }
     }
 }

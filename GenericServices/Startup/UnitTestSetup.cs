@@ -37,16 +37,9 @@ namespace GenericServices.Startup
                                                     + status.GetAllErrors());
 
             var readProfile = new MappingProfile(false);
-            dtoRegister.ConfigGenerator.Accessor.AddReadMappingToProfile(readProfile);
             var saveProfile = new MappingProfile(true);
-            //Only add a mapping if AutoMapper can be used to update/create the entity
-            if (dtoRegister.EntityInfo.EntityStyle != EntityStyles.DDDStyled && 
-                dtoRegister.EntityInfo.EntityStyle != EntityStyles.ReadOnly)
-            {
-                dtoRegister.ConfigGenerator.Accessor.AddSaveMappingToProfile(saveProfile);
-            }
-
-            return SetupAllDtosAndMappings.CreateWrappedAutoMapperConfig(readProfile, saveProfile);
+            SetupDtosAndMappings.SetupMappingForDto(dtoRegister, readProfile, saveProfile);
+            return SetupDtosAndMappings.CreateWrappedAutoMapperConfig(readProfile, saveProfile);
         }
     }
 }
