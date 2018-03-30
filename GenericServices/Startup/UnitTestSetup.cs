@@ -19,9 +19,7 @@ namespace GenericServices.Startup
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="context"></param>
-        /// <param name="publicConfig">WARNING: you MUST use a consistant GenericServicesConfig across ALL your tests.
-        /// This is because the configuration is used in cached values. If you want to test a different configuration then
-        /// make the test ONLY runnable by hand.</param>
+        /// <param name="publicConfig"></param>
         /// <returns></returns>
         public static IWrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)

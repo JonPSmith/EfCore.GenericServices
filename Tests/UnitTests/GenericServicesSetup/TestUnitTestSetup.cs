@@ -7,11 +7,12 @@ using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Startup;
+using Tests.Dtos;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Tests.UnitTests.GenericServicesPublic
+namespace Tests.UnitTests.GenericServicesSetup
 {
     public class TestUnitTestSetup
     {
@@ -24,7 +25,22 @@ namespace Tests.UnitTests.GenericServicesPublic
         public class DtoWithoutILink { }
 
         [Fact]
-        public void TestDtoWithTwoILinksBad()
+        public void TestSetupSingleDtoAndEntitiesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                //ATTEMPT
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+
+                //VERIFY
+                mapper.ShouldNotBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestSetupDtoWithTwoILinksBad()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -39,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestDtoWithoutLinkBad()
+        public void TestSetupDtoWithoutLinkBad()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
