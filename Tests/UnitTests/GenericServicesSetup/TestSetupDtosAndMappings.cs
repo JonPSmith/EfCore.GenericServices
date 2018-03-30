@@ -68,15 +68,15 @@ namespace Tests.UnitTests.GenericServicesSetup
             using (var context = new EfCoreContext(options))
             {
                 context.RegisterEntityClasses();
-
-                //ATTEMPT
-                var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
-                setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, true);
-
-                //VERIFY
-                setupDtos.IsValid.ShouldBeFalse();
-                setupDtos.Errors.Count.ShouldEqual(4);
             }
+
+            //ATTEMPT
+            var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
+            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, true);
+
+            //VERIFY
+            setupDtos.IsValid.ShouldBeFalse();
+            setupDtos.Errors.Count.ShouldEqual(4);
         }
 
         [Fact]
@@ -100,8 +100,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
             //VERIFY
             setupDtos.IsValid.ShouldBeFalse();
-            setupDtos.Errors.Count.ShouldEqual(2);
-            
+            setupDtos.Errors.Count.ShouldEqual(3);    
         }
 
 

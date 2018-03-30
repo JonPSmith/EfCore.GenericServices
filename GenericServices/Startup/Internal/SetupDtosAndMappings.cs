@@ -75,8 +75,10 @@ namespace GenericServices.Startup.Internal
             Header = $"Scanning {assemblyToScan.GetName().Name}";
             var allTypesInAssembly = assemblyToScan.GetTypes();
             var allLinkToEntityClasses = allTypesInAssembly
-                .Where(x => x.GetLinkedEntityFromDto() != null);
+                .Where(x => x.GetLinkedEntityFromDto(err => AddError(err)) != null);
 
+            if (!IsValid)
+                return;
             foreach (var dtoType in allLinkToEntityClasses)
             {
                 var dtoRegister = new RegisterOneDtoType(dtoType, allTypesInAssembly, PublicConfig);

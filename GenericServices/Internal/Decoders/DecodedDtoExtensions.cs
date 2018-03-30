@@ -19,7 +19,7 @@ namespace GenericServices.Internal.Decoders
         private class ClassWithNestedMapInterface : INestedMap<ClassWithNestedMapInterface> { }
         public static readonly string InterfaceNameINestedMap = typeof(ClassWithNestedMapInterface).GetInterfaces().Single().Name;
 
-        public static Type GetLinkedEntityFromDto(this Type entityOrDto)
+        public static Type GetLinkedEntityFromDto(this Type entityOrDto, Action<string> addError = null)
         {
             try
             {
@@ -28,7 +28,13 @@ namespace GenericServices.Internal.Decoders
             }
             catch (AmbiguousMatchException e)
             {
-                throw new InvalidOperationException($"You had multiple {HumanReadableILinkToEntity} interfaces on the DTO/VM {entityOrDto.Name}. That isn't allowed.");
+                var message =
+                    $"You had multiple {HumanReadableILinkToEntity} interfaces on the DTO/VM {entityOrDto.Name}. That isn't allowed.";
+                if (addError == null)
+                    throw new InvalidOperationException(message);
+
+                addError.Invoke(message);
+                return null;
             }
         }
 

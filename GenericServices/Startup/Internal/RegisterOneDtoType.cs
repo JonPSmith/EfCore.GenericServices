@@ -21,7 +21,9 @@ namespace GenericServices.Startup.Internal
         {
 
             Header = dtoType.Name;
-            var entityType = dtoType.GetLinkedEntityFromDto();
+            var entityType = dtoType.GetLinkedEntityFromDto(err => AddError(err));
+            if (!IsValid)
+                return;
             if (entityType == null)
             {
                 AddError($"The DTO/ViewModel class {dtoType.Name} is not registered as a valid GenericService DTO." +
