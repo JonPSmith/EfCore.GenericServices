@@ -17,13 +17,13 @@ namespace GenericServices.Startup
         /// This will configure GenericServices if you are using one DbContext and you are happy to use the default GenericServices configuration.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="assemblies">You can define the assemblies to scan for DTOs/ViewModels. Otherwise it will scan all assemblies (slower, but simple)</param>
+        /// <param name="assembliesToScan">You can define the assemblies to scan for DTOs/ViewModels. Otherwise it will scan all assemblies (slower, but simple)</param>
         /// <returns></returns>
         public static IServiceCollection GenericServicesSimpleSetup<TContext>(this IServiceCollection services,
-            params Assembly[] assemblies) where TContext : DbContext
+            params Assembly[] assembliesToScan) where TContext : DbContext
         {
             return services.ConfigureGenericServicesEntities(typeof(TContext))
-                .ScanAssemblesForDtos(assemblies)
+                .ScanAssemblesForDtos(assembliesToScan)
                 .RegisterGenericServices(typeof(TContext));
         }
 
@@ -42,11 +42,10 @@ namespace GenericServices.Startup
         }
 
         public static IGenericServicesSetupPart2 ScanAssemblesForDtos(this IGenericServicesSetupPart1 setupPart1,
-            params Assembly[] assemblies)
+            params Assembly[] assembliesToScan)
         {
-            assemblies = assemblies ?? AppDomain.CurrentDomain.GetAssemblies();
             var dtosRegister = new SetupDtosAndMappings(setupPart1.PublicConfig);
-            var wrappedMapping = dtosRegister.ScanAllAssemblies(assemblies, true);
+            var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, true);
             if (!dtosRegister.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {dtosRegister.Errors.Count} errors. Errors are:\n"
                                                     + dtosRegister.GetAllErrors());
@@ -65,7 +64,6 @@ namespace GenericServices.Startup
         public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
             Type singleContextToRegister = null)
         {
-            //services.AddScoped<IGenericService, GenericService>();
             setupPart2.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 
             //Async to go here
@@ -74,6 +72,7 @@ namespace GenericServices.Startup
             if (singleContextToRegister != null)
             {
                 setupPart2.Services.AddScoped<IGenericService, GenericService>();
+                //Async to go here
                 setupPart2.Services.AddScoped(s => (DbContext)s.GetRequiredService(singleContextToRegister));
             }
 
