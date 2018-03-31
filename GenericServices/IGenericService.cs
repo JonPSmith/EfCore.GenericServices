@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
 {
-    public interface IGenericService<TContext> : IStatusGeneric where TContext : DbContext
+    public interface IGenericService : IStatusGeneric
     {
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the GenericService is using.

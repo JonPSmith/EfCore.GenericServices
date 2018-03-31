@@ -39,7 +39,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SaveChanges();
 
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorDto { AuthorId = 1, Name = "New Name", Email = "you@gmail.com" };
@@ -64,7 +64,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000,1,1) };
@@ -88,7 +88,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
@@ -112,7 +112,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
@@ -137,7 +137,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.AddReviewDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
@@ -171,7 +171,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<DtoWithConfig>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoWithConfig { BookId = 4 };
@@ -195,7 +195,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
@@ -217,7 +217,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //        context.SeedDatabaseFourBooks();
 
         //        var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
-        //        var service = new GenericService<EfCoreContext>(context, wrapped);
+        //        var service = new GenericService(context, wrapped);
 
         //        //ATTEMPT
         //        var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };

@@ -11,6 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
 {
+    public class GenericService : GenericService<DbContext>, IGenericService
+    {
+        public GenericService(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
+        {
+        }
+    }
+
     public class GenericService<TContext> : 
         StatusGenericHandler, 
         IGenericService<TContext> where TContext : DbContext
@@ -23,7 +30,7 @@ namespace GenericServices.PublicButHidden
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        public TContext CurrentContext => _context;
+        public DbContext CurrentContext => _context;
 
         public GenericService(TContext context, IWrappedAutoMapperConfig wapper)
         {
@@ -155,7 +162,7 @@ namespace GenericServices.PublicButHidden
             _context.SaveChanges();
         }
 
-        public void DeleteWithActionAndSave<TEntity>(Func<TContext, TEntity, IStatusGeneric> runBeforeDelete,
+        public void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
             Header = "Delete";

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
+using GenericServices.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceLayer;
+using ServiceLayer.HomeController.Dtos;
 
 namespace RazorPageApp
 {
@@ -44,6 +47,8 @@ namespace RazorPageApp
             connection.Open();  //see https://github.com/aspnet/EntityFramework/issues/6968
             services.AddDbContext<EfCoreContext>(options => options.UseSqlite(connection));
             //--------------------------------------------------------------------
+
+            services.GenericServicesSimpleSetup<EfCoreContext>(Assembly.GetAssembly(typeof(BookListDto)));
 
             //Now I use AutoFac to do some of the more complex registering of services
             var containerBuilder = new ContainerBuilder();

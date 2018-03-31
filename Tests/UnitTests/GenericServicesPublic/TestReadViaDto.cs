@@ -29,7 +29,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitle>(1);
@@ -52,7 +52,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(1);
@@ -75,7 +75,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(x => x.BookId == 1);
@@ -98,7 +98,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(999);
@@ -120,7 +120,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<BookTitleAndCount>(x => true));
@@ -141,7 +141,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new GenericService<EfCoreContext>(context, mapper);
+                var service = new GenericService(context, mapper);
 
                 //ATTEMPT
                 var list = service.ReadManyNoTracked<BookTitle>().ToList();
@@ -164,7 +164,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new GenericService<EfCoreContext>(context, wrapped);
+                var service = new GenericService(context, wrapped);
 
                 //ATTEMPT
                 var list = service.ReadManyNoTracked<BookTitleAndCount>().ToList();
@@ -192,7 +192,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //    }
         //    using (var context = new EfCoreContext(options))
         //    {
-        //        var service = new GenericService<EfCoreContext>(context, mapper);
+        //        var service = new GenericService(context, mapper);
 
         //        //ATTEMPT
         //        var dto = new AuthorNameDto { Name = "New Name" };

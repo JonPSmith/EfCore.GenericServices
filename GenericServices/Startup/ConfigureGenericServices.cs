@@ -24,7 +24,7 @@ namespace GenericServices.Startup
         {
             return services.ConfigureGenericServicesEntities(typeof(TContext))
                 .ScanAssemblesForDtos(assemblies)
-                .RegisterGenericServices(true);
+                .RegisterGenericServices(typeof(TContext));
         }
 
         public static IGenericServicesSetupPart1 ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
@@ -59,24 +59,28 @@ namespace GenericServices.Startup
         /// via its interfaces: IGenericService and cref="IGenericService<TContext>">
         /// </summary>
         /// <param name="setupPart2"></param>
-        /// <param name="registerDbContext">If you have one DbContext and you want to use the non-generic IGenericService
-        /// then GenericServices has to register DbContext against your application's DbContext</param>
+        /// <param name="singleContextToRegister">If you have one DbContext and you want to use the non-generic IGenericService
+        /// then GenericServices has to register your DbContext against your application's DbContext</param>
         /// <returns></returns>
         public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
-            bool registerDbContext = false)
+            Type singleContextToRegister = null)
         {
             //services.AddScoped<IGenericService, GenericService>();
             setupPart2.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+
             //Async to go here
 
-            //Register AutoMapper configuration goes here
+            //If there is only one DbContext then the developer can use the non-generic GenericService
+            if (singleContextToRegister != null)
+            {
+                setupPart2.Services.AddScoped<IGenericService, GenericService>();
+                setupPart2.Services.AddScoped(s => (DbContext)s.GetRequiredService(singleContextToRegister));
+            }
 
+            //Register AutoMapper configuration goes here
+            setupPart2.Services.AddSingleton(setupPart2.AutoMapperConfig);
 
             return setupPart2.Services;
         }
-
-
-
-
     }
 }

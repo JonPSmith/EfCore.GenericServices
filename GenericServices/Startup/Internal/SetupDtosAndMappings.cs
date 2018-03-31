@@ -25,6 +25,8 @@ namespace GenericServices.Startup.Internal
 
         public IWrappedAutoMapperConfig ScanAllAssemblies(Assembly[] assembliesToScan, bool initializeMapper)
         {
+            if (assembliesToScan == null || assembliesToScan.Length == 0)
+                throw new ArgumentException("There were no assembles to scan!", nameof(assembliesToScan));
             foreach (var assembly in assembliesToScan)
             {
                 RegisterDtosInAssemblyAndBuildMaps(assembly);
