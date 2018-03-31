@@ -25,7 +25,6 @@ namespace Tests.UnitTests.Performance
             _output = output;
         }
 
-
         [Fact]
         public void TestCreateMapperOk()
         {
@@ -38,7 +37,7 @@ namespace Tests.UnitTests.Performance
             var myGeneric = typeof(CreateMapper.GenericMapper<,>);
             var genericType = myGeneric.MakeGenericType(typeof(BookTitleAndCount), entityInfo.EntityType);
             //ATTEMPT
-            using (new TimeThings(_output, "Activator.CreateInstance"))
+            using (new TimeThings(_output, "100 x Activator.CreateInstance"))
             {             
                 for (int i = 0; i < 100; i++)
                 {
@@ -47,12 +46,12 @@ namespace Tests.UnitTests.Performance
                 }
             }
             var constructor = genericType.GetConstructors().Single();
-            using (new TimeThings(_output, "Create Linq"))
+            using (new TimeThings(_output, "1 x Create Linq in cache"))
             {
                 CreateMapper.GetNewGenericMapper(genericType, constructor);
             }
 
-            using (new TimeThings(_output, "LINQ new (cached)"))
+            using (new TimeThings(_output, "100 x LINQ new (cached)"))
             {
                 for (int i = 0; i < 100; i++)
                 {
@@ -60,7 +59,7 @@ namespace Tests.UnitTests.Performance
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
-            using (new TimeThings(_output, "LINQ new (no cache)"))
+            using (new TimeThings(_output, "100 x LINQ new (no cache)"))
             {
                 for (int i = 0; i < 100; i++)
                 {

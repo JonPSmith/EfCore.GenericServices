@@ -30,11 +30,13 @@ namespace GenericServices.Internal.MappingCode
 
         private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
 
+        //This is only public for performance tests
         public static dynamic GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
         {
             return NewGenericMapperCache.GetOrAdd(genericType, value => NewGenericMapper(ctor));
         }
 
+        //This is only public for performance tests
         public static dynamic NewGenericMapper(ConstructorInfo ctor)
         {
             var arg1 = Expression.Parameter(typeof(DbContext), "context");
