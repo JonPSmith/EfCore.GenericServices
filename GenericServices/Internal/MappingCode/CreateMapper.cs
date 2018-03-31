@@ -22,9 +22,10 @@ namespace GenericServices.Internal.MappingCode
         {
             var myGeneric = typeof(GenericMapper<,>);
             var genericType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
-            //var constructor = genericType.GetConstructors().Single();
-            //Accessor = GetNewGenericMapper(genericType, constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
-            Accessor = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
+            var constructor = genericType.GetConstructors().Single();
+            Accessor = GetNewGenericMapper(genericType, constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
+            //Using Activator.CreateInstance with dynamic takes twice as long as LINQ new - see TestNewCreateMapper
+            //Accessor = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
         }
 
         //Using LINQ new was SLOWER than using Activator.CreateInstance - see TestNewCreateMapper
@@ -52,6 +53,8 @@ namespace GenericServices.Internal.MappingCode
             private readonly DbContext _context;
             private readonly IWrappedAutoMapperConfig _wrappedMapper;
             private readonly DecodedEntityClass _entityInfo;
+
+            public string EntityName => _entityInfo.EntityType.Name;
 
             public GenericMapper(DbContext context, IWrappedAutoMapperConfig wrappedMapper, DecodedEntityClass entityInfo)
             {
