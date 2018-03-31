@@ -2,10 +2,10 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
-using AutoMapper;
+using System.Reflection;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
@@ -21,8 +21,28 @@ namespace GenericServices.Internal.MappingCode
         public CreateMapper(DbContext context, IWrappedAutoMapperConfig wrapperMapperConfigs, Type tDto, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericMapper<,>);
-            var copierType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
-            Accessor = Activator.CreateInstance(copierType, new object[] { context, wrapperMapperConfigs, entityInfo});
+            var genericType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
+            //var constructor = genericType.GetConstructors().Single();
+            //Accessor = GetNewGenericMapper(genericType, constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
+            Accessor = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
+        }
+
+        //Using LINQ new was SLOWER than using Activator.CreateInstance - see TestNewCreateMapper
+        private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
+
+        public static dynamic GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
+        {
+            return NewGenericMapperCache.GetOrAdd(genericType, value => NewGenericMapper(ctor));
+        }
+
+        public static dynamic NewGenericMapper(ConstructorInfo ctor)
+        {
+            var arg1 = Expression.Parameter(typeof(DbContext), "context");
+            var arg2 = Expression.Parameter(typeof(IWrappedAutoMapperConfig), "wrapperMapper");
+            var arg3 = Expression.Parameter(typeof(DecodedEntityClass), "entityInfo");
+            var newExp = Expression.New(ctor, arg1, arg2, arg3);
+            var built = Expression.Lambda(newExp, false, arg1, arg2, arg3);
+            return built.Compile();
         }
 
         public class GenericMapper<TDto, TEntity>

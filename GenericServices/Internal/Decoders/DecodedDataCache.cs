@@ -3,12 +3,11 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using Microsoft.EntityFrameworkCore;
+
+[assembly: InternalsVisibleTo("Test")]
 
 namespace GenericServices.Internal.Decoders
 {
