@@ -39,8 +39,7 @@ namespace GenericServices.PublicButHidden
         }
 
         public T ReadSingle<T>(params object[] keys) where T : class
-        {
-            Header = "ReadSingle>Find";
+        {    
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -63,7 +62,6 @@ namespace GenericServices.PublicButHidden
 
         public T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
-            Header = "ReadSingle>Where";
             T result = null;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -86,7 +84,6 @@ namespace GenericServices.PublicButHidden
 
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
-            Header = "ReadMany";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -100,7 +97,6 @@ namespace GenericServices.PublicButHidden
 
         public T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            Header = "AddNew";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -126,7 +122,6 @@ namespace GenericServices.PublicButHidden
 
         public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
         {
-            Header = "Update";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -146,7 +141,6 @@ namespace GenericServices.PublicButHidden
 
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
         {
-            Header = "Delete";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(
@@ -165,7 +159,6 @@ namespace GenericServices.PublicButHidden
         public void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
-            Header = "Delete";
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(

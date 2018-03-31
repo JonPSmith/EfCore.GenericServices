@@ -105,7 +105,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse(service.GetAllErrors());
-                service.GetAllErrors().ShouldEqual("ReadSingle>Find: Sorry, I could not find the Book Title And Count you were looking for.");
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title And Count you were looking for.");
             }
         }
 

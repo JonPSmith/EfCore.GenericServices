@@ -96,7 +96,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("AddNew>Author: The Name field is required.");
+                service.GetAllErrors().ShouldEqual("Author: The Name field is required.");
             }
         }
 
