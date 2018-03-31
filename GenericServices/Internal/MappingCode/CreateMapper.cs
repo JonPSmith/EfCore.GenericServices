@@ -28,7 +28,6 @@ namespace GenericServices.Internal.MappingCode
             //Accessor = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
         }
 
-        //Using LINQ new was SLOWER than using Activator.CreateInstance - see TestNewCreateMapper
         private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
 
         public static dynamic GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
