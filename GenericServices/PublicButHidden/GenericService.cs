@@ -82,6 +82,41 @@ namespace GenericServices.PublicButHidden
             return result;
         }
 
+        public void ReadSingleToDto<TDto>(TDto dto, params object[] keys) where TDto : class
+        {
+            var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
+            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(TDto), dtoInfo.LinkedEntityInfo);
+            if (keys.Length == 0)
+            {
+                //we need to get the keys from the dto
+                keys = _context.GetKeysFromDtoInCorrectOrder(dto, dtoInfo.LinkedEntityInfo.EntityType, dtoInfo);
+            }
+            var result = ((IQueryable<TDto>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
+            if (result == null)
+            {
+                AddError(
+                    $"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TDto>()} you were looking for.");
+                return;
+            }
+            //Now copy the result to the original dto
+            dtoInfo.ShallowCopyDtoToDto(result, dto);
+        }
+
+        public void ReadSingleToDto<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class
+        {
+            var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
+            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(TDto), dtoInfo.LinkedEntityInfo);
+            var result = ((IQueryable<TDto>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression)).SingleOrDefault();
+            if (result == null)
+            {
+                AddError(
+                    $"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TDto>()} you were looking for.");
+                return;
+            }
+            //Now copy the result to the original dto
+            dtoInfo.ShallowCopyDtoToDto(result, dto);
+        }
+
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));

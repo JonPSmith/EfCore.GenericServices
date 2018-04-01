@@ -20,6 +20,8 @@ namespace GenericServices
 
         T ReadSingle<T>(params object[] keys) where T : class;
         T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class;
+        void ReadSingleToDto<TDto>(TDto dto, params object[] keys) where TDto : class;
+        void ReadSingleToDto<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class;
         IQueryable<T> ReadManyNoTracked<T>() where T : class;
         T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
         void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;

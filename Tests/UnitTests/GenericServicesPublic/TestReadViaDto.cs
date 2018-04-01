@@ -17,11 +17,13 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestReadViaDto
     {
+        //------------------------------------------------------
+        //ReadSingle
+
         [Fact]
         public void TestProjectBookTitleSingleOk()
         {
             //SETUP
-
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -129,6 +131,108 @@ namespace Tests.UnitTests.GenericServicesPublic
                 ex.Message.ShouldEqual("Sequence contains more than one element");
             }
         }
+
+        //------------------------------------------------------
+        //ReadSingleToDto
+
+        [Fact]
+        public void TestReadSingleToExistingOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new GenericService(context, mapper);
+                var dto = new BookTitle {BookId = -1, Title = "Original title"};
+
+                //ATTEMPT
+                service.ReadSingleToDto(dto, 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Title.ShouldEqual("Refactoring");
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleToExistingKeysInDtoOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new GenericService(context, mapper);
+                var dto = new BookTitle { BookId = 1, Title = "Original title" };
+
+                //ATTEMPT
+                service.ReadSingleToDto(dto);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Title.ShouldEqual("Refactoring");
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleToExistingBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new GenericService(context, mapper);
+                var dto = new BookTitle { BookId = -1, Title = "Original title" };
+
+                //ATTEMPT
+                service.ReadSingleToDto(dto, -1);
+
+                //VERIFY
+                service.IsValid.ShouldBeFalse();
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title you were looking for.");
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleToExistingWhereOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new GenericService(context, mapper);
+                var dto = new BookTitle { BookId = -1, Title = "Original title" };
+
+                //ATTEMPT
+                service.ReadSingleToDto(dto, x => x.BookId == 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Title.ShouldEqual("Refactoring");
+            }
+        }
+
+
+        //------------------------------------------------------
+        //Read many
 
         [Fact]
         public void TestProjectBookTitleManyOk()

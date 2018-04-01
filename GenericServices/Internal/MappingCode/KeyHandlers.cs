@@ -46,7 +46,7 @@ namespace GenericServices.Internal.MappingCode
                 var dtoKeyProperty = dtoInfo.PropertyInfos.SingleOrDefault(x => x.PropertyInfo.Name == entityKey.Name);
                 if (dtoKeyProperty == null)
                     throw new InvalidOperationException($"The DTO/VM class {typeof(TDto).Name} does not contain the primary key {entityKey.Name}."+
-                                                        " You have to include every part of a primary key in the DTO for an unpdate to work.");
+                                                        " You have to include every part of a primary key in the DTO for this service to work.");
                 keys.Add(dtoKeyProperty.PropertyInfo.GetValue(dto));
             }
 

@@ -96,6 +96,14 @@ namespace GenericServices.Internal.Decoders
             return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedCtorsAndStaticMethods, "ctor/static method");
         }
 
+        public void ShallowCopyDtoToDto(object source, object target)
+        {
+            foreach (var propertyInfo in PropertyInfos.Select(x => x.PropertyInfo))
+            {
+                propertyInfo.SetValue(target, propertyInfo.GetValue(source));
+            }
+        }
+
         //---------------------------------------------------------------------------------
 
         private static MethodCtorMatch FindMethodCtorByName(string name, int numParams, List<MethodCtorMatch>listToScan, string errorString)
