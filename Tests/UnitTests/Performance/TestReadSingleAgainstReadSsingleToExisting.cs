@@ -40,14 +40,14 @@ namespace Tests.UnitTests.Performance
 
                 //ATTEMPT
                 var preload = service.ReadSingle<BookListDto>(1);
-                using (new TimeThings(_output, "100 x ReadSingle"))
+                using (new TimeThings(_output, "ReadSingle", 100))
                 {
                     for (int i = 0; i < 100; i++)
                     {
                         var dto = service.ReadSingle<BookListDto>(1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingleToDto"))
+                using (new TimeThings(_output, "ReadSingleToDto", 100))
                 {
                     var dto = new BookListDto();
                     for (int i = 0; i < 100; i++)
@@ -55,14 +55,14 @@ namespace Tests.UnitTests.Performance
                         service.ReadSingleToDto(dto, 1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingle"))
+                using (new TimeThings(_output, "ReadSingle", 100))
                 {
                     for (int i = 0; i < 100; i++)
                     {
                         var dto = service.ReadSingle<BookListDto>(1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingleToDto"))
+                using (new TimeThings(_output, "ReadSingleToDto", 100))
                 {
                     var dto = new BookListDto();
                     for (int i = 0; i < 100; i++)
@@ -88,14 +88,14 @@ namespace Tests.UnitTests.Performance
 
                 //ATTEMPT
                 var preload = service.ReadSingle<BookTitle>(1);
-                using (new TimeThings(_output, "100 x ReadSingle"))
+                using (new TimeThings(_output, "ReadSingle", 100))
                 {
                     for (int i = 0; i < 100; i++)
                     {
                         var dto = service.ReadSingle<BookTitle>(1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingleToDto"))
+                using (new TimeThings(_output, "ReadSingleToDto", 100))
                 {
                     var dto = new BookTitle();
                     for (int i = 0; i < 100; i++)
@@ -103,14 +103,14 @@ namespace Tests.UnitTests.Performance
                         service.ReadSingleToDto(dto, 1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingle"))
+                using (new TimeThings(_output, "ReadSingle", 100))
                 {
                     for (int i = 0; i < 100; i++)
                     {
                         var dto = service.ReadSingle<BookTitle>(1);
                     }
                 }
-                using (new TimeThings(_output, "100 x ReadSingleToDto"))
+                using (new TimeThings(_output, "ReadSingleToDto", 100))
                 {
                     var dto = new BookTitle();
                     for (int i = 0; i < 100; i++)
