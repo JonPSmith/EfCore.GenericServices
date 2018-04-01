@@ -136,7 +136,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //ReadSingleToDto
 
         [Fact]
-        public void TestReadSingleToExistingOk()
+        public void TestReadSingleToDtoOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -160,7 +160,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestReadSingleToExistingKeysInDtoOk()
+        public void TestReadSingleToDtoKeysInDtoOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -184,7 +184,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestReadSingleToExistingBad()
+        public void TestReadSingleToDtoBadKey()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -207,7 +207,29 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestReadSingleToExistingWhereOk()
+        public void TestReadSingleToDtoBadDto()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new GenericService(context, mapper);
+                var dto = "";
+
+                //ATTEMPT
+                var ex = Assert.Throws<NullReferenceException>(() => service.ReadSingleToDto(dto, -1));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The class System.String is not registered as a valid GenericService DTO/ViewModel. Have you left off the ILinkToEntity interface?");
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleToDtoWhereOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
