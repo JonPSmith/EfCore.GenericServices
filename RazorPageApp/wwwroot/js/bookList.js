@@ -27,7 +27,7 @@ var BookList = (function($) {
         var ajaxSettings = {
             //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method name>
             //In this case it's '/?Handler=FilterSearchContent'
-            url: '/?handler=FilterSearchContent',
+            url: (false ? '/?handler=FilterSearchContent' : '/Home/Filter'),
             data: {
                 FilterBy: filterByValue
             }

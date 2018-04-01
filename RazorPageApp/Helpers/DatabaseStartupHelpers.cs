@@ -33,7 +33,7 @@ namespace RazorPageApp.Helpers
                     catch (Exception ex)
                     {
                         var logger = services.GetRequiredService<ILogger<Program>>();
-                        logger.LogError(ex, "An error occurred while setting upor seeding the development database.");
+                        logger.LogError(ex, "An error occurred while setting up or seeding the development database.");
                     }
                 }
             }

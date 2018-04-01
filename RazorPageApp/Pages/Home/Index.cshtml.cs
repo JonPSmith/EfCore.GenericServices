@@ -34,13 +34,13 @@ namespace RazorPageApp.Pages
             SortFilterPageData = options;
         }
 
-        public JsonResult OnGetFilterSearchContent(SortFilterPageOptions options)
+        public JsonResult OnGetFilterSearchContent(BooksFilterBy filterBy)
         {
-            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(options.FilterBy));
+            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(filterBy));
         }
 
         //You can use this to catch the data, or have items in the paremeters of the action method
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public BooksFilterBy FilterBy { get; set; }
 
         public JsonResult OnPostFilterSearchContent(SortFilterPageOptions options)
