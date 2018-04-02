@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
 using ServiceLayer.HomeController.QueryObjects;
@@ -14,12 +11,12 @@ namespace RazorPageApp.Pages
     public class IndexModel : PageModel
     {
         private readonly IListBooksService _listService;
-        private readonly IBookFilterDropdownService _filterDropDownService;
+        private readonly IBookFilterDropdownService _filterService;
 
-        public IndexModel(IListBooksService listService, IBookFilterDropdownService filterDropDownService)
+        public IndexModel(IListBooksService listService, IBookFilterDropdownService filterService)
         {
             _listService = listService;
-            _filterDropDownService = filterDropDownService;
+            _filterService = filterService;
         }
 
         public SortFilterPageOptions SortFilterPageData { get; private set; }
@@ -34,18 +31,18 @@ namespace RazorPageApp.Pages
             SortFilterPageData = options;
         }
 
-        public JsonResult OnGetFilterSearchContent(BooksFilterBy filterBy)
+        public JsonResult OnGetFilter(BooksFilterBy filterBy)
         {
-            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(filterBy));
+            return new JsonResult(_filterService.GetFilterDropDownValues(filterBy));
         }
 
         //You can use this to catch the data, or have items in the paremeters of the action method
         [BindProperty(SupportsGet = true)]
         public BooksFilterBy FilterBy { get; set; }
 
-        public JsonResult OnPostFilterSearchContent(SortFilterPageOptions options)
+        public JsonResult OnPostFilter(SortFilterPageOptions options)
         {
-            return new JsonResult(_filterDropDownService.GetFilterDropDownValues(options.FilterBy));
+            return new JsonResult(_filterService.GetFilterDropDownValues(options.FilterBy));
         }
     }
 }

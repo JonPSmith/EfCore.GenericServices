@@ -35,8 +35,6 @@ namespace RazorPageApp
             {
                 options.Conventions.AddPageRoute("/Home/Index", "");
             });
-            //Used for Ajax Post - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
-            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
             //--------------------------------------------------------------------
             //var connection = Configuration.GetConnectionString("DefaultConnection");

@@ -27,18 +27,16 @@ var BookList = (function($) {
         var ajaxSettings = {
             //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method name>
             //In this case it's '/?Handler=FilterSearchContent'
-            url: (false ? '/?handler=FilterSearchContent' : '/Home/Filter'),
+            url: (false ? '/?handler=Filter' : '/Home/Filter'),
             data: {
                 FilterBy: filterByValue
             }
         };
-        if (false) {
+        if (true) {
             //this make it into a POST - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
-            //see also https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery#javascript-ajax-and-spas
             ajaxSettings.type = 'POST';
-            ajaxSettings.beforeSend = function(xhr) {
-                xhr.setRequestHeader("XSRF-TOKEN",
-                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            ajaxSettings.headers = {
+                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
             };
         }
 
