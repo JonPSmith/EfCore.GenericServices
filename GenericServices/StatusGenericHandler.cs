@@ -14,8 +14,9 @@ namespace GenericServices
     /// </summary>
     public class StatusGenericHandler : IStatusGeneric
     {
+        public const string DefaultSuccessMessage = "Success!";
         private readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
-        private string _successMessage = "OK";
+        private string _successMessage = DefaultSuccessMessage;
 
         /// <summary>
         /// This creates a StatusGenericHandler, with optional header (see Header property, and CombineStatuses)
@@ -46,6 +47,17 @@ namespace GenericServices
                 ? _successMessage
                 : $"Failed with {_errors.Count} error" + (_errors.Count == 1 ? "" : "s");
             set => _successMessage = value;
+        }
+
+        /// <summary>
+        /// This sets the success message as long as it hasn't already been set.
+        /// This is useful because if a method in the entity class is called, and that sets the message, that existing message should take precidence
+        /// </summary>
+        /// <param name="message"></param>
+        public void SetMessageIfNotAlreadySet(string message)
+        {
+            if (_successMessage == DefaultSuccessMessage)
+                _successMessage = message;
         }
 
         /// <summary>
