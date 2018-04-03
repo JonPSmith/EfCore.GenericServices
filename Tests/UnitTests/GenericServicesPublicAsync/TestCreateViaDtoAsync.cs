@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
@@ -16,9 +17,9 @@ using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Tests.UnitTests.GenericServicesPublic
+namespace Tests.UnitTests.GenericServicesPublicAsync
 {
-    public class TestCreateViaDto
+    public class TestCreateViaDtoAsync
     {
         public class AuthorDto : ILinkToEntity<Author>
         {
@@ -27,7 +28,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateAuthorViaAutoMapperOk()
+        public async Task TestCreateAuthorViaAutoMapperOk()
         {
             //SETUP
             var unique = Guid.NewGuid().ToString();
@@ -37,11 +38,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNewAndSave(author);
+                await service.AddNewAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -54,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateAuthorViaAutoMapperMappingViaTestSetupOk()
+        public async Task TestCreateAuthorViaAutoMapperMappingViaTestSetupOk()
         {
             //SETUP
             var unique = Guid.NewGuid().ToString();
@@ -63,11 +64,11 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNewAndSave(author);
+                await service.AddNewAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -80,7 +81,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingDefaults_AutoMapperOk()
+        public async Task TestCreateEntityUsingDefaults_AutoMapperOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -89,14 +90,14 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
             }
             using (var context = new EfCoreContext(options))
-            {
-                var mapper = AutoMapperHelpers.CreateWrapperMapper<AuthorNameDto, Author>();
+            {              
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericService(context, mapper);
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNewAndSave(dto);
+                await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -110,7 +111,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingDefaults_AutoMapperMappingSetOk()
+        public async Task TestCreateEntityUsingDefaults_AutoMapperMappingSetOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -120,12 +121,12 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericService(context, mapper);
+                var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNewAndSave(dto, "AutoMapper");
+                await service.AddNewAndSaveAsync(dto, "AutoMapper");
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -148,7 +149,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingCtorOk()
+        public async Task TestCreateEntityUsingCtorOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -158,12 +159,12 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new GenericService(context, mapper);
+                var wrapped = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 1, MyString = "Hello"};
-                service.AddNewAndSave(dto);
+                await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -183,7 +184,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingStaticFactoryOk()
+        public async Task TestCreateEntityUsingStaticFactoryOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -193,12 +194,12 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericService(context, mapper);
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
-                service.AddNewAndSave(dto);
+                await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -212,7 +213,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingStaticFactoryWithBadStatusOk()
+        public async Task TestCreateEntityUsingStaticFactoryWithBadStatusOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -222,12 +223,12 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericService(context, mapper);
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var service = new GenericServiceAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };
-                service.AddNewAndSave(dto);
+                await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
