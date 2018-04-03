@@ -82,7 +82,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
-            return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(), 
+            return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(tDto), 
                 type => PrivateCallMethodReturnVoid(methodInfo, tDto, tEntity, propertyMatches));
         }
 
@@ -117,7 +117,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
-            return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
+            return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(tDto),
                 type => PrivateCallMethodReturnStatus(methodInfo, tDto, tEntity, propertyMatches));
         }
 
@@ -152,7 +152,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
-            return CallStaticFactoryCache.GetOrAdd(methodInfo.GenerateKey(),
+            return CallStaticFactoryCache.GetOrAdd(methodInfo.GenerateKey(tDto),
                 type => PrivateCallStaticFactory(methodInfo, tDto, propertyMatches));
         }
 
@@ -185,7 +185,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallConstructor(ConstructorInfo ctor, Type tDto, List<PropertyMatch> propertyMatches)
         {
-            return CallConstructorCache.GetOrAdd(ctor.GenerateKey(),
+            return CallConstructorCache.GetOrAdd(ctor.GenerateKey(tDto),
                 type => PrivateCallConstructor(ctor, tDto, propertyMatches));
         }
 
@@ -214,14 +214,14 @@ namespace GenericServices.Internal.LinqBuilders
             return built.Compile();
         }
 
-        private static string GenerateKey(this MethodInfo methodInfo)
+        private static string GenerateKey(this MethodInfo methodInfo, Type tDto)
         {
-            return methodInfo.DeclaringType.FullName + (methodInfo.IsStatic ? "Static" : "") + methodInfo.ToString();
+            return methodInfo.DeclaringType.FullName + tDto.FullName + (methodInfo.IsStatic ? "Static" : "") + methodInfo.ToString();
         }
 
-        private static string GenerateKey(this ConstructorInfo ctorInfo)
+        private static string GenerateKey(this ConstructorInfo ctorInfo, Type tDto)
         {
-            return ctorInfo.DeclaringType.FullName + ctorInfo.ToString();
+            return ctorInfo.DeclaringType.FullName + tDto.FullName + ctorInfo.ToString();
         }
     }
 }
