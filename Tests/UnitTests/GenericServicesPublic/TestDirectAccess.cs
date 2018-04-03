@@ -6,7 +6,6 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
-using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
@@ -85,7 +84,48 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.IsValid.ShouldBeFalse();
                 service.Errors.First().ToString().ShouldEqual("Sorry, I could not find the Book you were looking for.");
                 book.ShouldBeNull();
+            }
+        }
 
+        [Fact]
+        public void TestGetSingleOnEntityWhereBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                var book = service.ReadSingle<Book>(x => x.BookId == 99);
+
+                //VERIFY
+                service.IsValid.ShouldBeFalse();
+                service.Errors.First().ToString().ShouldEqual("Sorry, I could not find the Book you were looking for.");
+                book.ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestGetSingleOnEntityWhereException()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericService(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<Book>(x => true));
+
+                //VERIFY
+                ex.Message.ShouldEqual("Sequence contains more than one element");
             }
         }
 

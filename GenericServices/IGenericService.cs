@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
 {
+    /// <summary>
+    /// This is the sync interface to GenericService, which assumes you have one DbContext which the GenericService setup code will register to the DbContext type
+    /// You should use this with dependency injection to get an instance of the sync GenericService
+    /// </summary>
     public interface IGenericService : IStatusGeneric
     {
         /// <summary>
@@ -18,7 +22,20 @@ namespace GenericServices
         /// </summary>
         DbContext CurrentContext { get; }
 
+        /// <summary>
+        /// This reads a single entity or DTO given the key(s) of the entity you want to load
+        /// </summary>
+        /// <typeparam name="T">This should either be an entity class or a GenericService DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
+        /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
+        /// <returns></returns>
         T ReadSingle<T>(params object[] keys) where T : class;
+
+        /// <summary>
+        /// This reads a single entity or DTO using a where clause
+        /// </summary>
+        /// <typeparam name="T">This should either be an entity class or a GenericService DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
+        /// <param name="whereExpression">The where expression should return a single instance, otherwise you get a </param>
+        /// <returns></returns>
         T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class;
         void ReadSingleToDto<TDto>(TDto dto, params object[] keys) where TDto : class;
         void ReadSingleToDto<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class;

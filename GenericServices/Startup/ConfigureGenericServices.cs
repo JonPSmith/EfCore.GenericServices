@@ -55,7 +55,7 @@ namespace GenericServices.Startup
 
         /// <summary>
         /// This registers all the services needed to run GenericServices. You will be able to access GenericServices
-        /// via its interfaces: IGenericService and cref="IGenericService<TContext>">
+        /// via its interfaces: IGenericService, <see cref="IGenericService{TContext}" /> and async versions
         /// </summary>
         /// <param name="setupPart2"></param>
         /// <param name="singleContextToRegister">If you have one DbContext and you want to use the non-generic IGenericService
@@ -65,14 +65,13 @@ namespace GenericServices.Startup
             Type singleContextToRegister = null)
         {
             setupPart2.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-
-            //Async to go here
+            setupPart2.Services.AddScoped(typeof(IGenericServiceAsync<>), typeof(GenericServiceAsync<>));
 
             //If there is only one DbContext then the developer can use the non-generic GenericService
             if (singleContextToRegister != null)
             {
                 setupPart2.Services.AddScoped<IGenericService, GenericService>();
-                //Async to go here
+                setupPart2.Services.AddScoped<IGenericServiceAsync, GenericServiceAsync>();
                 setupPart2.Services.AddScoped(s => (DbContext)s.GetRequiredService(singleContextToRegister));
             }
 

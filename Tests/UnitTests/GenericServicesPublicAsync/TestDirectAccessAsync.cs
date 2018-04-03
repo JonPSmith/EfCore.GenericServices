@@ -85,7 +85,48 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 service.IsValid.ShouldBeFalse();
                 service.Errors.First().ToString().ShouldEqual("Sorry, I could not find the Book you were looking for.");
                 book.ShouldBeNull();
+            }
+        }
 
+        [Fact]
+        public async Task TestGetSingleOnEntityWhereBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                var book = await service.ReadSingleAsync<Book>(x => x.BookId == 99);
+
+                //VERIFY
+                service.IsValid.ShouldBeFalse();
+                service.Errors.First().ToString().ShouldEqual("Sorry, I could not find the Book you were looking for.");
+                book.ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public async Task TestGetSingleOnEntityWhereException()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+
+                //ATTEMPT
+                var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
+
+                //VERIFY
+                ex.Message.ShouldEqual("Source sequence contains more than one element.");
             }
         }
 
