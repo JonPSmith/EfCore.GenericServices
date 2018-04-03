@@ -2,7 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
 
 namespace GenericServices
 {
@@ -22,10 +21,10 @@ namespace GenericServices
         bool IsValid { get; }
 
         /// <summary>
-        /// On success this returns the message as set by the business logic, or the default messages set by the BizRunner
+        /// On success this returns any message set by GenericServices, or any method that returns a status
         /// If there are errors it contains the message "Failed with NN errors"
         /// </summary>
-        string Message { get; set; }
+        string Message { get; }
 
         /// <summary>
         /// This allows statuses to be combined
