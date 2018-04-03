@@ -2,13 +2,18 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using GenericServices;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Tests.EfClasses
 {
     public class DddCtorEntity
     {
         private DddCtorEntity() { }
+
+        public DddCtorEntity(int myInt)
+        {
+            MyInt = myInt;
+            MyString = "1 param ctor";
+        }
 
         public DddCtorEntity(int myInt, string myString)
         {
