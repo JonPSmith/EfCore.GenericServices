@@ -57,12 +57,13 @@ namespace GenericServices.PublicButHidden
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you were looking for.");
             }
+
             return result;
         }
 
         public T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
-            T result = null;
+            T result;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -79,6 +80,7 @@ namespace GenericServices.PublicButHidden
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you were looking for.");
             }
+
             return result;
         }
 
@@ -120,6 +122,7 @@ namespace GenericServices.PublicButHidden
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            SetMessageIfNotAlreadySet($"Successfully read many {ExtractDisplayHelpers.GetNameForClass<T>()}");
             if (entityInfo.EntityType == typeof(T))
             {
                 return _context.Set<T>().AsNoTracking();
@@ -152,6 +155,7 @@ namespace GenericServices.PublicButHidden
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
+            SetMessageIfNotAlreadySet($"Successfully created a {entityInfo.EntityType.GetNameForClass()}");
             return IsValid ? entityOrDto : null;
         }
 
@@ -172,6 +176,7 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
             }
+            SetMessageIfNotAlreadySet($"Successfully updated a {entityInfo.EntityType.GetNameForClass()}");
         }
 
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
@@ -189,6 +194,7 @@ namespace GenericServices.PublicButHidden
             }
             _context.Remove(entity);
             _context.SaveChanges();
+            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
         public void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
@@ -211,6 +217,7 @@ namespace GenericServices.PublicButHidden
 
             _context.Remove(entity);
             _context.SaveChanges();
+            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
     }
