@@ -62,7 +62,7 @@ namespace GenericServices.Internal.LinqBuilders
         public static IStatusGeneric<object> RunMethodOrCtorViaLinq(MethodCtorMatch ctorOrMethod, dynamic dto, 
             List<PropertyMatch> propertyMatches, DbContext context)
         {
-            var result = new StatusGenericHandler<dynamic>();
+            var result = new StatusGenericHandler<object>();
             if (ctorOrMethod.Constructor != null)
             {
                 var ctor = CallConstructor(ctorOrMethod.Constructor, dto.GetType(), propertyMatches);
@@ -185,7 +185,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallConstructor(ConstructorInfo ctor, Type tDto, List<PropertyMatch> propertyMatches)
         {
-            return CallMethodReturnStatusCache.GetOrAdd(ctor.GenerateKey(),
+            return CallConstructorCache.GetOrAdd(ctor.GenerateKey(),
                 type => PrivateCallConstructor(ctor, tDto, propertyMatches));
         }
 
