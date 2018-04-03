@@ -10,6 +10,7 @@ using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Startup;
+using ServiceLayer.HomeController.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -47,6 +48,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Author");
                 var entity = context.Authors.Find(1);
                 entity.Name.ShouldEqual("Start Name");
                 entity.Email.ShouldEqual(dto.Email);
@@ -72,6 +74,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Book");
                 var entity = context.Books.Find(4);
                 entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
             }
@@ -96,6 +99,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Book");
                 var entity = context.Books.Find(4);
                 entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
             }
@@ -120,6 +124,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Book");
                 var entity = context.Books.Find(4);
                 entity.ActualPrice.ShouldEqual(220);
             }
@@ -145,7 +150,32 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Book");
                 context.Set<Review>().Count().ShouldEqual(3);
+            }
+        }
+
+        [Fact]
+        public void TestUpdateAddPromotionWithMessageOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var wrapped = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
+                var service = new GenericService(context, wrapped);
+
+                //ATTEMPT
+                var dto = new AddRemovePromotionDto { BookId = 1, ActualPrice = 1, PromotionalText = "Really Cheap!"};
+                service.UpdateAndSave(dto, nameof(Book.AddPromotion));
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("The book's new price is $1.00.");
             }
         }
 
@@ -179,6 +209,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Book");
                 var entity = context.Books.Find(4);
                 entity.ActualPrice.ShouldEqual(220);
             }
@@ -205,28 +236,5 @@ namespace Tests.UnitTests.GenericServicesPublic
                 ex.Message.ShouldStartWith("Could not find a method of name AddReview. The method that fit the properties in the DTO/VM are:");
             }
         }
-
-        //[Fact]
-        //public void TestUpdateViaAutoMapperBad()
-        //{
-        //    //SETUP
-        //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-        //    using (var context = new EfCoreContext(options))
-        //    {
-        //        context.Database.EnsureCreated();
-        //        context.SeedDatabaseFourBooks();
-
-        //        var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
-        //        var service = new GenericService(context, wrapped);
-
-        //        //ATTEMPT
-        //        var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-        //        var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(dto, "AutoMapper"));
-
-        //        //VERIFY
-        //        ex.Message.ShouldStartWith("There was no way to update the entity class Book using AutoMapper.");
-        //    }
-        //}
-
     }
 }

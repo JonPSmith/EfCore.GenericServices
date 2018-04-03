@@ -21,7 +21,53 @@ namespace Tests.UnitTests.GenericServicesPublic
             //VERIFY
             status.IsValid.ShouldBeTrue();
             status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("OK");
+            status.Message.ShouldEqual(StatusGenericHandler.DefaultSuccessMessage);
+        }
+
+        [Fact]
+        public void TestGenericStatusSetMessageOk()
+        {
+            //SETUP 
+            var status = new StatusGenericHandler();
+
+            //ATTEMPT
+            status.Message = "New message";
+
+            //VERIFY
+            status.IsValid.ShouldBeTrue();
+            status.Errors.Any().ShouldBeFalse();
+            status.Message.ShouldEqual("New message");
+        }
+
+        [Fact]
+        public void TestGenericStatusSetMessageIfNotAlreadySetOk()
+        {
+            //SETUP 
+            var status = new StatusGenericHandler();
+
+            //ATTEMPT
+            status.SetMessageIfNotAlreadySet("New message");
+
+            //VERIFY
+            status.IsValid.ShouldBeTrue();
+            status.Errors.Any().ShouldBeFalse();
+            status.Message.ShouldEqual("New message");
+        }
+
+        [Fact]
+        public void TestGenericStatusSetMessageIfNotAlreadySetFailWhenSetOk()
+        {
+            //SETUP 
+            var status = new StatusGenericHandler();
+
+            //ATTEMPT
+            status.Message = "Already set";
+            status.SetMessageIfNotAlreadySet("New message");
+
+            //VERIFY
+            status.IsValid.ShouldBeTrue();
+            status.Errors.Any().ShouldBeFalse();
+            status.Message.ShouldEqual("Already set");
         }
 
         [Fact]
@@ -40,7 +86,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestGenericStatusCombineStatusesOk()
+        public void TestGenericStatusCombineStatusesWithErrorsOk()
         {
             //SETUP 
             var status1 = new StatusGenericHandler();
@@ -54,6 +100,22 @@ namespace Tests.UnitTests.GenericServicesPublic
             status2.IsValid.ShouldBeFalse();
             status2.Errors.Single().ToString().ShouldEqual("This is an error.");
             status2.Message.ShouldEqual("Failed with 1 error");
+        }
+
+        [Fact]
+        public void TestGenericStatusCombineStatusesIsValidWithMessageOk()
+        {
+            //SETUP 
+            var status1 = new StatusGenericHandler();
+            var status2 = new StatusGenericHandler();
+
+            //ATTEMPT
+            status1.Message = "My message";
+            status2.CombineStatuses(status1);
+
+            //VERIFY
+            status2.IsValid.ShouldBeTrue();
+            status2.Message.ShouldEqual("My message");
         }
 
         [Fact]

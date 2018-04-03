@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DtosTestDb\" />
     <Folder Include="UnitTests\DataLayer\" />
   </ItemGroup>
 

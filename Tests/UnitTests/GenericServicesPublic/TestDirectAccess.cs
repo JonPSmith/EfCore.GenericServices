@@ -170,6 +170,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.AddNewAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -194,11 +195,12 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new GenericService(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var author = service.ReadSingle<Author>(1);
+                var author = context.Authors.Find(1);
                 author.Email = unique;
                 service.UpdateAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -228,6 +230,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -254,6 +257,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully deleted a Book");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -290,7 +294,10 @@ namespace Tests.UnitTests.GenericServicesPublic
                 if (stopDelete)
                     service.IsValid.ShouldBeFalse();
                 else
+                {
                     service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                    service.Message.ShouldEqual("Successfully deleted a Book");
+                }
             }
             using (var context = new EfCoreContext(options))
             {

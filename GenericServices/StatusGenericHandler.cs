@@ -111,7 +111,7 @@ namespace GenericServices
                     ? status.Errors
                     : status.Errors.Select(x => new ErrorGeneric(Header, x)));
             }
-            if (IsValid && status.Message != null)
+            if (IsValid && status.Message != DefaultSuccessMessage)
                 Message = status.Message;
 
             return this;
