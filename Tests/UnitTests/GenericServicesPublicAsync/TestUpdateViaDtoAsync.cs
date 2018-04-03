@@ -48,6 +48,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Author");
                 var entity = context.Authors.Find(1);
                 entity.Name.ShouldEqual("Start Name");
                 entity.Email.ShouldEqual(dto.Email);
@@ -73,6 +74,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Book");
                 var entity = context.Books.Find(4);
                 entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
             }
@@ -97,6 +99,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Book");
                 var entity = context.Books.Find(4);
                 entity.PublishedOn.ShouldEqual(new DateTime(2000, 1, 1));
             }
@@ -121,6 +124,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Book");
                 var entity = context.Books.Find(4);
                 entity.ActualPrice.ShouldEqual(220);
             }
@@ -146,6 +150,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Book");
                 context.Set<Review>().Count().ShouldEqual(3);
             }
         }
@@ -180,6 +185,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully updated the Book");
                 var entity = context.Books.Find(4);
                 entity.ActualPrice.ShouldEqual(220);
             }

@@ -156,6 +156,7 @@ namespace GenericServices.PublicButHidden
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
+            SetMessageIfNotAlreadySet($"Successfully created a {entityInfo.EntityType.GetNameForClass()}");
             return IsValid ? entityOrDto : null;
         }
 
@@ -176,6 +177,7 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(dtoInfo.ValidateOnSave).ConfigureAwait(false));        
             }
+            SetMessageIfNotAlreadySet($"Successfully updated the {entityInfo.EntityType.GetNameForClass()}");
         }
 
         public async Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
@@ -193,6 +195,7 @@ namespace GenericServices.PublicButHidden
             }
             _context.Remove(entity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
         public async Task DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
@@ -215,6 +218,7 @@ namespace GenericServices.PublicButHidden
 
             _context.Remove(entity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
     }

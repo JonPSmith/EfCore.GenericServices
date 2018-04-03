@@ -46,6 +46,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -72,6 +73,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -101,6 +103,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -130,6 +133,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -174,6 +178,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Ddd Static Fact Entity");
             }
             using (var context = new TestDbContext(options))
             {

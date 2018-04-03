@@ -200,7 +200,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.UpdateAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully updated a Author");
+                service.Message.ShouldEqual("Successfully updated the Author");
             }
             using (var context = new EfCoreContext(options))
             {
@@ -230,7 +230,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully updated a Author");
+                service.Message.ShouldEqual("Successfully updated the Author");
             }
             using (var context = new EfCoreContext(options))
             {

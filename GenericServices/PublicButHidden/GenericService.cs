@@ -176,7 +176,7 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
             }
-            SetMessageIfNotAlreadySet($"Successfully updated a {entityInfo.EntityType.GetNameForClass()}");
+            SetMessageIfNotAlreadySet($"Successfully updated the {entityInfo.EntityType.GetNameForClass()}");
         }
 
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
