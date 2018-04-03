@@ -93,7 +93,7 @@ namespace GenericServices.Internal.Decoders
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
                 return GetDefaultSetterMethod(entityInfo, _matchedCtorsAndStaticMethods, "ctor/static method");
 
-            return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedCtorsAndStaticMethods, "ctor/static method");
+            return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedCtorsAndStaticMethods, "ctor/static methods");
         }
 
         public void ShallowCopyDtoToDto(object source, object target)
