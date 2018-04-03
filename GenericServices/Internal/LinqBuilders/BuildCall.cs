@@ -152,7 +152,7 @@ namespace GenericServices.Internal.LinqBuilders
 
         public static dynamic CallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
-            return CallMethodReturnStatusCache.GetOrAdd(methodInfo.GenerateKey(),
+            return CallStaticFactoryCache.GetOrAdd(methodInfo.GenerateKey(),
                 type => PrivateCallStaticFactory(methodInfo, tDto, propertyMatches));
         }
 

@@ -207,8 +207,8 @@ namespace Tests.UnitTests.GenericServicesInternal
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = BuildCall.CallConstructor(ctor, typeof(Dto), new List<PropertyMatch> { prop1, prop2 });
-            var newInstance = action.Invoke(dto);
+            var func = BuildCall.CallConstructor(ctor, typeof(Dto), new List<PropertyMatch> { prop1, prop2 });
+            var newInstance = func.Invoke(dto);
 
             //VERIFY
             ((int)newInstance.MyInt).ShouldEqual(123);
