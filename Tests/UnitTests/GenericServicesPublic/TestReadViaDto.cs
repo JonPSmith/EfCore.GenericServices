@@ -252,6 +252,55 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
+        //-------------------------------------------------------
+        //Read Single - including collection
+
+        [Fact]
+        public void TestReadSingleCollection()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookWithAuthors>();
+                var service = new GenericService(context, mapper);
+
+                //ATTEMPT
+                var dto = service.ReadSingle<BookWithAuthors>(1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Authors.Count.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleToDtoCollection()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookWithAuthors>();
+                var service = new GenericService(context, mapper);
+                var dto = new BookWithAuthors();
+
+                //ATTEMPT
+                service.ReadSingleToDto(dto, 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.Authors.Count.ShouldEqual(1);
+            }
+        }
 
         //------------------------------------------------------
         //Read many
