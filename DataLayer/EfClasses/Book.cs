@@ -98,7 +98,7 @@ namespace DataLayer.EfClasses
             _reviews.Remove(review); 
         }
 
-        public IStatusGeneric AddPromotion(decimal newPrice, string promotionalText)                  
+        public IStatusGeneric AddPromotion(decimal actualPrice, string promotionalText)                  
         {
             var status = new StatusGenericHandler();
             if (string.IsNullOrWhiteSpace(promotionalText))
@@ -107,10 +107,10 @@ namespace DataLayer.EfClasses
                 return status;
             }
 
-            ActualPrice = newPrice;  
+            ActualPrice = actualPrice;  
             PromotionalText = promotionalText;
 
-            status.Message = $"The book's new price is ${newPrice:F}.";
+            status.Message = $"The book's new price is ${actualPrice:F}.";
 
             return status; 
         }
