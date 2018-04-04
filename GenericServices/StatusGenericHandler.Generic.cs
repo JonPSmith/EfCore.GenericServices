@@ -18,6 +18,11 @@ namespace GenericServices
             get => IsValid ? _result : default(T);
         }
 
+        /// <summary>
+        /// This sets the result to be returned
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public StatusGenericHandler<T> SetResult(T result)
         {
             _result = result;

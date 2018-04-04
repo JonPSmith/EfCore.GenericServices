@@ -15,6 +15,7 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestParametersMatch
     {
+#pragma warning disable xUnit1013 // Public method should be marked as test
         public void ParemeterlessMethod() { }
         public void SetMyInt(int myInt) { }
 
@@ -24,6 +25,7 @@ namespace Tests.UnitTests.GenericServicesInternal
 
         public int MyInt { get; set; }
         public string MyString { get; set; }
+#pragma warning restore xUnit1013 // Public method should be marked as test
 
         private static MethodInfo _paremeterlessMethod = typeof(TestParametersMatch).GetMethod(nameof(ParemeterlessMethod));
         private static MethodInfo _setMyInt = typeof(TestParametersMatch).GetMethod(nameof(SetMyInt));
@@ -63,7 +65,9 @@ namespace Tests.UnitTests.GenericServicesInternal
             match.Score.ShouldEqual(0.65);
         }
 
+#pragma warning disable xUnit1013 // Public method should be marked as test
         public void MyMethodWithDb(int myInt, EfCoreContext context) { }
+#pragma warning restore xUnit1013 // Public method should be marked as test
 
         [Fact]
         public void TesDbContextMatch()

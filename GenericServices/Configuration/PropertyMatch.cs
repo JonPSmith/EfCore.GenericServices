@@ -34,7 +34,10 @@ namespace GenericServices.Configuration
         /// </summary>
         public enum TypeMatchLevels
         {
-            NoMatch = 0, NeedsCast = 1, NeedsCastOnCollection = 2, Match = 3
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+            NoMatch = 0,
+            Match = 3
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         }
 
         /// <summary>

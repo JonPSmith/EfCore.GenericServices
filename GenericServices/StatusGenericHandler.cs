@@ -14,7 +14,7 @@ namespace GenericServices
     /// </summary>
     public class StatusGenericHandler : IStatusGeneric
     {
-        public const string DefaultSuccessMessage = "Success!";
+        internal const string DefaultSuccessMessage = "Success!";
         private readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
         private string _successMessage = DefaultSuccessMessage;
 

@@ -143,7 +143,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
-                var books = service.ReadManyNoTracked<Book>();
+                var books = await service.ReadManyNoTracked<Book>().ToListAsync();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -267,7 +267,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             var status = new StatusGenericHandler();
             if (entity.BookId == 1)
                 status.AddError("Stop delete");
-            return status;
+            return await Task.FromResult(status);
         }
 
         [Theory]

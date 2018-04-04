@@ -26,7 +26,7 @@ namespace GenericServices.Internal.Decoders
                 var linkInterface = entityOrDto.GetInterface(InterfaceNameILinkToEntity);
                 return linkInterface?.GetGenericArguments().Single();
             }
-            catch (AmbiguousMatchException e)
+            catch (AmbiguousMatchException)
             {
                 var message =
                     $"You had multiple {HumanReadableILinkToEntity} interfaces on the DTO/VM {entityOrDto.Name}. That isn't allowed.";
