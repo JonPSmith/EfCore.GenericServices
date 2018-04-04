@@ -4,13 +4,17 @@
 using System;
 using System.Reflection;
 using GenericServices.Configuration;
-using GenericServices.Startup.Internal;
+using GenericServices.Setup.Internal;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Startup
+namespace GenericServices.Setup
 {
+    /// <summary>
+    /// This contains extension methods for setting up GenericServices at startup.
+    /// It assumes the use of dependency injection (DI) and <see cref="IServiceCollection"/> for DI registering
+    /// </summary>
     public static class ConfigureGenericServices
     {
         /// <summary>
@@ -27,12 +31,27 @@ namespace GenericServices.Startup
                 .RegisterGenericServices(typeof(TContext));
         }
 
+        /// <summary>
+        /// If you want to use multiple DbContexts then you should use this, plus <see cref="ScanAssemblesForDtos"/> and <see cref="RegisterGenericServices"/>
+        /// to set up GenericServices
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="contextTypes">You should provide an array of your DbContext types that you want to register</param>
+        /// <returns></returns>
         public static IGenericServicesSetupPart1 ConfigureGenericServicesEntities(this IServiceCollection serviceCollection,
             params Type[] contextTypes)
         {
             return serviceCollection.ConfigureGenericServicesEntities(null, contextTypes);
         }
 
+        /// <summary>
+        /// If you want to use multiple DbContexts then you should use this, plus <see cref="ScanAssemblesForDtos"/> and <see cref="RegisterGenericServices"/>
+        /// to set up GenericServices. This version allow you to provide a <see cref="GenericServicesConfig"/> with your settings
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration">You provide a <see cref="GenericServicesConfig"/> with your settings</param>
+        /// <param name="contextTypes">You should provide an array of your DbContext types that you want to register</param>
+        /// <returns></returns>
         public static IGenericServicesSetupPart1 ConfigureGenericServicesEntities(this IServiceCollection services,
             IGenericServicesConfig configuration, params Type[] contextTypes)
         {
@@ -41,6 +60,12 @@ namespace GenericServices.Startup
             return setupEntities;
         }
 
+        /// <summary>
+        /// If you use ConfigureGenericServicesEntities, then you should follow it with this method to find/set up the DTOs
+        /// </summary>
+        /// <param name="setupPart1"></param>
+        /// <param name="assembliesToScan"></param>
+        /// <returns></returns>
         public static IGenericServicesSetupPart2 ScanAssemblesForDtos(this IGenericServicesSetupPart1 setupPart1,
             params Assembly[] assembliesToScan)
         {
@@ -54,6 +79,7 @@ namespace GenericServices.Startup
         }
 
         /// <summary>
+        /// If you used ScanAssemblesForDtos you should add this method on the end
         /// This registers all the services needed to run GenericServices. You will be able to access GenericServices
         /// via its interfaces: ICrudServices, <see cref="ICrudServices{TContext}" /> and async versions
         /// </summary>

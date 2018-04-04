@@ -6,7 +6,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Tests.Dtos;
 using TestSupport.EfHelpers;
 using Xunit;

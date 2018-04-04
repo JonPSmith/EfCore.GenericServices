@@ -4,7 +4,7 @@
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
     internal static class SetupEntitiesExtensions
     {

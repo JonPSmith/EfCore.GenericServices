@@ -3,23 +3,26 @@
 
 using System;
 using GenericServices.Configuration;
-using GenericServices.Startup.Internal;
+using GenericServices.Setup.Internal;
 using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using GenericServices.Configuration.Internal;
-using GenericServices.Internal.Decoders;
 
-namespace GenericServices.Startup
+namespace GenericServices.Setup
 {
+    /// <summary>
+    /// This contains an extension method if you want to use GenericServices in a unit test.
+    /// It sets up a single DTO with all the entity classes
+    /// NOTE because all the setups are cached other tests may have registered other DTOs
+    /// </summary>
     public static class UnitTestSetup
     {
         /// <summary>
-        /// This is designed to set up the system for using one DTO in a unit test of a service
+        /// This is designed to set up the system for using one DTO and the entity classes in a unit test of a service
         /// </summary>
-        /// <typeparam name="TDto"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="publicConfig"></param>
+        /// <typeparam name="TDto">This should be the type of a class that has the <see cref="ILinkToEntity{TEntity}" applied to it/> </typeparam>
+        /// <param name="context">This is the DbContext conatining the entity clas your TDto refers to</param>
+        /// <param name="publicConfig">Optional: you can provide a publicConfig. 
+        /// NOTE: All use of this method must use the same config file, because it is read at startup and then cached.</param>
         /// <returns></returns>
         public static IWrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)

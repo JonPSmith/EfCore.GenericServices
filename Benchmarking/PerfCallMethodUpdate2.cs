@@ -5,7 +5,7 @@ using BenchmarkDotNet.Running;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using Tests.Helpers;
 using TestSupport.EfHelpers;

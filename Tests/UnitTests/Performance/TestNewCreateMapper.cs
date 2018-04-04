@@ -7,7 +7,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Tests.Dtos;
 using TestSupport.EfHelpers;
 using Xunit;

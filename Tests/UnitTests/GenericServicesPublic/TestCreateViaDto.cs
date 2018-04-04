@@ -7,7 +7,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;

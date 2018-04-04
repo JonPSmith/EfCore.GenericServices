@@ -10,7 +10,7 @@ using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;

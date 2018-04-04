@@ -9,7 +9,7 @@ using AutoMapper;
 
 [assembly: InternalsVisibleTo("Tests")]
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
     internal class MappingProfile : Profile
     {

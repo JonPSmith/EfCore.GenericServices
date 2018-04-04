@@ -5,8 +5,9 @@ using System;
 using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
+using GenericServices.Setup.Internal;
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
     internal class RegisterOneDtoType : StatusGenericHandler
     {

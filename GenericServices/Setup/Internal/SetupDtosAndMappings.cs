@@ -9,7 +9,7 @@ using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
     internal class SetupDtosAndMappings : StatusGenericHandler
     {

@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using ServiceLayer.HomeController.Dtos;
 using Tests.Dtos;
 using Tests.Helpers;

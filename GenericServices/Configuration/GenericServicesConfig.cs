@@ -6,15 +6,22 @@ using System.Reflection;
 
 namespace GenericServices.Configuration
 {
+    /// <summary>
+    /// This is the delegate for the method that matches name/type to a property's name/type
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="type"></param>
+    /// <param name="propertyInfo"></param>
+    /// <returns></returns>
     public delegate PropertyMatch MatchNameAndType(string name, Type type, PropertyInfo propertyInfo);
 
+    /// <summary>
+    /// This is the global configuration for GenericServices. It is read once during startup.
+    /// You can set values to alter the way GenericServices works
+    /// </summary>
     public class GenericServicesConfig : IGenericServicesConfig
     {
-       
-        /// <summary>
-        /// This holds the code that will match the Name and Type to the Name/Type of a PropertyInfo
-        /// The DefaultNameMatcher only handles names that are exactly the same, apart from the given name can be camelCase
-        /// </summary>
+        /// <inheritdoc />
         public MatchNameAndType NameMatcher { get; set; } = DefaultNameMatcher.MatchCamelAndPascalName;
 
     }

@@ -9,7 +9,7 @@ using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using ServiceLayer.HomeController.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;

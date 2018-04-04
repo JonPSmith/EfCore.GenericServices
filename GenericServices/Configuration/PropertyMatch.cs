@@ -10,8 +10,10 @@ namespace GenericServices.Configuration
     /// <summary>
     /// This represents source of the data to go into a method/ctor. It to allow injection of DbContext into access methods
     /// </summary>
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum MatchSources { Property, DbContext }
-    
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
     /// <summary>
     /// This holds the information on a match between a name/type and a propertyInfo, with a score to set how it did
     /// This is used by a name matcher to try to match method/ctor properties to a set of properties in a class

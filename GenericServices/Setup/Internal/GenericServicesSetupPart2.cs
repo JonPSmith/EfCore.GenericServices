@@ -6,19 +6,28 @@ using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
+    /// <summary>
+    /// Used to chain ConfigureGenericServicesEntities to RegisterGenericServices
+    /// </summary>
     public class GenericServicesSetupPart2 : IGenericServicesSetupPart2
     {
-        public GenericServicesSetupPart2(IServiceCollection services, IGenericServicesConfig publicConfig, IWrappedAutoMapperConfig autoMapperConfig)
+
+        internal GenericServicesSetupPart2(IServiceCollection services, IGenericServicesConfig publicConfig, IWrappedAutoMapperConfig autoMapperConfig)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
             PublicConfig = publicConfig ?? throw new ArgumentNullException(nameof(publicConfig));
             AutoMapperConfig = autoMapperConfig ?? throw new ArgumentNullException(nameof(autoMapperConfig));
         }
 
+        /// <inheritdoc />
         public IServiceCollection Services { get; }
+
+        /// <inheritdoc />
         public IGenericServicesConfig PublicConfig { get; }
+
+        /// <inheritdoc />
         public IWrappedAutoMapperConfig AutoMapperConfig { get; }
     }
 }

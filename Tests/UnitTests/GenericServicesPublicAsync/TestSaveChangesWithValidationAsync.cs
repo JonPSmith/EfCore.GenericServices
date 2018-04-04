@@ -8,7 +8,7 @@ using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;

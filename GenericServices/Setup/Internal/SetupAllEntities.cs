@@ -6,7 +6,7 @@ using GenericServices.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericServices.Startup.Internal
+namespace GenericServices.Setup.Internal
 {
     internal class SetupAllEntities : IGenericServicesSetupPart1
     {

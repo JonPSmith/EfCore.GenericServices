@@ -6,7 +6,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup;
+using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;

@@ -5,6 +5,9 @@ using System;
 
 namespace GenericServices.Configuration
 {
+    /// <summary>
+    /// This is the interface for global configuration for GenericServices. 
+    /// </summary>
     public interface IGenericServicesConfig
     {
         /// <summary>

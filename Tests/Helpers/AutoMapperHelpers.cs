@@ -4,7 +4,7 @@
 using System;
 using AutoMapper;
 using GenericServices.PublicButHidden;
-using GenericServices.Startup.Internal;
+using GenericServices.Setup.Internal;
 
 namespace Tests.Helpers
 {
