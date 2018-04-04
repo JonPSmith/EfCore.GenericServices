@@ -46,7 +46,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _wrapped);
                 var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT

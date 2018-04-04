@@ -19,7 +19,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 {
     public class TestDirectAccessAsync
     {
-        //Dummy - not needed becasue direct, but GenericService tests to make sure its not null
+        //Dummy - not needed becasue direct, but CrudServices tests to make sure its not null
         WrappedAutoMapperConfig _wrappedMapperConfig = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(1);
@@ -54,7 +54,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 1);
@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(99);
@@ -98,7 +98,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 99);
@@ -120,7 +120,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
@@ -140,7 +140,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var books = service.ReadManyNoTracked<Book>();
@@ -164,7 +164,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -192,7 +192,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 var author = await service.ReadSingleAsync<Author>(1);
@@ -220,7 +220,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -248,7 +248,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 await service.DeleteAndSaveAsync<Book>(1);
@@ -284,7 +284,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new GenericServiceAsync(context, _wrappedMapperConfig);
+                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
 
                 //ATTEMPT
                 await service.DeleteWithActionAndSaveAsync<Book>(DeleteCheck, bookId);

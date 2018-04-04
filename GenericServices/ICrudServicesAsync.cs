@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
 {
-    public interface IGenericServiceAsync : IStatusGeneric
+    public interface ICrudServicesAsync : IStatusGeneric
     {
         /// <summary>
-        /// This allows you to access the current DbContext that this instance of the GenericService is using.
+        /// This allows you to access the current DbContext that this instance of the CrudServices is using.
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>

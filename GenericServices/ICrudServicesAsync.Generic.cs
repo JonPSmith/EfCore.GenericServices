@@ -5,5 +5,5 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
 {
-    public interface IGenericServiceAsync<TContext> : IGenericServiceAsync where TContext : DbContext { }
+    public interface ICrudServicesAsync<TContext> : ICrudServicesAsync where TContext : DbContext { }
 }

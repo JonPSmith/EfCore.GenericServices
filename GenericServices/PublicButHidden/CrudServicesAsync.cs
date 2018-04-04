@@ -12,27 +12,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
 {
-    public class GenericServiceAsync : GenericServiceAsync<DbContext>, IGenericServiceAsync
+    public class CrudServicesAsync : CrudServicesAsync<DbContext>, ICrudServicesAsync
     {
-        public GenericServiceAsync(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
+        public CrudServicesAsync(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
         {
         }
     }
 
-    public class GenericServiceAsync<TContext> : 
+    public class CrudServicesAsync<TContext> : 
         StatusGenericHandler where TContext : DbContext
     {
         private readonly TContext _context;
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
 
         /// <summary>
-        /// This allows you to access the current DbContext that this instance of the GenericService is using.
+        /// This allows you to access the current DbContext that this instance of the CrudServices is using.
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
         public DbContext CurrentContext => _context;
 
-        public GenericServiceAsync(TContext context, IWrappedAutoMapperConfig wapper)
+        public CrudServicesAsync(TContext context, IWrappedAutoMapperConfig wapper)
         {
             _context = context;
             _wrapperMapperConfigs = wapper ?? throw new ArgumentException(nameof(wapper));

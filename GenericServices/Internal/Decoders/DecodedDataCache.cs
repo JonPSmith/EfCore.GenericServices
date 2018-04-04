@@ -41,7 +41,7 @@ namespace GenericServices.Internal.Decoders
         {
             if (!DecodedDtoCache.TryGetValue(dtoType, out var result))
                    throw new NullReferenceException(
-                       $"The class {dtoType} is not registered as a valid GenericService DTO/ViewModel." +
+                       $"The class {dtoType} is not registered as a valid CrudServices DTO/ViewModel." +
                        $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
             return result;
         }

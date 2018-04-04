@@ -38,7 +38,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
@@ -65,7 +65,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 context.Database.EnsureCreated();
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {              
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
@@ -125,7 +125,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
@@ -170,7 +170,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
@@ -200,7 +200,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericServiceAsync(context, wrapped);
+                var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };

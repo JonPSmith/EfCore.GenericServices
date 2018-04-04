@@ -36,7 +36,7 @@ namespace Tests.UnitTests.Performance
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookListDto>();
-                var service = new GenericService(context, mapper);
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var preload = service.ReadSingle<BookListDto>(1);
@@ -84,7 +84,7 @@ namespace Tests.UnitTests.Performance
                 context.SeedDatabaseFourBooks();
 
                 var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new GenericService(context, mapper);
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var preload = service.ReadSingle<BookTitle>(1);

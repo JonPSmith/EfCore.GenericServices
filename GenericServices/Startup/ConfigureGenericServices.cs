@@ -55,23 +55,23 @@ namespace GenericServices.Startup
 
         /// <summary>
         /// This registers all the services needed to run GenericServices. You will be able to access GenericServices
-        /// via its interfaces: IGenericService, <see cref="IGenericService{TContext}" /> and async versions
+        /// via its interfaces: ICrudServices, <see cref="ICrudServices{TContext}" /> and async versions
         /// </summary>
         /// <param name="setupPart2"></param>
-        /// <param name="singleContextToRegister">If you have one DbContext and you want to use the non-generic IGenericService
+        /// <param name="singleContextToRegister">If you have one DbContext and you want to use the non-generic ICrudServices
         /// then GenericServices has to register your DbContext against your application's DbContext</param>
         /// <returns></returns>
         public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
             Type singleContextToRegister = null)
         {
-            setupPart2.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-            setupPart2.Services.AddScoped(typeof(IGenericServiceAsync<>), typeof(GenericServiceAsync<>));
+            setupPart2.Services.AddScoped(typeof(ICrudServices<>), typeof(CrudServices<>));
+            setupPart2.Services.AddScoped(typeof(ICrudServicesAsync<>), typeof(CrudServicesAsync<>));
 
-            //If there is only one DbContext then the developer can use the non-generic GenericService
+            //If there is only one DbContext then the developer can use the non-generic CrudServices
             if (singleContextToRegister != null)
             {
-                setupPart2.Services.AddScoped<IGenericService, GenericService>();
-                setupPart2.Services.AddScoped<IGenericServiceAsync, GenericServiceAsync>();
+                setupPart2.Services.AddScoped<ICrudServices, CrudServices>();
+                setupPart2.Services.AddScoped<ICrudServicesAsync, CrudServicesAsync>();
                 setupPart2.Services.AddScoped(s => (DbContext)s.GetRequiredService(singleContextToRegister));
             }
 

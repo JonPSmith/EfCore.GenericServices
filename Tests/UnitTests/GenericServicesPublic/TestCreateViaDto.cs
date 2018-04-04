@@ -36,7 +36,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
@@ -63,7 +63,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {              
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
@@ -123,7 +123,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
@@ -162,7 +162,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
@@ -192,7 +192,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
@@ -218,7 +218,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
@@ -247,7 +247,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
@@ -277,7 +277,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
-                var service = new GenericService(context, wrapped);
+                var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };

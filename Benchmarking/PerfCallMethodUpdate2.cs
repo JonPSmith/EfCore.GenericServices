@@ -64,7 +64,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _wrapped);
 
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
@@ -102,7 +102,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new GenericService<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _wrapped);
 
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);

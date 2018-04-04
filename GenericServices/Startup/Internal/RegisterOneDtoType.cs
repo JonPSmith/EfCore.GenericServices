@@ -26,7 +26,7 @@ namespace GenericServices.Startup.Internal
                 return;
             if (entityType == null)
             {
-                AddError($"The class {dtoType.Name} is not registered as a valid GenericService DTO/ViewModel." +
+                AddError($"The class {dtoType.Name} is not registered as a valid CrudServices DTO/ViewModel." +
                          $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
                 return;
             }

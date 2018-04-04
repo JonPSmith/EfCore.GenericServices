@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoWithoutILink>());
 
                 //VERIFY
-                ex.Message.ShouldEndWith("The class DtoWithoutILink is not registered as a valid GenericService DTO/ViewModel. Have you left off the ILinkToEntity interface?");
+                ex.Message.ShouldEndWith("The class DtoWithoutILink is not registered as a valid CrudServices DTO/ViewModel. Have you left off the ILinkToEntity interface?");
             }
         }
 

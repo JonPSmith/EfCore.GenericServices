@@ -8,9 +8,9 @@ namespace RazorPageApp.Pages
 {
     public class ChangePubDateModel : PageModel
     {
-        private readonly IGenericService _service;
+        private readonly ICrudServices _service;
 
-        public ChangePubDateModel(IGenericService service)
+        public ChangePubDateModel(ICrudServices service)
         {
             _service = service;
         }
