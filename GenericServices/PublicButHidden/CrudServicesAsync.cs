@@ -12,35 +12,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
 {
+    /// <summary>
+    /// This is the async version of GenericServices' CRUD, which assumes you have one DbContext which the CrudServices setup code will register to the DbContext type
+    /// You should use this with dependency injection to get an instance of the sync CrudServices
+    /// </summary>
     public class CrudServicesAsync : CrudServicesAsync<DbContext>, ICrudServicesAsync
     {
+        /// <summary>
+        /// CrudServicesAsync needs the correct DbContext and the AutoMapper config
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="wapper"></param>
         public CrudServicesAsync(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
         {
         }
     }
 
-    public class CrudServicesAsync<TContext> : 
-        StatusGenericHandler where TContext : DbContext
+    /// <summary>
+    /// This is the async version of GenericServices' CRUD for use in an application that has multiple DbContext
+    /// You need to define the DbContext you need to carry out the CRUD actions 
+    /// You should use this with dependency injection to get an instance of the sync CrudServices
+    /// </summary>
+    public class CrudServicesAsync<TContext> :
+        StatusGenericHandler,
+        ICrudServicesAsync<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
+
+        /// <inheritdoc />
+        public DbContext CurrentContext => _context;
 
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the CrudServices is using.
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        public DbContext CurrentContext => _context;
-
         public CrudServicesAsync(TContext context, IWrappedAutoMapperConfig wapper)
         {
             _context = context;
             _wrapperMapperConfigs = wapper ?? throw new ArgumentException(nameof(wapper));
         }
 
+        /// <inheritdoc />
         public async Task<T> ReadSingleAsync<T>(params object[] keys) where T : class
-        {    
-            T result = null;
+        {
+            T result;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -61,9 +78,10 @@ namespace GenericServices.PublicButHidden
             return result;
         }
 
+        /// <inheritdoc />
         public async Task<T> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
-            T result = null;
+            T result;
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
@@ -84,6 +102,7 @@ namespace GenericServices.PublicButHidden
             return result;
         }
 
+        /// <inheritdoc />
         public async Task ReadSingleToDtoAsync<TDto>(TDto dto, params object[] keys) where TDto : class
         {
             var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
@@ -105,6 +124,7 @@ namespace GenericServices.PublicButHidden
             dtoInfo.ShallowCopyDtoToDto(result, dto);
         }
 
+        /// <inheritdoc />
         public async Task ReadSingleToDtoAsync<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class
         {
             var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
@@ -121,6 +141,7 @@ namespace GenericServices.PublicButHidden
             dtoInfo.ShallowCopyDtoToDto(result, dto);
         }
 
+        /// <inheritdoc />
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
@@ -134,6 +155,7 @@ namespace GenericServices.PublicButHidden
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
+        /// <inheritdoc />
         public async Task<T> AddNewAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
@@ -160,6 +182,7 @@ namespace GenericServices.PublicButHidden
             return IsValid ? entityOrDto : null;
         }
 
+        /// <inheritdoc />
         public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
@@ -180,6 +203,7 @@ namespace GenericServices.PublicButHidden
             SetMessageIfNotAlreadySet($"Successfully updated the {entityInfo.EntityType.GetNameForClass()}");
         }
 
+        /// <inheritdoc />
         public async Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
@@ -198,6 +222,7 @@ namespace GenericServices.PublicButHidden
             SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
+        /// <inheritdoc />
         public async Task DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
             params object[] keys) where TEntity : class
         {

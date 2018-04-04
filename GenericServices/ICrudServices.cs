@@ -75,7 +75,8 @@ namespace GenericServices
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or "AutoMapper" to use</param>
-        /// <returns></returns>
+        /// <returns>It returns the class you provided. It will contain the primary key defined after the database. 
+        /// If its a DTO then GenericServices will have copied the keys from the entity added back into the DTO</returns>
         T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace GenericServices
         /// This will delete the entity class with the given primary key
         /// </summary>
         /// <typeparam name="TEntity">The entity class you want to delete. It should be an entity in the DbContext you are referring to.</typeparam>
-        /// <param name="keys"></param>
+        /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class;
 
         /// <summary>
@@ -104,8 +105,10 @@ namespace GenericServices
         /// only go ahead if the status your method returns is Valid, i.e. no errors
         /// </summary>
         /// <typeparam name="TEntity">The entity class you want to delete. It should be an entity in the DbContext you are referring to.</typeparam>
-        /// <param name="runBeforeDelete"></param>
-        /// <param name="keys"></param>
+        /// <param name="runBeforeDelete">You provide a method, which is called after the entity to delete has been loaded, but before the Remove method is called.
+        /// Your method has access to the database and can handle any relationships, and returns an <see cref="IStatusGeneric"/>. The Remove will 
+        /// only go ahead if the status your method returns is Valid, i.e. no errors</param>
+        /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class;
     }

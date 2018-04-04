@@ -3,6 +3,11 @@
 
 namespace GenericServices
 {
+    /// <summary>
+    /// This is a version of <see cref="IStatusGeneric"/> that contains a result.
+    /// Useful if you want to return something with the status
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IStatusGeneric<out T> : IStatusGeneric
     {
         /// <summary>

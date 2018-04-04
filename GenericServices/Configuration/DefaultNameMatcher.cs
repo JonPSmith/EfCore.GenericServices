@@ -7,8 +7,22 @@ using System.Reflection;
 
 namespace GenericServices.Configuration
 {
+    /// <summary>
+    /// This is the default name/type matching method. You can replace it with your own matcher by 
+    /// setting the value of the NameMatcher property in the <see cref="GenericServicesConfig"/> class
+    /// and then providing that at startup 
+    /// </summary>
     public static class DefaultNameMatcher
     {
+        /// <summary>
+        /// This matches the name and type to the name/type in a <see cref="PropertyInfo"/>
+        /// As method/ctor parameters normally start with a lower case character and properties start with an upper case character
+        /// the method ensures the name provided has its first character as an upper case
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
         public static PropertyMatch MatchCamelAndPascalName(string name, Type type, PropertyInfo propertyInfo)
         {
             //The first item could be a method name, which starts with a lower case

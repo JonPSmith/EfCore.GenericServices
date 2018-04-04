@@ -12,7 +12,7 @@ using AutoMapper;
 
 namespace GenericServices.Internal.Decoders
 {
-    public class BestPropertyMatch
+    internal class BestPropertyMatch
     {
         public PropertyInfo PropertyInfo { get; private set; }
 
