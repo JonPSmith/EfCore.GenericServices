@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using DataLayer.EfClasses;
-using GenericServices;
+﻿using GenericServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageApp.Helpers;
-using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
 
 namespace RazorPageApp.Pages
 {
-    public class AddPromotionModel : PageModel, ILinkToEntity<Book>
+    public class AddPromotionModel : PageModel
     {
         private readonly ICrudServices _service;
 
