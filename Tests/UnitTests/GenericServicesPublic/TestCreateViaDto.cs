@@ -127,7 +127,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNewAndSave(dto, "AutoMapper");
+                service.AddNewAndSave(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

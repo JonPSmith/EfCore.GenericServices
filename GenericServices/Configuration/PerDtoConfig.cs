@@ -17,7 +17,7 @@ namespace GenericServices.Configuration
         /// This allows you to specify the exact constructor, static method or AutoMapper to create/fill the entity:
         /// - use constructor: "ctor(n)", where n is the number of parameters the ctor has
         /// - static method: use MethodName, e.g. "CreateBookFactory" (can have num params too, e.g. CreateBookFactory(3))
-        /// - AutoMapper: "AutoMapper"
+        /// - AutoMapper: CrudValues.UseAutoMapper
         /// </summary>
         public virtual string CreateMethod { get; } = null;
 
@@ -25,7 +25,7 @@ namespace GenericServices.Configuration
         /// This allows you to specify the exact method or AutoMapper that can be used to update the entity
         /// The options are:
         /// - Method: use MethodName, e.g. "AddReview" (can have num params too, e.g. AddReview(3))
-        /// - AutoMapper: "AutoMapper"
+        /// - AutoMapper: CrudValues.UseAutoMapper
         /// </summary>
         public virtual string UpdateMethod { get; } = null;
 

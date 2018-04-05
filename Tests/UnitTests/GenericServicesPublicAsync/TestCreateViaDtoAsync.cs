@@ -129,7 +129,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                await service.AddNewAndSaveAsync(dto, "AutoMapper");
+                await service.AddNewAndSaveAsync(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

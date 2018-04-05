@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                await service.UpdateAndSaveAsync(dto, "AutoMapper");
+                await service.UpdateAndSaveAsync(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -212,28 +212,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 ex.Message.ShouldStartWith("Could not find a method of name AddReview. The method that fit the properties in the DTO/VM are:");
             }
         }
-
-        //[Fact]
-        //public async Task TestUpdateViaAutoMapperBad()
-        //{
-        //    //SETUP
-        //    var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-        //    using (var context = new EfCoreContext(options))
-        //    {
-        //        context.Database.EnsureCreated();
-        //        context.SeedDatabaseFourBooks();
-
-        //        var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>(true);
-        //        var service = new CrudServicesAsync(context, wrapped);
-
-        //        //ATTEMPT
-        //        var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-        //        var ex = Assert.Throws<InvalidOperationException>(() => await service.UpdateAndSaveAsync(dto, "AutoMapper"));
-
-        //        //VERIFY
-        //        ex.Message.ShouldStartWith("There was no way to update the entity class Book using AutoMapper.");
-        //    }
-        //}
 
     }
 }

@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericServices;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +70,7 @@ namespace Benchmarking
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = newDate };
-                service.UpdateAndSave(dto, "AutoMapper");
+                service.UpdateAndSave(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

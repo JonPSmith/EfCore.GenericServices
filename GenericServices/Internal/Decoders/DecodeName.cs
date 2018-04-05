@@ -46,7 +46,7 @@ namespace GenericServices.Internal.Decoders
                 //I do this because the DecodedDto methods use exact match of name. MethodCtorMatch sets the name of a ctor in this way too
                 Name = DecodedNameTypes.Ctor.ToString();      
             }
-            else if (Name.Equals(DecodedNameTypes.AutoMapper.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            else if (Name.Equals(CrudValues.UseAutoMapper, StringComparison.InvariantCultureIgnoreCase))
                 NameType = DecodedNameTypes.AutoMapper;
         }
 

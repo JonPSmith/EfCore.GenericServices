@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
-                service.UpdateAndSave(dto, "AutoMapper");
+                service.UpdateAndSave(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

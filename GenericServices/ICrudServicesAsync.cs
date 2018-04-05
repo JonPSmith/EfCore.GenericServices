@@ -52,7 +52,7 @@ namespace GenericServices
         /// </summary>
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
-        /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or "AutoMapper" to use</param>
+        /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or CrudValues.UseAutoMapper to use</param>
         /// <returns>It returns a task with the class you provided. It will contain the primary key defined after the database. 
         /// If its a DTO then GenericServices will have copied the keys from the entity added back into the DTO</returns>
         Task<T> AddNewAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
@@ -67,7 +67,7 @@ namespace GenericServices
         /// </summary>
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
-        /// <param name="methodName">Optional: you can give the method name to be used for the update, or "AutoMapper" to make it use AutoMapper to update the entity.</param>
+        /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
         /// <returns>Task, async</returns>
         Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class;
 
