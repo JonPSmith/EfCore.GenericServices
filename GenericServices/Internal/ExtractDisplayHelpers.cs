@@ -17,7 +17,7 @@ namespace GenericServices.Internal
         public static string GetNameForProperty<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class
         {
             var propAndAttr = GetPropAndAttr(model);
-            return propAndAttr.Item2?.Name ?? propAndAttr.Item1.Name.SplitPascalCase();
+            return propAndAttr.Item2?.Description ?? propAndAttr.Item1.Name.SplitPascalCase();
         }
 
         public static string GetNameForClass<T>() where T : class
@@ -27,8 +27,8 @@ namespace GenericServices.Internal
 
         public static string GetNameForClass(this Type type)
         {
-            var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
-            return displayNameAttr?.DisplayName ?? type.Name.SplitPascalCase();
+            var displayNameAttr = type.GetCustomAttribute<DescriptionAttribute>();
+            return displayNameAttr?.Description ?? type.Name.SplitPascalCase();
         }
 
         //public static string GetShortName<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class
@@ -40,7 +40,7 @@ namespace GenericServices.Internal
         //---------------------------------------------------------
         //private method
 
-        private static Tuple<PropertyInfo,DisplayAttribute> GetPropAndAttr<T, TV>(Expression<Func<T, TV>> model) where T : class
+        private static Tuple<PropertyInfo, DescriptionAttribute> GetPropAndAttr<T, TV>(Expression<Func<T, TV>> model) where T : class
         {
             var memberEx = (MemberExpression)model.Body;
             if (memberEx == null)
@@ -50,8 +50,8 @@ namespace GenericServices.Internal
             if (propInfo == null)
                 throw new ArgumentNullException(nameof(model), "The member you gave is not a property.");
 
-            var displayAttr = propInfo.GetCustomAttribute<DisplayAttribute>();
-            return new Tuple<PropertyInfo, DisplayAttribute>(propInfo, displayAttr);
+            var displayAttr = propInfo.GetCustomAttribute<DescriptionAttribute>();
+            return new Tuple<PropertyInfo, DescriptionAttribute>(propInfo, displayAttr);
         }
     }
 }
