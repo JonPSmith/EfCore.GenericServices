@@ -31,12 +31,6 @@ namespace GenericServices.Internal
             return displayNameAttr?.Description ?? type.Name.SplitPascalCase();
         }
 
-        //public static string GetShortName<T, TV>(this T source, Expression<Func<T, TV>> model) where T : class
-        //{
-        //    var propAndAttr = GetPropAndAttr(model);
-        //    return propAndAttr.Item2?.ShortName ?? propAndAttr.Item1.Name;
-        //}
-
         //---------------------------------------------------------
         //private method
 
