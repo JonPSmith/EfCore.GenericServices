@@ -71,7 +71,7 @@ namespace GenericServices.PublicButHidden
 
             if (result == null)
             {
-                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you were looking for.");
+                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
             }
 
             return result;
@@ -95,47 +95,10 @@ namespace GenericServices.PublicButHidden
 
             if (result == null)
             {
-                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<T>()} you were looking for.");
+                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
             }
 
             return result;
-        }
-
-        /// <inheritdoc />
-        public void ReadSingleToDto<TDto>(TDto dto, params object[] keys) where TDto : class
-        {
-            var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
-            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(TDto), dtoInfo.LinkedEntityInfo);
-            if (keys.Length == 0)
-            {
-                //we need to get the keys from the dto
-                keys = _context.GetKeysFromDtoInCorrectOrder(dto, dtoInfo.LinkedEntityInfo.EntityType, dtoInfo);
-            }
-            var result = ((IQueryable<TDto>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
-            if (result == null)
-            {
-                AddError(
-                    $"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TDto>()} you were looking for.");
-                return;
-            }
-            //Now copy the result to the original dto
-            dtoInfo.ShallowCopyDtoToDto(result, dto);
-        }
-
-        /// <inheritdoc />
-        public void ReadSingleToDto<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class
-        {
-            var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
-            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(TDto), dtoInfo.LinkedEntityInfo);
-            var result = ((IQueryable<TDto>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression)).SingleOrDefault();
-            if (result == null)
-            {
-                AddError(
-                    $"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TDto>()} you were looking for.");
-                return;
-            }
-            //Now copy the result to the original dto
-            dtoInfo.ShallowCopyDtoToDto(result, dto);
         }
 
         /// <inheritdoc />
@@ -217,7 +180,7 @@ namespace GenericServices.PublicButHidden
             }
             _context.Remove(entity);
             _context.SaveChanges();
-            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
+            SetMessageIfNotAlreadySet($"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}");
         }
 
         /// <inheritdoc />
@@ -241,7 +204,7 @@ namespace GenericServices.PublicButHidden
 
             _context.Remove(entity);
             _context.SaveChanges();
-            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
+            SetMessageIfNotAlreadySet($"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}");
         }
 
     }

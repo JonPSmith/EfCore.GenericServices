@@ -107,7 +107,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse(service.GetAllErrors());
-                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title And Count you were looking for.");
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book you were looking for.");
             }
         }
 
@@ -132,126 +132,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        //------------------------------------------------------
-        //ReadSingleToDto
-
-        [Fact]
-        public void TestReadSingleToDtoOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
-                var dto = new BookTitle {BookId = -1, Title = "Original title"};
-
-                //ATTEMPT
-                service.ReadSingleToDto(dto, 1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
-
-        [Fact]
-        public void TestReadSingleToDtoKeysInDtoOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
-                var dto = new BookTitle { BookId = 1, Title = "Original title" };
-
-                //ATTEMPT
-                service.ReadSingleToDto(dto);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
-
-        [Fact]
-        public void TestReadSingleToDtoBadKey()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
-                var dto = new BookTitle { BookId = -1, Title = "Original title" };
-
-                //ATTEMPT
-                service.ReadSingleToDto(dto, -1);
-
-                //VERIFY
-                service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title you were looking for.");
-            }
-        }
-
-        [Fact]
-        public void TestReadSingleToDtoBadDto()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
-                var dto = "";
-
-                //ATTEMPT
-                var ex = Assert.Throws<NullReferenceException>(() => service.ReadSingleToDto(dto, -1));
-
-                //VERIFY
-                ex.Message.ShouldEqual("The class System.String is not registered as a valid CrudServices DTO/ViewModel. Have you left off the ILinkToEntity interface?");
-            }
-        }
-
-        [Fact]
-        public void TestReadSingleToDtoWhereOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
-                var dto = new BookTitle { BookId = -1, Title = "Original title" };
-
-                //ATTEMPT
-                service.ReadSingleToDto(dto, x => x.BookId == 1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
-
         //-------------------------------------------------------
         //Read Single - including collection
 
@@ -270,30 +150,6 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookWithAuthors>(1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Authors.Count.ShouldEqual(1);
-            }
-        }
-
-        [Fact]
-        public void TestReadSingleToDtoCollection()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookWithAuthors>();
-                var service = new CrudServices(context, mapper);
-                var dto = new BookWithAuthors();
-
-                //ATTEMPT
-                service.ReadSingleToDto(dto, 1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());

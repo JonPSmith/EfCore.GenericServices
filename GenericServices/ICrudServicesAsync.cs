@@ -36,27 +36,6 @@ namespace GenericServices
         Task<T> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class;
 
         /// <summary>
-        /// This projects an entity to DTO and selects one using the primary keys 
-        /// It then and shallow copies the result into an existing DTO. Useful for Razor Pages
-        /// </summary>
-        /// <typeparam name="TDto">This type is found from the input dto</typeparam>
-        /// <param name="dto">This must be a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
-        /// <param name="keys">Optional: If you provide keys then the method will use them, otherwise it will extract the keys
-        /// from the dto's properties.</param>
-        /// <returns>Task, async</returns>
-        Task ReadSingleToDtoAsync<TDto>(TDto dto, params object[] keys) where TDto : class;
-
-        /// <summary>
-        /// This projects an entity to DTO and selects one using the where clause. 
-        /// It then and shallow copies the result into an existing DTO. Useful for Razor Pages.
-        /// </summary>
-        /// <typeparam name="TDto">This type is found from the input dto</typeparam>
-        /// <param name="dto">This must be a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
-        /// <param name="whereExpression">The where expression should return a single instance, otherwise you get a </param>
-        /// <returns>Task, async</returns>
-        Task ReadSingleToDtoAsync<TDto>(TDto dto, Expression<Func<TDto, bool>> whereExpression) where TDto : class;
-
-        /// <summary>
         /// This returns an <see cref="IQueryable{T}"/> result, where T can be either an actual entity class,
         /// or if a CrudServices DTO is provided then the linked entity class will be projected via AutoMapper to the DTO
         /// Apply an async method such as ToListAsync to execute the query asynchrously

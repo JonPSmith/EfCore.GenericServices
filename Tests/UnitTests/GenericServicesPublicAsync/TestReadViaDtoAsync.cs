@@ -108,7 +108,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse(service.GetAllErrors());
-                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title And Count you were looking for.");
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book you were looking for.");
             }
         }
 
@@ -133,125 +133,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
         }
 
-        //------------------------------------------------------
-        //ReadSingleToDto
-
-        [Fact]
-        public async Task TestReadSingleToDtoOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = new BookTitle {BookId = -1, Title = "Original title"};
-
-                //ATTEMPT
-                await service.ReadSingleToDtoAsync(dto, 1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
-
-        [Fact]
-        public async Task TestReadSingleToDtoKeysInDtoOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = new BookTitle { BookId = 1, Title = "Original title" };
-
-                //ATTEMPT
-                await service.ReadSingleToDtoAsync(dto);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
-
-        [Fact]
-        public async Task TestReadSingleToDtoBadKey()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = new BookTitle { BookId = -1, Title = "Original title" };
-
-                //ATTEMPT
-                await service.ReadSingleToDtoAsync(dto, -1);
-
-                //VERIFY
-                service.IsValid.ShouldBeFalse();
-                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Book Title you were looking for.");
-            }
-        }
-
-        [Fact]
-        public async Task TestReadSingleToDtoBadDto()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = "";
-
-                //ATTEMPT
-                var ex = await Assert.ThrowsAsync<NullReferenceException>(() => service.ReadSingleToDtoAsync(dto, -1));
-
-                //VERIFY
-                ex.Message.ShouldEqual("The class System.String is not registered as a valid CrudServices DTO/ViewModel. Have you left off the ILinkToEntity interface?");
-            }
-        }
-
-        [Fact]
-        public async Task TestReadSingleToDtoWhereOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = new BookTitle { BookId = -1, Title = "Original title" };
-
-                //ATTEMPT
-                await service.ReadSingleToDtoAsync(dto, x => x.BookId == 1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Title.ShouldEqual("Refactoring");
-            }
-        }
+ 
 
         //-------------------------------------------------------
         //Read Single - including collection
@@ -271,30 +153,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookWithAuthors>(1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                dto.BookId.ShouldEqual(1);
-                dto.Authors.Count.ShouldEqual(1);
-            }
-        }
-
-        [Fact]
-        public async Task TestReadSingleToDtoCollection()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-
-                var mapper = context.SetupSingleDtoAndEntities<BookWithAuthors>();
-                var service = new CrudServicesAsync(context, mapper);
-                var dto = new BookWithAuthors();
-
-                //ATTEMPT
-                await service.ReadSingleToDtoAsync(dto, 1);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
