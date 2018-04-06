@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DataLayer.QueryObjects;
+using GenericServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.HomeController;
@@ -10,13 +12,11 @@ namespace RazorPageApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IListBooksService _listService;
-        private readonly IBookFilterDropdownService _filterService;
+        private readonly ICrudServices _service;
 
-        public IndexModel(IListBooksService listService, IBookFilterDropdownService filterService)
+        public IndexModel(ICrudServices service)
         {
-            _listService = listService;
-            _filterService = filterService;
+            _service = service;
         }
 
         public SortFilterPageOptions SortFilterPageData { get; private set; }
@@ -24,25 +24,15 @@ namespace RazorPageApp.Pages
 
         public void OnGet(SortFilterPageOptions options)
         {
-            BooksList = _listService
-                .SortFilterPage(options)
-                .ToList();
+            var booksQuery = _service.ReadManyNoTracked<BookListDto>()
+                .OrderBooksBy(options.OrderByOptions)
+                .FilterBooksBy(options.FilterBy,
+                    options.FilterValue);
 
+            options.SetupRestOfDto(booksQuery);
+
+            BooksList = booksQuery.Page(options.PageNum - 1, options.PageSize);
             SortFilterPageData = options;
-        }
-
-        public JsonResult OnGetFilter(BooksFilterBy filterBy)
-        {
-            return new JsonResult(_filterService.GetFilterDropDownValues(filterBy));
-        }
-
-        //You can use this to catch the data, or have items in the paremeters of the action method
-        [BindProperty(SupportsGet = true)]
-        public BooksFilterBy FilterBy { get; set; }
-
-        public JsonResult OnPostFilter(SortFilterPageOptions options)
-        {
-            return new JsonResult(_filterService.GetFilterDropDownValues(options.FilterBy));
         }
     }
 }

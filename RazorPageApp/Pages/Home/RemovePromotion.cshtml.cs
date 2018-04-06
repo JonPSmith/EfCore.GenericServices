@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataLayer.EfClasses;
+using GenericServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageApp.Helpers;
@@ -12,19 +14,20 @@ namespace RazorPageApp.Pages
 {
     public class RemovePromotionModel : PageModel
     {
-        private readonly IAddRemovePromotionService _service;
+        private readonly ICrudServices _service;
 
-        public RemovePromotionModel(IAddRemovePromotionService service)
+        public RemovePromotionModel(ICrudServices service)
         {
             _service = service;
         }
+
 
         [BindProperty]
         public AddRemovePromotionDto Dto { get; set; }
 
         public void OnGet(int id)
         {
-            Dto = _service.GetOriginal(id);
+            Dto = _service.ReadSingle<AddRemovePromotionDto>(id);
             if (!_service.IsValid)
             {
                 _service.CopyErrorsToModelState(ModelState, Dto, nameof(Dto));
@@ -38,9 +41,9 @@ namespace RazorPageApp.Pages
             {
                 return Page();
             }
-            _service.RemovePromotion(Dto.BookId);
+            _service.UpdateAndSave(Dto, nameof(Book.RemovePromotion));
             if (_service.IsValid)
-                return RedirectToPage("BookUpdated", new { message = "Successfully removed the promotion." });
+                return RedirectToPage("BookUpdated", new { message = _service.Message });
 
             //Error state
             _service.CopyErrorsToModelState(ModelState, Dto, nameof(Dto));
