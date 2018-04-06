@@ -72,7 +72,7 @@ namespace GenericServices.Internal.LinqBuilders
             }
 
             //Otherwise its static method 
-            var staticFunc = CallStaticFactory(ctorOrMethod.Method, dto.GetType(), propertyMatches);
+            var staticFunc = CallStaticCreator(ctorOrMethod.Method, dto.GetType(), propertyMatches);
             return propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext)
                 ? staticFunc(dto, context)
                 : staticFunc(dto);
@@ -148,15 +148,15 @@ namespace GenericServices.Internal.LinqBuilders
             return built.Compile();
         }
 
-        private static readonly ConcurrentDictionary<string, dynamic> CallStaticFactoryCache = new ConcurrentDictionary<string, dynamic>();
+        private static readonly ConcurrentDictionary<string, dynamic> CallStaticCreatorCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
+        public static dynamic CallStaticCreator(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
-            return CallStaticFactoryCache.GetOrAdd(methodInfo.GenerateKey(tDto),
-                type => PrivateCallStaticFactory(methodInfo, tDto, propertyMatches));
+            return CallStaticCreatorCache.GetOrAdd(methodInfo.GenerateKey(tDto),
+                type => PrivateCallStaticCreator(methodInfo, tDto, propertyMatches));
         }
 
-        private static dynamic PrivateCallStaticFactory(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallStaticCreator(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
             if (!propertyMatches.Any())
                 throw new InvalidOperationException("I have not written this to handle static methods that take no parameters. I can do that but is it likely?");

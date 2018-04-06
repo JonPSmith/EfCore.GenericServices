@@ -30,7 +30,7 @@ namespace GenericServices.Internal.MappingCode
         public object CreateEntityAndFillFromDto(TDto dto, string methodCtorName)
         {
             if (!_entityInfo.CanBeCreatedByCtorOrStaticMethod && !_entityInfo.CanBeCreatedViaAutoMapper)
-                throw new InvalidOperationException($"I cannot create the entity class {_entityInfo.EntityType.Name} because it has no public constructor, or valid static factory methods.");
+                throw new InvalidOperationException($"I cannot create the entity class {_entityInfo.EntityType.Name} because it has no public constructor, or valid static creator methods.");
 
             //we look for methods to create/update a new entity in the following order
             //1. A public static method that returns IStatusGeneric (chosing the one with the most parameters that the DTO has too)
@@ -41,7 +41,7 @@ namespace GenericServices.Internal.MappingCode
 
             if (_entityInfo.CanBeCreatedByCtorOrStaticMethod)
             {
-                var ctorStaticToRun = _dtoInfo.GetCtorStaticFactoryToRun(decodedName, _entityInfo);
+                var ctorStaticToRun = _dtoInfo.GetCtorStaticCreatorToRun(decodedName, _entityInfo);
                 var runStatus = BuildCall.RunMethodOrCtorViaLinq(ctorStaticToRun,
                     dto, ctorStaticToRun.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _context);
                 CombineStatuses(runStatus);

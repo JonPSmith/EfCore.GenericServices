@@ -35,11 +35,11 @@ namespace GenericServices.Internal.Decoders
             return result.OrderByDescending(x => x.PropertiesMatch.MatchedPropertiesInOrder.Count);
         }
 
-        public IEnumerable<MethodCtorMatch> GradeAllCtorsAndStaticMethods(MethodInfo[] staticFactoryMethods,
+        public IEnumerable<MethodCtorMatch> GradeAllCtorsAndStaticMethods(MethodInfo[] staticCreateMethods,
             ConstructorInfo[] publicCtors, List<PropertyInfo> propertiesToCheck,
             HowTheyWereAskedFor howDefined)
         {
-            var result = staticFactoryMethods.Select(method => new MethodCtorMatch(method,
+            var result = staticCreateMethods.Select(method => new MethodCtorMatch(method,
                 new ParametersMatch(method.GetParameters(), propertiesToCheck, InternalPropertyMatch), howDefined)).ToList();
             result.AddRange(publicCtors.Select(method => new MethodCtorMatch(method,
                 new ParametersMatch(method.GetParameters(), propertiesToCheck, InternalPropertyMatch), howDefined)));

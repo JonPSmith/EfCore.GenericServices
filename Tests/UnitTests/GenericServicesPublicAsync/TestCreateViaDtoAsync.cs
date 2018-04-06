@@ -152,14 +152,14 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             public string MyString { get; set; }
         }
 
-        public class DtoStaticFactoryCreate : ILinkToEntity<DddStaticFactEntity>
+        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
         {
             public int MyInt { get; set; }
             public string MyString { get; set; }
         }
 
         [Fact]
-        public async Task TestCreateEntityUsingStaticFactoryOk()
+        public async Task TestCreateEntityUsingStaticCreateOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -169,16 +169,16 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new TestDbContext(options))
             {
-                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
-                var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
+                var dto = new DtoStaticCreate { MyInt = 1, MyString = "Hello"};
                 await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully created a Ddd Static Fact Entity");
+                service.Message.ShouldEqual("Successfully created a Ddd Static Create Entity");
             }
             using (var context = new TestDbContext(options))
             {
@@ -189,7 +189,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         }
 
         [Fact]
-        public async Task TestCreateEntityUsingStaticFactoryWithBadStatusOk()
+        public async Task TestCreateEntityUsingStaticCreateWithBadStatusOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -199,11 +199,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new TestDbContext(options))
             {
-                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServicesAsync(context, wrapped);
 
                 //ATTEMPT
-                var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };
+                var dto = new DtoStaticCreate { MyInt = 1, MyString = null };
                 await service.AddNewAndSaveAsync(dto);
 
                 //VERIFY

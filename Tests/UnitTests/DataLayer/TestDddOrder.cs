@@ -25,7 +25,7 @@ namespace Tests.UnitTests.DataLayer
 
             //ATTEMPT
             var bookOrders = new List<OrderBooksDto>() { new OrderBooksDto(book1.BookId, book1, 1), new OrderBooksDto(book2.BookId, book2, 2) };
-            var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), bookOrders);
+            var status = Order.CreateOrder("user", DateTime.Today.AddDays(3), bookOrders);
 
             //VERIFY
             status.IsValid.ShouldBeTrue();
@@ -42,7 +42,7 @@ namespace Tests.UnitTests.DataLayer
 
             //ATTEMPT
             var lineItems = new List<OrderBooksDto> { new OrderBooksDto(book.BookId, book, 3) };
-            var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), lineItems);
+            var status = Order.CreateOrder("user", DateTime.Today.AddDays(3), lineItems);
 
             //VERIFY
             status.IsValid.ShouldBeTrue();
@@ -57,7 +57,7 @@ namespace Tests.UnitTests.DataLayer
             //SETUP
 
             //ATTEMPT
-            var status = Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), new OrderBooksDto[]{});
+            var status = Order.CreateOrder("user", DateTime.Today.AddDays(3), new OrderBooksDto[]{});
 
             //VERIFY
             status.IsValid.ShouldBeFalse();
@@ -70,7 +70,7 @@ namespace Tests.UnitTests.DataLayer
             //SETUP
             var book = DddEfTestData.CreateDummyBookOneAuthor();
             var lineItems = new List<OrderBooksDto> { new OrderBooksDto(book.BookId, book, 3) };
-            var order = Order.CreateOrderFactory("user", DateTime.Today.AddDays(1), lineItems).Result;
+            var order = Order.CreateOrder("user", DateTime.Today.AddDays(1), lineItems).Result;
 
             //ATTEMPT
             var newDeliverDate = DateTime.Today.AddDays(2);
@@ -99,7 +99,7 @@ namespace Tests.UnitTests.DataLayer
                 //ATTEMPT
                 var book = context.Books.First();
                 var lineItems = new List<OrderBooksDto> { new OrderBooksDto(book.BookId, book, 1) };
-                context.Add(Order.CreateOrderFactory("user", DateTime.Today.AddDays(3), lineItems).Result);
+                context.Add(Order.CreateOrder("user", DateTime.Today.AddDays(3), lineItems).Result);
                 context.SaveChanges();
 
                 //VERIFY

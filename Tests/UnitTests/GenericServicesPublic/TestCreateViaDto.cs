@@ -229,14 +229,14 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        public class DtoStaticFactoryCreate : ILinkToEntity<DddStaticFactEntity>
+        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
         {
             public int MyInt { get; set; }
             public string MyString { get; set; }
         }
 
         [Fact]
-        public void TestCreateEntityUsingStaticFactoryOk()
+        public void TestCreateEntityUsingStaticCreatorOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -246,16 +246,16 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
-                var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = "Hello"};
+                var dto = new DtoStaticCreate { MyInt = 1, MyString = "Hello"};
                 service.AddNewAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully created a Ddd Static Fact Entity");
+                service.Message.ShouldEqual("Successfully created a Ddd Static Create Entity");
             }
             using (var context = new TestDbContext(options))
             {
@@ -266,7 +266,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingStaticFactoryWithBadStatusOk()
+        public void TestCreateEntityUsingStaticCreateWithBadStatusOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -276,11 +276,11 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticFactoryCreate>();
+                var wrapped = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
-                var dto = new DtoStaticFactoryCreate { MyInt = 1, MyString = null };
+                var dto = new DtoStaticCreate { MyInt = 1, MyString = null };
                 service.AddNewAndSave(dto);
 
                 //VERIFY

@@ -88,7 +88,7 @@ namespace GenericServices.Internal.Decoders
             return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedSetterMethods, "method");
         }
 
-        public MethodCtorMatch GetCtorStaticFactoryToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
+        public MethodCtorMatch GetCtorStaticCreatorToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
                 return GetDefaultSetterMethod(entityInfo, _matchedCtorsAndStaticMethods, "ctor/static method");
@@ -168,7 +168,7 @@ namespace GenericServices.Internal.Decoders
                 .Select(x => x.PropertyInfo).ToList();
 
             var result = new List<MethodCtorMatch>();
-            var matches = _matcher.GradeAllCtorsAndStaticMethods(entityInfo.PublicStaticFactoryMethods, entityInfo.PublicCtors,
+            var matches = _matcher.GradeAllCtorsAndStaticMethods(entityInfo.PublicStaticCreatorMethods, entityInfo.PublicCtors,
                 nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties);
             return matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }

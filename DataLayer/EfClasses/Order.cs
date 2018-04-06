@@ -28,7 +28,7 @@ namespace DataLayer.EfClasses
 
         public string OrderNumber => $"SO{OrderId:D6}";
 
-        public static IStatusGeneric<Order> CreateOrderFactory(
+        public static IStatusGeneric<Order> CreateOrder(
             string customerName, DateTime expectedDeliveryDate,
             IEnumerable<OrderBooksDto> bookOrders)
         {

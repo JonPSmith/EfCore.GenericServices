@@ -16,7 +16,7 @@ namespace GenericServices.Configuration
         /// <summary>
         /// This allows you to specify the exact constructor, static method or AutoMapper to create/fill the entity:
         /// - use constructor: "ctor(n)", where n is the number of parameters the ctor has
-        /// - static method: use MethodName, e.g. "CreateBookFactory" (can have num params too, e.g. CreateBookFactory(3))
+        /// - static method: use MethodName, e.g. "CreateBook" (can have num params too, e.g. CreateBook(3))
         /// - AutoMapper: CrudValues.UseAutoMapper
         /// </summary>
         public virtual string CreateMethod { get; } = null;

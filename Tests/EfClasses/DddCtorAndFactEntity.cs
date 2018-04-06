@@ -16,7 +16,7 @@ namespace Tests.EfClasses
             MyString = myString;
         }
 
-        public static IStatusGeneric<DddCtorAndFactEntity> CreateFactory(int id, int myInt, string myString)
+        public static IStatusGeneric<DddCtorAndFactEntity> Create(int id, int myInt, string myString)
         {
             var status = new StatusGenericHandler<DddCtorAndFactEntity>();
             var result = new DddCtorAndFactEntity

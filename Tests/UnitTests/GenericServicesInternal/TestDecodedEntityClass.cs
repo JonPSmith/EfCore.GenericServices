@@ -32,7 +32,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeFalse();
                 decoded.PublicCtors.Length.ShouldEqual(1);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
                 decoded.PublicSetterMethods.Length.ShouldEqual(0);
                 decoded.PropertiesWithPublicSetter.Select(x => x.Name)
                     .ShouldEqual(new []{nameof(Author.AuthorId), nameof(Author.Name), nameof(Author.Email), nameof(Author.BooksLink) });
@@ -56,7 +56,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeFalse();
                 decoded.PublicCtors.Length.ShouldEqual(0);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
                 decoded.PublicSetterMethods.Length.ShouldEqual(0);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
             }
@@ -79,7 +79,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(1);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
                 decoded.PublicSetterMethods.Length.ShouldEqual(5);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(1);
             }
@@ -102,7 +102,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeUpdatedViaProperties.ShouldBeFalse();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(0);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(1);
                 decoded.PublicSetterMethods.Length.ShouldEqual(1);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
             }
@@ -130,7 +130,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeFalse();
                 decoded.PublicSetterMethods.Length.ShouldEqual(0);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(3);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
             }
         }
 
@@ -153,7 +153,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(2);
                 decoded.PublicSetterMethods.Length.ShouldEqual(2);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(0);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
             }
         }
 
@@ -165,7 +165,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             using (var context = new TestDbContext(options))
             {
                 //ATTEMPT
-                var decoded = new DecodedEntityClass(typeof(DddStaticFactEntity), context);
+                var decoded = new DecodedEntityClass(typeof(DddStaticCreateEntity), context);
 
                 //VERIFY
                 decoded.EntityStyle.ShouldEqual(EntityStyles.DDDStyled);
@@ -176,7 +176,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(0);
                 decoded.PublicSetterMethods.Length.ShouldEqual(2);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(1);
             }
         }
 
@@ -199,7 +199,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(1);
                 decoded.PublicSetterMethods.Length.ShouldEqual(2);
-                decoded.PublicStaticFactoryMethods.Length.ShouldEqual(1);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(1);
             }
         }
 

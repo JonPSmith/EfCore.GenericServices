@@ -5,14 +5,14 @@ using GenericServices;
 
 namespace Tests.EfClasses
 {
-    public class DddStaticFactEntity
+    public class DddStaticCreateEntity
     {
-        private DddStaticFactEntity() { }
+        private DddStaticCreateEntity() { }
 
-        public static IStatusGeneric<DddStaticFactEntity> CreateFactory(int myInt, string myString)
+        public static IStatusGeneric<DddStaticCreateEntity> Create(int myInt, string myString)
         {
-            var status = new StatusGenericHandler<DddStaticFactEntity>();
-            var result = new DddStaticFactEntity
+            var status = new StatusGenericHandler<DddStaticCreateEntity>();
+            var result = new DddStaticCreateEntity
             {
                 MyInt = myInt,
                 MyString = myString,

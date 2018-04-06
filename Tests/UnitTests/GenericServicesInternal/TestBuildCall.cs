@@ -54,7 +54,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 return new StatusGenericHandler {Message = "OK"};
             }
 
-            public static IStatusGeneric<Target1> CreateFactory(int myInt, string myString)
+            public static IStatusGeneric<Target1> Create(int myInt, string myString)
             {
                 var status =
                     new StatusGenericHandler<Target1>
@@ -179,16 +179,16 @@ namespace Tests.UnitTests.GenericServicesInternal
         }
 
         [Fact]
-        public void TestBuildCallStaticFactory()
+        public void TestBuildCallStatic()
         {
             //SETUP 
             var prop1 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
             var prop2 = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyString)));
-            var method = typeof(Target1).GetMethod(nameof(Target1.CreateFactory));
+            var method = typeof(Target1).GetMethod(nameof(Target1.Create));
             var dto = new Dto { MyInt = 123, MyString = "Hello" };
 
             //ATTEMPT
-            var action = BuildCall.CallStaticFactory(method, typeof(Dto), new List<PropertyMatch> { prop1, prop2});
+            var action = BuildCall.CallStaticCreator(method, typeof(Dto), new List<PropertyMatch> { prop1, prop2});
             var status = action.Invoke(dto);
 
             //VERIFY

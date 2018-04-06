@@ -34,7 +34,7 @@ namespace GenericServices.Internal.Decoders
         public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
 
         public ConstructorInfo[] PublicCtors { get; }
-        public MethodInfo[] PublicStaticFactoryMethods { get; } = new MethodInfo[0];
+        public MethodInfo[] PublicStaticCreatorMethods { get; } = new MethodInfo[0];
         public MethodInfo[] PublicSetterMethods { get; }
         public PropertyInfo[] PropertiesWithPublicSetter { get; }
 
@@ -42,7 +42,7 @@ namespace GenericServices.Internal.Decoders
         public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
         public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
         public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
-        public bool CanBeCreatedByCtorOrStaticMethod => PublicCtors.Any(x => x.GetParameters().Length > 0) || PublicStaticFactoryMethods.Any();
+        public bool CanBeCreatedByCtorOrStaticMethod => PublicCtors.Any(x => x.GetParameters().Length > 0) || PublicStaticCreatorMethods.Any();
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
@@ -74,7 +74,7 @@ namespace GenericServices.Internal.Decoders
             var staticMethods = entityType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
             if (staticMethods.Any())
             {
-                PublicStaticFactoryMethods = (from method in staticMethods
+                PublicStaticCreatorMethods = (from method in staticMethods
                     let genericArgs = (method.ReturnType.IsGenericType
                         ? method.ReturnType.GetGenericArguments()
                         : new Type[0])
@@ -108,7 +108,7 @@ namespace GenericServices.Internal.Decoders
         {
             return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitPascalCase()} " + (EntityStyle == EntityStyles.Standard
                        ? $"with {PropertiesWithPublicSetter.Length} settable properties"
-                       : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticFactoryMethods.Length} static class factories.");
+                       : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticCreatorMethods.Length} static class factories.");
         }
     }
 }

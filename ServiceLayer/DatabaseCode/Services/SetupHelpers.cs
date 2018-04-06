@@ -96,7 +96,7 @@ namespace ServiceLayer.DatabaseCode.Services
         {
             var deliverDay = orderDate.AddDays(5);
             var bookOrders = new List<OrderBooksDto>() {new OrderBooksDto(1, bookOrdered, 1)};
-            return Order.CreateOrderFactory(userId, deliverDay, bookOrders)?.Result;
+            return Order.CreateOrder(userId, deliverDay, bookOrders)?.Result;
         }
     }
 }

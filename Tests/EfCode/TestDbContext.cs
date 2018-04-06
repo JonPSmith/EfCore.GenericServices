@@ -10,7 +10,7 @@ namespace Tests.EfCode
     {
         public DbSet<NormalEntity> NormalEntities { get; set; }
         public DbSet<DddCtorEntity> DddCtorEntities { get; set; }
-        public DbSet<DddStaticFactEntity> DddStaticFactEntities { get; set; }
+        public DbSet<DddStaticCreateEntity> DddStaticFactEntities { get; set; }
         public DbSet<DddCtorAndFactEntity> DddCtorAndFactEntities { get; set; }
         public DbSet<NotUpdatableEntity> NotUpdatableEntities { get; set; }
         public DbSet<ReadOnlyEntity> ReadOnlyEntities { get; set; }
