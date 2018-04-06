@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageApp.Helpers;
 using ServiceLayer.HomeController.Dtos;
 
-namespace RazorPageApp.Pages
+namespace RazorPageApp.Pages.Home
 {
     public class AddPromotionModel : PageModel
     {

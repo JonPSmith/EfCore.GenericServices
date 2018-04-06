@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DataLayer.QueryObjects;
 using GenericServices;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
 using ServiceLayer.HomeController.QueryObjects;
 
-namespace RazorPageApp.Pages
+namespace RazorPageApp.Pages.Home
 {
     public class IndexModel : PageModel
     {
