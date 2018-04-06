@@ -15,6 +15,69 @@ namespace Tests.UnitTests.DataLayer
 {
     public class TestDddBook
     {
+
+        [Fact]
+        public void TestCreateBookOk()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var status = Book.CreateBook(
+                "Book Title",
+                "Book Description",
+                new DateTime(2000, 1, 1),
+                "Book Publisher",
+                123,
+                null,
+                new[] {new Author {Name = "Test Author"}}
+                );
+
+            //VERIFY
+            status.IsValid.ShouldBeTrue(status.GetAllErrors());   
+        }
+
+        [Fact]
+        public void TestCreateBookNoTitleBad()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var status = Book.CreateBook(
+                "",
+                "Book Description",
+                new DateTime(2000, 1, 1),
+                "Book Publisher",
+                123,
+                null,
+                new[] { new Author { Name = "Test Author" } }
+            );
+
+            //VERIFY
+            status.IsValid.ShouldBeFalse();
+            status.GetAllErrors().ShouldEqual("The book title cannot be empty.");
+        }
+
+        [Fact]
+        public void TestCreateBookNoAuthorsBad()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var status = Book.CreateBook(
+                "Book Title",
+                "Book Description",
+                new DateTime(2000, 1, 1),
+                "Book Publisher",
+                123,
+                null,
+                new Author[0] 
+            );
+
+            //VERIFY
+            status.IsValid.ShouldBeFalse();
+            status.GetAllErrors().ShouldEqual("You must have at least one Author for a book.");
+        }
+
         [Fact]
         public void TestAddReviewToBookWithIncludeOk()
         {

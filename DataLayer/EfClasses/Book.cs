@@ -47,6 +47,35 @@ namespace DataLayer.EfClasses
             _authorsLink = new HashSet<BookAuthor>(authors.Select(a => new BookAuthor(this, a, order++)));
         }
 
+        public static IStatusGeneric<Book> CreateBook(string title, string description, DateTime publishedOn,
+            string publisher, decimal price, string imageUrl, IEnumerable<Author> authors)
+        {
+            var status = new StatusGenericHandler<Book>();
+            if (string.IsNullOrWhiteSpace(title))
+                status.AddError("The book title cannot be empty.");
+
+            var book = new Book
+            {
+                Title = title,
+                Description = description,
+                PublishedOn = publishedOn,
+                Publisher = publisher,
+                ActualPrice = price,
+                OrgPrice = price,
+                ImageUrl = imageUrl,
+                _reviews = new HashSet<Review>()       //We add an empty list on create. I allows reviews to be added when building test data
+            };
+            if (authors == null)
+                throw new ArgumentNullException(nameof(authors));
+
+            byte order = 0;
+            book._authorsLink = new HashSet<BookAuthor>(authors.Select(a => new BookAuthor(book, a, order++)));
+            if (!book._authorsLink.Any())
+                status.AddError("You must have at least one Author for a book.");
+
+            return status.SetResult(book);
+        }
+
         public int BookId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
