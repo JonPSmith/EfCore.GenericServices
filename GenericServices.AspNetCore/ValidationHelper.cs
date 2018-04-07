@@ -4,10 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using GenericServices;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace RazorPageApp.Helpers
+namespace GenericServices.AspNetCore
 {
     public static class ValidationHelper
     {

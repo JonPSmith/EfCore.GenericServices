@@ -14,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
+    <ProjectReference Include="..\GenericServices.AspNetCore\GenericServices.AspNetCore.csproj" />
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
   </ItemGroup>
 </Project>
