@@ -40,7 +40,7 @@ namespace GenericServices.PublicButHidden
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
 
         /// <inheritdoc />
-        public DbContext CurrentContext => _context;
+        public DbContext Context => _context;
 
         /// <summary>
         /// CrudServices needs the correct DbContext and the AutoMapper config

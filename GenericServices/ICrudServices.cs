@@ -20,7 +20,7 @@ namespace GenericServices
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        DbContext CurrentContext { get; }
+        DbContext Context { get; }
 
         /// <summary>
         /// This reads a single entity or DTO given the key(s) of the entity you want to load

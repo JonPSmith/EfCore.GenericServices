@@ -41,7 +41,7 @@ namespace GenericServices.PublicButHidden
         private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
 
         /// <inheritdoc />
-        public DbContext CurrentContext => _context;
+        public DbContext Context => _context;
 
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the CrudServices is using.
