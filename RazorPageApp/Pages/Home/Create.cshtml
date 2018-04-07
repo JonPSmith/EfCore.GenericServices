@@ -4,5 +4,76 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Create Book</h2>
+<div class="form-horizontal">
+    <form method="post">
+        @Html.ValidationSummary(true, null, new { @class = "text-danger h4" })
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Title</label>
+            </div>
+            <span asp-validation-for="Data.Title" class="text-danger"></span>
+            <input asp-for="Data.Title" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Description</label>
+            </div>
+            <span asp-validation-for="Data.Description" class="text-danger"></span>
+            <input asp-for="Data.Description" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Publication Date</label>
+            </div>
+            <span asp-validation-for="Data.PublishedOn" class="text-danger"></span>
+            <input asp-for="Data.PublishedOn" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Publisher</label>
+            </div>
+            <span asp-validation-for="Data.Publisher" class="text-danger"></span>
+            <input asp-for="Data.Publisher" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Price</label>
+            </div>
+            <span asp-validation-for="Data.Price" class="text-danger"></span>
+            <input asp-for="Data.Price" class="form-control col-sm-10" />
+        </div>
+        <p>
+            I cheated and made a simple way to enter authors (the proper way is to use dropdown lists and dyamically build list)
+            <br />
+            In this simple version just fill in one or more author.
+            If the name fits an existing author I will point to that author, or create a new author if not found
+        </p>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Author 1</label>
+            </div>
+            <input asp-for="Data.AuthorNames[0]" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Author 2</label>
+            </div>
+            <input asp-for="Data.AuthorNames[1]" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label">Author 3</label>
+            </div>
+            <input asp-for="Data.AuthorNames[2]" class="form-control col-sm-10" />
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit">Create Book</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
 

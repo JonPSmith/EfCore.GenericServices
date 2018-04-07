@@ -20,7 +20,8 @@ namespace GenericServices.Internal.Decoders
         }
 
         /// <summary>
-        /// This takes a set of methods and grades them by how well they fit to the parameters available in the DTO
+        /// This takes a set of methods and grades them as to whether they can be called by the parameters in the DTO.
+        /// This allows extra parameters to be in the DTO for other purposes, and still fit 
         /// </summary>
         /// <param name="methods"></param>
         /// <param name="propertiesToCheck"></param>
@@ -35,6 +36,14 @@ namespace GenericServices.Internal.Decoders
             return result.OrderByDescending(x => x.PropertiesMatch.MatchedPropertiesInOrder.Count);
         }
 
+        /// <summary>
+        /// Same as GradeAllMethods, but for ctors and static methods
+        /// </summary>
+        /// <param name="staticCreateMethods"></param>
+        /// <param name="publicCtors"></param>
+        /// <param name="propertiesToCheck"></param>
+        /// <param name="howDefined"></param>
+        /// <returns></returns>
         public IEnumerable<MethodCtorMatch> GradeAllCtorsAndStaticMethods(MethodInfo[] staticCreateMethods,
             ConstructorInfo[] publicCtors, List<PropertyInfo> propertiesToCheck,
             HowTheyWereAskedFor howDefined)

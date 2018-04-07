@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using Xunit;
 using GenericServices.Internal.Decoders;
+using Microsoft.AspNetCore.Mvc;
 using TestSupport.EfHelpers;
 using Xunit.Extensions.AssertExtensions;
 
@@ -118,6 +119,33 @@ namespace Tests.UnitTests.GenericServicesInternal
             //VERIFY
             method.Method.Name.ShouldEqual("UpdatePublishedOn");
         }
+
+        public class ExtraParamsDto : ILinkToEntity<Book>
+        {
+            [HiddenInput]
+            public int BookId { get; set; }
+
+            public string Title { get; set; }
+
+            [DataType(DataType.Date)]
+            public DateTime PublishedOn { get; set; }
+
+            public DateTime SomeOtherParam { get; set; }
+        }
+
+        [Fact]
+        public void TestCheckExtraParamsOk()
+        {
+            //SETUP
+            var decoded = new DecodedDto(typeof(ExtraParamsDto), _bookEntityInfo, new GenericServicesConfig(), null);
+
+            //ATTEMPT
+            var method = decoded.GetMethodToRun(new DecodeName(null), _bookEntityInfo);
+
+            //VERIFY
+            method.Method.Name.ShouldEqual("UpdatePublishedOn");
+        }
+
 
     }
 }

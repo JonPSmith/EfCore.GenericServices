@@ -24,15 +24,17 @@ namespace RazorPageApp.Pages.Home
 
         public void OnGet()
         {
-            //do nothing
+            Data = new CreateBookDto();
         }
 
-        public IActionResult OnPut()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+            //Now I need to set up the Authors collection
+            Data.SetupAuthorsCollection(_service.Context);
             _service.CreateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = _service.Message});
@@ -40,6 +42,11 @@ namespace RazorPageApp.Pages.Home
             //Error state
             _service.CopyErrorsToModelState(ModelState, Data);
             return Page();
+        }
+
+        public async Task OnPutAsync()
+        {
+
         }
     }
 }

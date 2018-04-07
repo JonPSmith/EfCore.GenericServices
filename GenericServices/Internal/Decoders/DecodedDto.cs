@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
 using GenericServices.Configuration;
 using GenericServices.Configuration.Internal;
 
@@ -16,6 +15,9 @@ namespace GenericServices.Internal.Decoders
         private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
         private readonly List<MethodCtorMatch> _matchedSetterMethods;
         private readonly List<MethodCtorMatch> _matchedCtorsAndStaticMethods;
+
+        private List<MethodCtorMatch> _allPossibleSetterMatches;
+        private List<MethodCtorMatch> _allPossibleCtorsAndStaticMatches;
 
         private readonly MethodCtorMatcher _matcher;
         private readonly PerDtoConfig _perDtoConfig; //can be null
@@ -83,54 +85,73 @@ namespace GenericServices.Internal.Decoders
         public MethodCtorMatch GetMethodToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
-                return GetDefaultSetterMethod(entityInfo, _matchedSetterMethods, "method");
+            {
+                var result = GetDefaultSetterMethod(_matchedSetterMethods, "method");
+                if (result != null)
+                    return result;
 
-            return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedSetterMethods, "method");
+                throw new InvalidOperationException($"The entity class {entityInfo.EntityType.Name} did find a method that matches the {DtoType.Name}." +
+                                                    $" It only links methods where ALL the method's parameters can be fulfilled by the DTO/VM non-read-only properties." +
+                                                    " The possible matches are \n" + string.Join("\n", _allPossibleSetterMatches));
+            }
+
+            return FindMethodCtorByName(nameInfo, _matchedSetterMethods, "method");
         }
 
         public MethodCtorMatch GetCtorStaticCreatorToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
-                return GetDefaultSetterMethod(entityInfo, _matchedCtorsAndStaticMethods, "ctor/static method");
+            {
+                var result = GetDefaultSetterMethod(_matchedCtorsAndStaticMethods, "ctor/static method");
+                if (result != null)
+                    return result;
 
-            return FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams, _matchedCtorsAndStaticMethods, "ctor/static methods");
+                throw new InvalidOperationException($"The entity class {entityInfo.EntityType.Name} did find an ctor/static method that matches the {DtoType.Name}." +
+                                                    $" It only links ctor/static methods where ALL the method's parameters can be fulfilled by the DTO/VM non-read-only properties." +
+                                                    " The possible matches are \n" + string.Join("\n", _allPossibleCtorsAndStaticMatches));
+            }
+
+            return FindMethodCtorByName(nameInfo, _matchedCtorsAndStaticMethods, "ctor/static methods");
         }
 
         //---------------------------------------------------------------------------------
 
-        private static MethodCtorMatch FindMethodCtorByName(string name, int numParams, List<MethodCtorMatch>listToScan, string errorString)
+        private static MethodCtorMatch FindMethodCtorByName(DecodeName nameInfo, List<MethodCtorMatch>listToScan, string errorString)
         {
-            var namedMethods = listToScan.Where(x => x.Name == name);
-            if (numParams > 0)
+            //IEnumerable<>
+            var namedMethods = nameInfo.NameType == DecodedNameTypes.Ctor
+                ? listToScan.Where(x => x.Constructor != null)
+                : listToScan.Where(x => x.Name == nameInfo.Name);
+
+            if (nameInfo.NumParams > 0)
                 namedMethods = namedMethods.Where(x =>
-                    x.PropertiesMatch.MatchedPropertiesInOrder.Count == numParams);
+                    x.PropertiesMatch.MatchedPropertiesInOrder.Count == nameInfo.NumParams);
             var result = namedMethods.ToList();
-            var nameString = name + (numParams < 0 ? "" : $"({numParams})");
+            var nameString = nameInfo.Name + (nameInfo.NumParams < 0 ? "" : $"({nameInfo.NumParams})");
             if (!result.Any() && errorString != null)
                 throw new InvalidOperationException($"Could not find a {errorString} of name {nameString}. The {errorString} that fit the properties in the DTO/VM are:\n" +
-                                string.Join("\n", listToScan.Select(x => x.ToStringShort())));
+                                string.Join("\n", listToScan.Select(x => x.ToString())));
             if (result.Count > 1)
             {
                 if (errorString != null)
                     throw new InvalidOperationException($"There were multiple {errorString}s that fitted the name {nameString}. The possible options are:\n" +
-                                                    string.Join("\n", result.Select(x => x.ToStringShort())));
+                                                    string.Join("\n", result.Select(x => x.ToString())));
                 return null;
             }
             return result.SingleOrDefault();
         }
 
-        private static MethodCtorMatch GetDefaultSetterMethod(DecodedEntityClass entityInfo, List<MethodCtorMatch> listToScan, string errorString)
+        private MethodCtorMatch GetDefaultSetterMethod(List<MethodCtorMatch> listToScan, string errorString)
         {
             var methodsWithParams = listToScan.Where(x => !x.IsParameterlessMethod).ToList();
             if (methodsWithParams.Count == 1)
                 return methodsWithParams.Single();
 
             if (methodsWithParams.Any())
-                throw new InvalidOperationException($"There are multiple {errorString}, so you need to define which one you want used via the {errorString} parameter. "+
+                throw new InvalidOperationException($"There are multiple {errorString}, so you need to define which one you want used via the {errorString} parameter. " +
                                                     "The possible options are:\n" +
                                                     string.Join("\n", listToScan.Select(x => x.ToStringShort())));
-            throw new InvalidOperationException($"The entity class {entityInfo.EntityType.GetNameForClass()} did not have an {errorString} linked to this DTO/VM."+
-                                                $" It only links {errorString} where all the method's parameters can be forfilled by the DTO/VM non-read-only properties.");
+            return null;
         }
 
         private List<MethodCtorMatch> PreloadPossibleMethodCtorMatches(List<MethodCtorMatch> allPossibleMatches, DecodeName nameInfo, string errorString)
@@ -140,12 +161,13 @@ namespace GenericServices.Internal.Decoders
             if (nameInfo.NameType != DecodedNameTypes.NoNameGiven)
             {
                 //name as been defined in perDtoConfig
-                return new List<MethodCtorMatch>{FindMethodCtorByName(nameInfo.Name, nameInfo.NumParams,
+                return new List<MethodCtorMatch>{FindMethodCtorByName(nameInfo,
                     allPossibleMatches, (errorString == null ? null : errorString + "(PerDtoConfig)"))};
             }
             //Nothing defined so try via the DTO name
             var nameFromDto = ExtractPossibleMethodNameFromDtoTypeName();
-            var foundMatch = FindMethodCtorByName(nameFromDto, -1, allPossibleMatches, null);
+            var dtoNamed = new DecodeName(nameFromDto);
+            var foundMatch = FindMethodCtorByName(dtoNamed, allPossibleMatches, null);
             if (foundMatch != null)
                 return new List<MethodCtorMatch>{foundMatch};
             //otherwise return all the possible versions
@@ -157,9 +179,9 @@ namespace GenericServices.Internal.Decoders
             var nonReadOnlyPropertyInfo = PropertyInfos.Where(y => y.PropertyType != DtoPropertyTypes.ReadOnly)
                 .Select(x => x.PropertyInfo).ToList();
 
-            var matches = _matcher.GradeAllMethods(entityInfo.PublicSetterMethods,
-                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties);
-            return matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
+            _allPossibleSetterMatches = _matcher.GradeAllMethods(entityInfo.PublicSetterMethods,
+                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties).ToList();
+            return _allPossibleSetterMatches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
 
         private List<MethodCtorMatch> MatchCtorsAndStaticMethodsToProperties(DecodedEntityClass entityInfo)
@@ -167,10 +189,10 @@ namespace GenericServices.Internal.Decoders
             var nonReadOnlyPropertyInfo = PropertyInfos.Where(y => y.PropertyType != DtoPropertyTypes.ReadOnly)
                 .Select(x => x.PropertyInfo).ToList();
 
-            var result = new List<MethodCtorMatch>();
-            var matches = _matcher.GradeAllCtorsAndStaticMethods(entityInfo.PublicStaticCreatorMethods, entityInfo.PublicCtors,
-                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties);
-            return matches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
+            _allPossibleCtorsAndStaticMatches = _matcher.GradeAllCtorsAndStaticMethods(
+                entityInfo.PublicStaticCreatorMethods, entityInfo.PublicCtors,
+                nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties).ToList();
+            return _allPossibleCtorsAndStaticMatches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
 
         private string ExtractPossibleMethodNameFromDtoTypeName()
