@@ -117,7 +117,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public async Task<T> AddNewAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public async Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))

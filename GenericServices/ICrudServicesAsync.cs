@@ -55,7 +55,7 @@ namespace GenericServices
         /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or CrudValues.UseAutoMapper to use</param>
         /// <returns>It returns a task with the class you provided. It will contain the primary key defined after the database. 
         /// If its a DTO then GenericServices will have copied the keys from the entity added back into the DTO</returns>
-        Task<T> AddNewAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
+        Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
 
         /// <summary>
         /// This will update the entity referred to by the keys in the given class instance.

@@ -33,7 +33,7 @@ namespace RazorPageApp.Pages.Home
             {
                 return Page();
             }
-            _service.AddNewAndSave(Data);
+            _service.CreateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = _service.Message});
 

@@ -168,7 +168,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
-                await service.AddNewAndSaveAsync(author);
+                await service.CreateAndSaveAsync(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
             }

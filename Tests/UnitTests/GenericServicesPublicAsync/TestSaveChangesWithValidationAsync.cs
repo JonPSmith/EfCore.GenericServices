@@ -49,7 +49,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = "Name", Email = unique };
-                await service.AddNewAndSaveAsync(author);
+                await service.CreateAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = null, Email = unique };
-                var ex = await Assert.ThrowsAsync<Microsoft.EntityFrameworkCore.DbUpdateException> (() => service.AddNewAndSaveAsync(author));
+                var ex = await Assert.ThrowsAsync<Microsoft.EntityFrameworkCore.DbUpdateException> (() => service.CreateAndSaveAsync(author));
 
                 //VERIFY
                 ex.InnerException?.Message.ShouldEqual("SQLite Error 19: 'NOT NULL constraint failed: Authors.Name'.");
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new LocalAuthorDtoWithConfig { Name = null, Email = unique };
-                await service.AddNewAndSaveAsync(author);
+                await service.CreateAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();

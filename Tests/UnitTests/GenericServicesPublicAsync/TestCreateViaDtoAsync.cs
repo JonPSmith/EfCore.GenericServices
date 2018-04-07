@@ -42,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                await service.AddNewAndSaveAsync(author);
+                await service.CreateAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -69,7 +69,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                await service.AddNewAndSaveAsync(author);
+                await service.CreateAndSaveAsync(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -99,7 +99,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                await service.AddNewAndSaveAsync(dto);
+                await service.CreateAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -129,7 +129,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                await service.AddNewAndSaveAsync(dto, CrudValues.UseAutoMapper);
+                await service.CreateAndSaveAsync(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -174,7 +174,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = "Hello"};
-                await service.AddNewAndSaveAsync(dto);
+                await service.CreateAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -204,7 +204,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = null };
-                await service.AddNewAndSaveAsync(dto);
+                await service.CreateAndSaveAsync(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();

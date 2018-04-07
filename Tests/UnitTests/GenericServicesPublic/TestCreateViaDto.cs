@@ -40,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNewAndSave(author);
+                service.CreateAndSave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.AddNewAndSave(author);
+                service.CreateAndSave(author);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNewAndSave(dto);
+                service.CreateAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -127,7 +127,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
-                service.AddNewAndSave(dto, CrudValues.UseAutoMapper);
+                service.CreateAndSave(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -166,7 +166,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
-                service.AddNewAndSave(dto, "ctor(2)");
+                service.CreateAndSave(dto, "ctor(2)");
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -196,7 +196,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
-                service.AddNewAndSave(dto, "ctor(1)");
+                service.CreateAndSave(dto, "ctor(1)");
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -222,7 +222,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
-                var ex = Assert.Throws<InvalidOperationException>(() => service.AddNewAndSave(dto));
+                var ex = Assert.Throws<InvalidOperationException>(() => service.CreateAndSave(dto));
 
                 //VERIFY
                 ex.Message.ShouldStartWith("There are multiple ctor/static method, so you need to define which one you want used via the ctor/static method parameter. ");
@@ -251,7 +251,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = "Hello"};
-                service.AddNewAndSave(dto);
+                service.CreateAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -281,7 +281,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = null };
-                service.AddNewAndSave(dto);
+                service.CreateAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeFalse();

@@ -117,7 +117,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public T AddNewAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public T CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
             if (entityInfo.EntityType == typeof(T))

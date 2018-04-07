@@ -167,7 +167,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
-                service.AddNewAndSave(author);
+                service.CreateAndSave(author);
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
