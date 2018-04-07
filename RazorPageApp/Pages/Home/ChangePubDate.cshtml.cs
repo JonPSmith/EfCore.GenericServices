@@ -37,7 +37,7 @@ namespace RazorPageApp.Pages.Home
             }
             _service.UpdateAndSave(Data);
             if (_service.IsValid)
-                return RedirectToPage("BookUpdated", new {message = "Successfully changed publication date."});
+                return RedirectToPage("BookUpdated", new {message = _service.Message });
 
             //Error state
             _service.CopyErrorsToModelState(ModelState, Data);

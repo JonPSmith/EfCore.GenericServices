@@ -35,6 +35,16 @@
                     <li><a asp-page="/Home/Index">All books</a></li>
                     <li><a asp-page="/Author/Index">Authors</a></li>
                     <li><a asp-page="/Home/About">About</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Admin
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownAdminItems">
+                            <li><a asp-page="/Home/Create">New book</a></li>
+                            <li><a asp-page="/Author/Create">New author</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -43,7 +53,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - RazorPageApp</p>
+            <p>&copy; 2018 - GenericServices' example Razor Pages app</p>
         </footer>
     </div>
 

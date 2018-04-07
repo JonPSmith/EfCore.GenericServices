@@ -48,7 +48,7 @@ namespace DataLayer.EfClasses
         }
 
         public static IStatusGeneric<Book> CreateBook(string title, string description, DateTime publishedOn,
-            string publisher, decimal price, string imageUrl, IEnumerable<Author> authors)
+            string publisher, decimal price, string imageUrl, ICollection<Author> authors)
         {
             var status = new StatusGenericHandler<Book>();
             if (string.IsNullOrWhiteSpace(title))
@@ -77,6 +77,7 @@ namespace DataLayer.EfClasses
         }
 
         public int BookId { get; private set; }
+        [Required(AllowEmptyStrings = false)]
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime PublishedOn { get; set; }
