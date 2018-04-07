@@ -17,14 +17,14 @@ namespace RazorPageApp.Pages.Home
         }
 
         [BindProperty]
-        public AddRemovePromotionDto Dto { get; set; }
+        public AddRemovePromotionDto Data { get; set; }
 
         public void OnGet(int id)
         {
-            Dto = _service.ReadSingle<AddRemovePromotionDto>(id);
+            Data = _service.ReadSingle<AddRemovePromotionDto>(id);
             if (!_service.IsValid)
             {
-                _service.CopyErrorsToModelState(ModelState, Dto, "Dto");
+                _service.CopyErrorsToModelState(ModelState, Data, "Data");
             }
         }
 
@@ -34,12 +34,12 @@ namespace RazorPageApp.Pages.Home
             {
                 return Page();
             }
-            _service.UpdateAndSave(Dto);
+            _service.UpdateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = _service.Message });
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Dto, "Dto");
+            _service.CopyErrorsToModelState(ModelState, Data, "Data");
             return Page();
         }
     }

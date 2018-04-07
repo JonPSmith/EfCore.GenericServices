@@ -17,14 +17,14 @@ namespace RazorPageApp.Pages.Home
         }
 
         [BindProperty]
-        public AddReviewDto Dto { get; set; }
+        public AddReviewDto Data { get; set; }
 
         public void OnGet(int id)
         {
-            Dto = _service.GetOriginal(id);
+            Data = _service.GetOriginal(id);
             if (!_service.IsValid)
             {
-                _service.CopyErrorsToModelState(ModelState, Dto);
+                _service.CopyErrorsToModelState(ModelState, Data);
             }
         }
 
@@ -35,12 +35,12 @@ namespace RazorPageApp.Pages.Home
             {
                 return Page();
             }
-            _service.AddReviewToBook(Dto);
+            _service.AddReviewToBook(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = "Successfully added a review to the book." });
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Dto);
+            _service.CopyErrorsToModelState(ModelState, Data);
             return Page();
         }
     }

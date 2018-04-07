@@ -17,14 +17,14 @@ namespace RazorPageApp.Pages.Home
         }
 
         [BindProperty]
-        public ChangePubDateDto Dto { get; set; }
+        public ChangePubDateDto Data { get; set; }
 
         public void OnGet(int id)
         {
-            Dto = _service.ReadSingle<ChangePubDateDto>(id);
+            Data = _service.ReadSingle<ChangePubDateDto>(id);
             if (!_service.IsValid)
             {
-                _service.CopyErrorsToModelState(ModelState, Dto);
+                _service.CopyErrorsToModelState(ModelState, Data);
             }
         }
 
@@ -35,12 +35,12 @@ namespace RazorPageApp.Pages.Home
             {
                 return Page();
             }
-            _service.UpdateAndSave(Dto);
+            _service.UpdateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new {message = "Successfully changed publication date."});
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Dto);
+            _service.CopyErrorsToModelState(ModelState, Data);
             return Page();
         }
     }
