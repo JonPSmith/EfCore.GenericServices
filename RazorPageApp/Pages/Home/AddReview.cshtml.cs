@@ -1,7 +1,7 @@
-﻿using GenericServices.AspNetCore;
+﻿using GenericServices;
+using GenericServices.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPageApp.Helpers;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.Dtos;
 
@@ -9,19 +9,20 @@ namespace RazorPageApp.Pages.Home
 {
     public class AddReviewModel : PageModel
     {
-        private readonly IAddReviewService _service;
+        private readonly ICrudServices _service;
 
-        public AddReviewModel(IAddReviewService service)
+        public AddReviewModel(ICrudServices service)
         {
             _service = service;
         }
+
 
         [BindProperty]
         public AddReviewDto Data { get; set; }
 
         public void OnGet(int id)
         {
-            Data = _service.GetOriginal(id);
+            Data = _service.ReadSingle<AddReviewDto>(id);
             if (!_service.IsValid)
             {
                 _service.CopyErrorsToModelState(ModelState, Data);
@@ -35,9 +36,9 @@ namespace RazorPageApp.Pages.Home
             {
                 return Page();
             }
-            _service.AddReviewToBook(Data);
+            _service.UpdateAndSave(Data);
             if (_service.IsValid)
-                return RedirectToPage("BookUpdated", new { message = "Successfully added a review to the book." });
+                return RedirectToPage("BookUpdated", new { message = _service.Message});
 
             //Error state
             _service.CopyErrorsToModelState(ModelState, Data);

@@ -2,7 +2,6 @@
 using GenericServices.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPageApp.Helpers;
 using ServiceLayer.HomeController.Dtos;
 
 namespace RazorPageApp.Pages.Home

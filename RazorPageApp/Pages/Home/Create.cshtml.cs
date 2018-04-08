@@ -43,10 +43,5 @@ namespace RazorPageApp.Pages.Home
             _service.CopyErrorsToModelState(ModelState, Data);
             return Page();
         }
-
-        public async Task OnPutAsync()
-        {
-
-        }
     }
 }
