@@ -16,7 +16,7 @@ namespace DataLayer.EfClasses
 
         public int AuthorId { get;  set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         [MaxLength(NameLength)]
         public string Name { get;  set; }
 
