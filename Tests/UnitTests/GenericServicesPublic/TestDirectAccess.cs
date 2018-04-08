@@ -248,6 +248,32 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
+        public void TestUpdateOnEntityKeyNotSetOk()
+        {
+            //SETUP
+            var unique = Guid.NewGuid().ToString();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
+                var logs = context.SetupLogging();
+
+                //ATTEMPT
+                var author = new Author {Name = "New Name", Email = unique };
+                var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(author));
+
+                //VERIFY
+                ex.Message.ShouldStartWith("The primary key was not set on the entity class Author.");
+            }
+        }
+
+        [Fact]
         public void TestDeleteEntityOk()
         {
             //SETUP

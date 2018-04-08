@@ -150,6 +150,8 @@ namespace GenericServices.PublicButHidden
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
+                if (!_context.Entry(entityOrDto).IsKeySet)
+                    throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
