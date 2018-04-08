@@ -8,6 +8,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.PublicButHidden;
+using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -19,9 +20,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 {
     public class TestDirectAccessAsync
     {
-        //Dummy - not needed becasue direct, but CrudServices tests to make sure its not null
-        WrappedAutoMapperConfig _wrappedMapperConfig = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
-
         [Fact]
         public async Task TestGetSingleOnEntityOk()
         {
@@ -32,7 +30,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(1);
@@ -54,7 +53,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 1);
@@ -76,7 +76,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(99);
@@ -98,7 +99,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 99);
@@ -120,7 +122,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
@@ -140,14 +143,15 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var books = await service.ReadManyNoTracked<Book>().ToListAsync();
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                books.Count().ShouldEqual(4);
+                books.Count.ShouldEqual(4);
                 context.Entry(books.ToList().First()).State.ShouldEqual(EntityState.Detached);
             }
         }
@@ -164,7 +168,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -192,7 +197,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 var author = await service.ReadSingleAsync<Author>(1);
@@ -220,7 +226,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -248,7 +255,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 await service.DeleteAndSaveAsync<Book>(1);
@@ -284,7 +292,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServicesAsync(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
 
                 //ATTEMPT
                 await service.DeleteWithActionAndSaveAsync<Book>(DeleteCheck, bookId);
@@ -298,6 +307,27 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 context.Books.Count().ShouldEqual(bookId == 1 ? 4 : 3);
+            }
+        }
+
+        [Fact]
+        public async Task TestNotEntityNoDtoOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, mapper);
+
+                //ATTEMPT
+                var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<string>(1));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The class String is not registered as entity class in your DbContext EfCoreContext.");
             }
         }
     }

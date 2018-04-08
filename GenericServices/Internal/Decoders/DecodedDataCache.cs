@@ -19,7 +19,7 @@ namespace GenericServices.Internal.Decoders
             var entityType = entityOrDto.GetLinkedEntityFromDto() ?? entityOrDto;
             if (!EntityInfoCache.TryGetValue(entityType, out var result))
                 throw new InvalidOperationException(
-                    $"The class {entityType.Name} is not registered as entity class in the database linked to your DbContext {context.GetType().Name}.");
+                    $"The class {entityType.Name} is not registered as entity class in your DbContext {context.GetType().Name}.");
             return result;
         }
 

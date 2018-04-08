@@ -333,7 +333,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex  = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<string>(1));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class String is not registered as entity class in the database linked to your DbContext EfCoreContext.");
+                ex.Message.ShouldEqual("The class String is not registered as entity class in your DbContext EfCoreContext.");
             }
         }
     }
