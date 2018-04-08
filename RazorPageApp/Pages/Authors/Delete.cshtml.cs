@@ -18,7 +18,7 @@ namespace RazorPageApp.Pages.Authors
         }
 
         [BindProperty]
-        public DataLayer.EfClasses.Author Data { get; set; }
+        public Author Data { get; set; }
 
         public void OnGet(int id)
         {
@@ -43,8 +43,8 @@ namespace RazorPageApp.Pages.Authors
         private IStatusGeneric CheckIfInOrder(DbContext context, Author entityToDelete)
         {
             var status = new StatusGenericHandler();
-            //Nothing in the system would stop an author from being deleted, but that would cause problems to books thyer were an author on
-            //Therefore You check if the author is linked to any books via the many-to-many linking table, BookAuthor
+            //Nothing in the system would stop an author from being deleted, but that would cause problems to books where they are an author
+            //Therefore you check if the author is linked to any books via the many-to-many linking table, BookAuthor
             if (context.Set<BookAuthor>().Any(x => x.AuthorId == entityToDelete.AuthorId))
                 status.AddError("I'm sorry, but I can't delete that author because they are in existing books.");
 
