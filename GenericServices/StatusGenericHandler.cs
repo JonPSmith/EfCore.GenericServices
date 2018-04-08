@@ -50,17 +50,6 @@ namespace GenericServices
         }
 
         /// <summary>
-        /// This sets the success message as long as it hasn't already been set.
-        /// This is useful because if a method in the entity class is called, and that sets the message, that existing message should take precidence
-        /// </summary>
-        /// <param name="message"></param>
-        public void SetMessageIfNotAlreadySet(string message)
-        {
-            if (_successMessage == DefaultSuccessMessage)
-                _successMessage = message;
-        }
-
-        /// <summary>
         /// The header provides a prefix to any errors you add. Useful if you want to have a general prefix to all your errors
         /// e.g. a header if "MyClass" would produce error messages such as "MyClass: This is my error message."
         /// </summary>

@@ -7,6 +7,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.PublicButHidden;
+using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -18,8 +19,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestDirectAccess
     {
-        //Dummy - not needed becasue direct, but CrudServices tests to make sure its not null
-        WrappedAutoMapperConfig _wrappedMapperConfig = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
+
 
         [Fact]
         public void TestGetSingleOnEntityOk()
@@ -31,7 +31,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(1);
@@ -53,7 +54,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(x => x.BookId == 1);
@@ -75,7 +77,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(99);
@@ -97,7 +100,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(x => x.BookId == 99);
@@ -119,7 +123,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<Book>(x => true));
@@ -139,7 +144,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var books = service.ReadManyNoTracked<Book>();
@@ -163,7 +169,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -192,7 +199,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 var author = context.Authors.Find(1);
@@ -221,7 +229,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -250,7 +259,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 service.DeleteAndSave<Book>(1);
@@ -279,7 +289,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new EfCoreContext(options))
             {
-                var service = new CrudServices(context, _wrappedMapperConfig);
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
 
                 //ATTEMPT
                 service.DeleteWithActionAndSave<Book>( (c,e) =>
@@ -302,6 +313,27 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Books.Count().ShouldEqual(stopDelete ? 4 : 3);
+            }
+        }
+
+        [Fact]
+        public void TestNotEntityNoDtoOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, mapper);
+
+                //ATTEMPT
+                var ex  = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<string>(1));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The class String is not registered as entity class in the database linked to your DbContext EfCoreContext.");
             }
         }
     }

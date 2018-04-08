@@ -57,7 +57,7 @@ namespace GenericServices.PublicButHidden
         public T ReadSingle<T>(params object[] keys) where T : class
         {    
             T result;
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 result = _context.Set<T>().Find(keys);
@@ -81,7 +81,7 @@ namespace GenericServices.PublicButHidden
         public T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
             T result;
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 result = _context.Set<T>().Where(whereExpression).SingleOrDefault();
@@ -104,8 +104,8 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
-            SetMessageIfNotAlreadySet($"Successfully read many {ExtractDisplayHelpers.GetNameForClass<T>()}");
+            Message = $"Successfully read many {ExtractDisplayHelpers.GetNameForClass<T>()}";
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 return _context.Set<T>().AsNoTracking();
@@ -119,7 +119,8 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public T CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            Message = $"Successfully created a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
@@ -139,14 +140,14 @@ namespace GenericServices.PublicButHidden
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
-            SetMessageIfNotAlreadySet($"Successfully created a {entityInfo.EntityType.GetNameForClass()}");
             return IsValid ? entityOrDto : null;
         }
 
         /// <inheritdoc />
         public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
@@ -161,13 +162,13 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
             }
-            SetMessageIfNotAlreadySet($"Successfully updated the {entityInfo.EntityType.GetNameForClass()}");
         }
 
         /// <inheritdoc />
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(
                     "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
@@ -180,14 +181,14 @@ namespace GenericServices.PublicButHidden
             }
             _context.Remove(entity);
             _context.SaveChanges();
-            SetMessageIfNotAlreadySet($"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}");
         }
 
         /// <inheritdoc />
         public void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(
                     "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
@@ -204,7 +205,6 @@ namespace GenericServices.PublicButHidden
 
             _context.Remove(entity);
             _context.SaveChanges();
-            SetMessageIfNotAlreadySet($"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}");
         }
 
     }

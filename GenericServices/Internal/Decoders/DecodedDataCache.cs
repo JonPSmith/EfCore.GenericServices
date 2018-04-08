@@ -13,13 +13,14 @@ namespace GenericServices.Internal.Decoders
 {
     internal static class DecodedDataCache
     {
-        public static DecodedEntityClass GetUnderlyingEntityInfo(this DbContext context, Type entityOrDto)
+        public static DecodedEntityClass GetEntityInfoThrowExceptionIfNotThere(this DbContext context, Type entityOrDto)
         {
-            if (EntityInfoCache.ContainsKey(entityOrDto)) return EntityInfoCache[entityOrDto];
-
             //If the entity type is found in the LinkToEntity interface it returns that, otherwise the called type because it must be the entity
             var entityType = entityOrDto.GetLinkedEntityFromDto() ?? entityOrDto;
-            return context.GetEntityClassInfo(entityType);
+            if (!EntityInfoCache.TryGetValue(entityType, out var result))
+                throw new InvalidOperationException(
+                    $"The class {entityType.Name} is not registered as entity class in the database linked to your DbContext {context.GetType().Name}.");
+            return result;
         }
 
         public static DecodedEntityClass RegisterDecodedEntityClass(this DbContext context, Type entityType)
@@ -30,11 +31,6 @@ namespace GenericServices.Internal.Decoders
         public static DecodedEntityClass GetRegisteredEntityInfo(this Type entityType)
         {
             return EntityInfoCache.ContainsKey(entityType) ? EntityInfoCache[entityType] : null;
-        }
-
-        public static DecodedDto GetRegisteredDtoInfo(this Type dtoType)
-        {
-            return DecodedDtoCache.ContainsKey(dtoType) ? DecodedDtoCache[dtoType] : null;
         }
 
         public static DecodedDto GetDtoInfoThrowExceptionIfNotThere(this Type dtoType)

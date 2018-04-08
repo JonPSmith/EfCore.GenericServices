@@ -40,37 +40,6 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestGenericStatusSetMessageIfNotAlreadySetOk()
-        {
-            //SETUP 
-            var status = new StatusGenericHandler();
-
-            //ATTEMPT
-            status.SetMessageIfNotAlreadySet("New message");
-
-            //VERIFY
-            status.IsValid.ShouldBeTrue();
-            status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("New message");
-        }
-
-        [Fact]
-        public void TestGenericStatusSetMessageIfNotAlreadySetFailWhenSetOk()
-        {
-            //SETUP 
-            var status = new StatusGenericHandler();
-
-            //ATTEMPT
-            status.Message = "Already set";
-            status.SetMessageIfNotAlreadySet("New message");
-
-            //VERIFY
-            status.IsValid.ShouldBeTrue();
-            status.Errors.Any().ShouldBeFalse();
-            status.Message.ShouldEqual("Already set");
-        }
-
-        [Fact]
         public void TestGenericStatusWithErrorOk()
         {
             //SETUP 

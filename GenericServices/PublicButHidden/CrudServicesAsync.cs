@@ -58,7 +58,7 @@ namespace GenericServices.PublicButHidden
         public async Task<T> ReadSingleAsync<T>(params object[] keys) where T : class
         {
             T result;
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 result = await _context.Set<T>().FindAsync(keys).ConfigureAwait(false);
@@ -82,7 +82,7 @@ namespace GenericServices.PublicButHidden
         public async Task<T> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
             T result;
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 result = await _context.Set<T>().Where(whereExpression).SingleOrDefaultAsync().ConfigureAwait(false);
@@ -105,7 +105,7 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public IQueryable<T> ReadManyNoTracked<T>() where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
                 return _context.Set<T>().AsNoTracking();
@@ -119,7 +119,8 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public async Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            Message = $"Successfully created a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
@@ -139,14 +140,14 @@ namespace GenericServices.PublicButHidden
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
-            SetMessageIfNotAlreadySet($"Successfully created a {entityInfo.EntityType.GetNameForClass()}");
             return IsValid ? entityOrDto : null;
         }
 
         /// <inheritdoc />
         public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(T));
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
@@ -161,16 +162,13 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(dtoInfo.ValidateOnSave).ConfigureAwait(false));        
             }
-            SetMessageIfNotAlreadySet($"Successfully updated the {entityInfo.EntityType.GetNameForClass()}");
         }
 
         /// <inheritdoc />
         public async Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
-            if (entityInfo.EntityType != typeof(TEntity))
-                throw new NotImplementedException(
-                    "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var entity = await _context.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
             if (entity == null)
@@ -180,17 +178,14 @@ namespace GenericServices.PublicButHidden
             }
             _context.Remove(entity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
-            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
         /// <inheritdoc />
         public async Task DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
-            var entityInfo = _context.GetUnderlyingEntityInfo(typeof(TEntity));
-            if (entityInfo.EntityType != typeof(TEntity))
-                throw new NotImplementedException(
-                    "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var entity = await _context.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
             if (entity == null)
@@ -204,7 +199,6 @@ namespace GenericServices.PublicButHidden
 
             _context.Remove(entity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
-            SetMessageIfNotAlreadySet($"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}");
         }
 
     }
