@@ -9,18 +9,15 @@ using GenericServices.Configuration;
 
 namespace ServiceLayer.HomeController.Dtos
 {
-    class BookListDtoConfig : PerDtoConfig<BookListDto, Book>
+    class DeleteBookDtoConfig : PerDtoConfig<DeleteBookDto, Book>
     {
-        public override Action<IMappingExpression<Book, BookListDto>> AlterReadMapping
+        public override Action<IMappingExpression<Book, DeleteBookDto>> AlterReadMapping
         {
             get
             {
                 return cfg => cfg
-                    .ForMember(x => x.ReviewsCount, x => x.MapFrom(book => book.Reviews.Count()))
                     .ForMember(x => x.AuthorsOrdered, y => y.MapFrom(p => string.Join(", ",
-                        p.AuthorsLink.OrderBy(q => q.Order).Select(q => q.Author.Name).ToList())))
-                    .ForMember(x => x.ReviewsAverageVotes,
-                        x => x.MapFrom(p => p.Reviews.Select(y => (double?)y.NumStars).Average()));
+                        p.AuthorsLink.OrderBy(q => q.Order).Select(q => q.Author.Name).ToList())));
             }
         }
     }
