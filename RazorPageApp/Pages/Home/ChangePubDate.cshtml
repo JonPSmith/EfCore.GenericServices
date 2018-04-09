@@ -28,6 +28,7 @@
                 <label class="control-label">Publication Date</label>
             </div>
             <input asp-for="Data.PublishedOn" class="form-control col-sm-10" />
+            <span asp-validation-for="Data.PublishedOn" class="text-danger"></span>
         </div>
 
         <div class="form-group">

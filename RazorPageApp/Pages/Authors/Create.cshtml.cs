@@ -27,13 +27,13 @@ namespace RazorPageApp.Pages.Authors
             Data = new Author();
         }
 
-        public IActionResult OnPost(int id)
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            _service.CreateAndSave<Author>(Data);
+            _service.CreateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("Index", new { message = _service.Message });
 

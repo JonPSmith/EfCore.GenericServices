@@ -27,11 +27,11 @@ namespace RazorPageApp.Pages.Home
             }
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(AddRemovePromotionDto formInput)
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return new PageResult();
             }
             _service.UpdateAndSave(Data);
             if (_service.IsValid)

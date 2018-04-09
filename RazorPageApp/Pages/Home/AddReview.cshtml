@@ -27,6 +27,7 @@
                 <label class="control-label">Your Name</label>
             </div>
             <input asp-for="Data.VoterName" class="form-control col-sm-10" />
+            <span asp-validation-for="Data.VoterName" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -34,6 +35,7 @@
                 <label class="control-label">Grade (0 to 5)</label>
             </div>
             <input asp-for="Data.NumStars" min="0" max="5" class="form-control col-sm-10" />
+            <span asp-validation-for="Data.NumStars" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -41,6 +43,7 @@
                 <label class="control-label">Your comment</label>
             </div>
             <textarea asp-for="Data.Comment" class="form-control col-sm-10"></textarea>
+            <span asp-validation-for="Data.Comment" class="text-danger"></span>
         </div>
 
         <div class="form-group">
