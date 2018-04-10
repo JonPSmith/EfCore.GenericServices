@@ -12,7 +12,6 @@ namespace GenericServices.Internal.Decoders
 {
     internal class DecodedDto
     {
-        private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
         private readonly List<MethodCtorMatch> _matchedSetterMethods;
         private readonly List<MethodCtorMatch> _matchedCtorsAndStaticMethods;
 
@@ -194,6 +193,8 @@ namespace GenericServices.Internal.Decoders
                 nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties).ToList();
             return _allPossibleCtorsAndStaticMatches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
+
+        private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
 
         private string ExtractPossibleMethodNameFromDtoTypeName()
         {
