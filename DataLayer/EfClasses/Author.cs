@@ -6,7 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
-    //I have made the Author entity class "normal", i.e. not locked down in the DDD-style way
+    //I have styled the Author entity class as a standard-styled entity, 
+    //i.e. it can be created/updated via its property setters. 
+    //Technically it has to have a public, parameterless constructor and all properties should  have public setters
     public class Author
     {
         public const int NameLength = 100;
