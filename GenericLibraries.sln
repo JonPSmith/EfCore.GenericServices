@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericServices", "GenericS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarking", "Benchmarking\Benchmarking.csproj", "{8FF91588-7710-4838-A7AC-DE717845A53B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericServices.AspNetCore", "GenericServices.AspNetCore\GenericServices.AspNetCore.csproj", "{ED410392-20F5-4735-9C82-AEDADB6EE7E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericServices.AspNetCore", "GenericServices.AspNetCore\GenericServices.AspNetCore.csproj", "{ED410392-20F5-4735-9C82-AEDADB6EE7E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
