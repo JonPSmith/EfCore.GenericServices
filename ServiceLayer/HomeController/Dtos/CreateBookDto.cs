@@ -8,11 +8,15 @@ using System.Linq;
 using DataLayer.EfClasses;
 using GenericServices;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ServiceLayer.HomeController.Dtos
 {
     public class CreateBookDto : ILinkToEntity<Book>
     {
+        //This will be populated with the primary key of the created book
+        public int BookId { get; set; }
+
         //I would normally have the Required attribute to catch this at the front end
         //But to show how the static create method catches that error I have commented it out
         //[Required(AllowEmptyStrings = false)]
@@ -27,24 +31,41 @@ namespace ServiceLayer.HomeController.Dtos
 
         public ICollection<Author> Authors { get; set; }
 
-        //------------------------------------
-        //I cheat and have a simple way to enter Authors
-
-        public string[] AuthorNames { get; set; } = new string[3];
-
-        public void SetupAuthorsCollection(DbContext context)
+        public CreateBookDto()
         {
-            Authors = AuthorNames.Select(x => FindOrCreateAuthor(context, x)).Where(x => x != null).ToList();
+            PublishedOn = DateTime.Today;
         }
 
-        private Author FindOrCreateAuthor(DbContext context, string authorsName)
+        //---------------------------------------------------------
+        //Now the data for the front end
+
+        public struct IdText
         {
-            if (string.IsNullOrEmpty(authorsName))
-                return null;
+            public IdText(int id, string text)
+            {
+                Id = id;
+                Text = text;
+            }
 
-            return context.Set<Author>().FirstOrDefault(x => x.Name == authorsName)
-                   ?? new Author {Name = authorsName};
+            [JsonProperty(PropertyName = "id")]
+            public int Id { get; }
+            [JsonProperty(PropertyName = "text")]
+            public string Text { get; }
+        }
 
+        public List<IdText> AuthorList { get; private set; }
+
+        public void BeforeDisplay(DbContext context)
+        {
+            AuthorList = context.Set<Author>().Select(x => new IdText(x.AuthorId, x.Name))
+                .OrderBy(x => x.Text).ToList();
+        }
+
+        public List<int> BookAuthorIds { get; set; } = new List<int>();
+
+        public void BeforeSave(DbContext context)
+        {
+            Authors = BookAuthorIds.Select(x => context.Find<Author>(x)).Where(x => x != null).ToList();
         }
     }
 }

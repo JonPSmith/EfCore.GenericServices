@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -6,10 +7,12 @@ using DataLayer.EfCode;
 using GenericServices.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using RazorPageApp.Pages;
 using ServiceLayer;
 using ServiceLayer.HomeController.Dtos;
@@ -71,6 +74,16 @@ namespace RazorPageApp
             }
 
             app.UseStaticFiles();
+            // thanks to https://wildermuth.com/2017/11/19/ASP-NET-Core-2-0-and-the-End-of-Bower for this trick
+            if (env.IsDevelopment())
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"node_modules")),
+                    RequestPath = new PathString("/vendor")
+                });
+            }
 
             app.UseMvc();
         }

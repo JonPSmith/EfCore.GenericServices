@@ -44,29 +44,25 @@
             <span asp-validation-for="Data.Price" class="text-danger"></span>
         </div>
         <p>
-            I cheated and made a simple way to enter authors (the proper way is to use dropdown lists and dyamically build list)
-            <br />
-            In this simple version just fill in one or more author.
-            If the name fits an existing author I will point to that author, or create a new author if not found
+            Please note that I used select2.js and this does not retain the order in which the authors were selected.
+            <br/>
+            In a real system this would need to be fixed, but for this demo I haven't bothered.
         </p>
         <div class="form-group">
             <div class="col-sm-2">
-                <label class="control-label">Author 1</label>
+                <label class="control-label">Select Authors</label>
             </div>
-            <input asp-for="Data.AuthorNames[0]" class="form-control col-sm-10" />
+            <select asp-for="Data.BookAuthorIds" id="select2-input" class="form-control col-sm-10" multiple="multiple">
+                @if (Model.Data?.AuthorList != null)
+                {
+                    foreach (var idText in Model.Data.AuthorList)
+                    {
+                        <option value="@idText.Id">@idText.Text</option>
+                    }
+                }
+            </select>
         </div>
-        <div class="form-group">
-            <div class="col-sm-2">
-                <label class="control-label">Author 2</label>
-            </div>
-            <input asp-for="Data.AuthorNames[1]" class="form-control col-sm-10" />
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2">
-                <label class="control-label">Author 3</label>
-            </div>
-            <input asp-for="Data.AuthorNames[2]" class="form-control col-sm-10" />
-        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit">Create Book</button>
@@ -77,3 +73,20 @@
 
 </div>
 
+@section Scripts{
+    <script src="~/vendor/select2/dist/js/select2.js"></script>
+    <script>
+
+
+        var $authorInput = $("#select2-input");
+        //Note that select2 will order the input based on the order they came from the server
+        //See issue https://github.com/select2/select2/issues/3106
+        $authorInput.select2({
+            //width: 'resolve',
+            minimumInputLength: 2,
+            //tags: true, // Allows custom text
+            selectOnClose: true,  //Allows tab/return to select
+            tokenSeparators: [','] // Hitting comma as a user types allows them to quickly add more results
+        });
+    </script>
+}

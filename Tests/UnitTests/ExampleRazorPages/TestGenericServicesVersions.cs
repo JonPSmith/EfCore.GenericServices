@@ -29,21 +29,23 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<CreateBookDto>();
                 var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new CreateBookDto { Title = "Hello", Price = 50, PublishedOn = new DateTime(2010,1,1)};
-                dto.AuthorNames[0] = "Jon Smith";
-                dto.SetupAuthorsCollection(context);
+                dto.BookAuthorIds.Add(1);
+                dto.BeforeSave(context);
                 service.CreateAndSave(dto);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                context.Set<Book>().Count().ShouldEqual(1);
-                var book = context.Find<Book>(1);
-                book.ActualPrice.ShouldEqual(dto.Price);
+                context.Set<Book>().Count().ShouldEqual(5);
+                var book = context.Books.Include(x => x.AuthorsLink).ThenInclude(x => x.Author)
+                    .Single(x => x.BookId == dto.BookId);
+                book.AuthorsLink.Single().Author.Name.ShouldEqual("Martin Fowler");
             }
         }
 
@@ -55,14 +57,15 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
 
                 var wrapped = context.SetupSingleDtoAndEntities<CreateBookDto>();
                 var service = new CrudServices(context, wrapped);
 
                 //ATTEMPT
                 var dto = new CreateBookDto { Title = "", Price = 50, PublishedOn = new DateTime(2010, 1, 1) };
-                dto.AuthorNames[0] = "Jon Smith";
-                dto.SetupAuthorsCollection(context);
+                dto.BookAuthorIds.Add(1);
+                dto.BeforeSave(context);
                 service.CreateAndSave(dto);
 
                 //VERIFY
@@ -70,8 +73,6 @@ namespace Tests.UnitTests.ExampleRazorPages
                 service.GetAllErrors().ShouldEqual("The book title cannot be empty.");
             }
         }
-
-
 
         [Fact]
         public void TestCreateBookUseCtorOk()

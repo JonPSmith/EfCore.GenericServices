@@ -25,22 +25,25 @@ namespace RazorPageApp.Pages.Home
         public void OnGet()
         {
             Data = new CreateBookDto();
+            Data.BeforeDisplay(_service.Context);
         }
 
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
+                Data.BeforeDisplay(_service.Context);
                 return Page();
             }
-            //Now I need to set up the Authors collection
-            Data.SetupAuthorsCollection(_service.Context);
+            //Now I need to set up the Authors collection before calling create
+            Data.BeforeSave(_service.Context);
             _service.CreateAndSave(Data);
             if (_service.IsValid)
                 return RedirectToPage("BookUpdated", new { message = _service.Message});
 
             //Error state
             _service.CopyErrorsToModelState(ModelState, Data);
+            Data.BeforeDisplay(_service.Context);
             return Page();
         }
     }
