@@ -39,8 +39,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Add(new Author {Name = "Start Name", Email = "me@nospam.com"});
                 context.SaveChanges();
 
-                var wrapped = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<AuthorDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new AuthorDto { AuthorId = 1, Name = "New Name", Email = "you@gmail.com" };
@@ -65,8 +65,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000,1,1) };
@@ -90,8 +90,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
@@ -115,8 +115,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
@@ -141,8 +141,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.AddReviewDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.AddReviewDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
@@ -166,8 +166,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                var wrapped = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new AddRemovePromotionDto { BookId = 1, ActualPrice = 1, PromotionalText = "Really Cheap!"};
@@ -200,8 +200,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<DtoWithConfig>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<DtoWithConfig>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new DtoWithConfig { BookId = 4 };
@@ -225,8 +225,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };

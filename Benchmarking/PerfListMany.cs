@@ -21,7 +21,7 @@ namespace Benchmarking
 {
     public class PerfListMany
     {
-        private IWrappedAutoMapperConfig _wrapped;
+        private UnitTestData _utData;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseDummyBooks(100);
-                _wrapped = context.SetupSingleDtoAndEntities<BookListDto>();
+                _utData = context.SetupSingleDtoAndEntities<BookListDto>();
             }
         }
 
@@ -64,7 +64,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _utData.Wrapped);
 
                 //ATTEMPT
                 var books = service.ReadManyNoTracked<BookListDto>().ToList();

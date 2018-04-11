@@ -30,8 +30,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitle>(1);
@@ -53,8 +53,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(1);
@@ -76,8 +76,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(x => x.BookId == 1);
@@ -99,8 +99,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookTitleAndCount>(999);
@@ -121,8 +121,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<BookTitleAndCount>(x => true));
@@ -145,8 +145,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookWithAuthors>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookWithAuthors>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookWithAuthors>(1);
@@ -171,8 +171,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var list = service.ReadManyNoTracked<BookTitle>().ToList();
@@ -194,8 +194,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var wrapped = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var list = service.ReadManyNoTracked<BookTitleAndCount>().ToList();
@@ -223,7 +223,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //    }
         //    using (var context = new EfCoreContext(options))
         //    {
-        //        var service = new CrudServices(context, mapper);
+        //        var service = new CrudServices(context, utData.Wrapped);
 
         //        //ATTEMPT
         //        var dto = new AuthorNameDto { Name = "New Name" };

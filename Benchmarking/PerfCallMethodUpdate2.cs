@@ -17,7 +17,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodUpdate2
     {
-        private IWrappedAutoMapperConfig _wrapped;
+        private UnitTestData _utData;
         private DbContextOptions<EfCoreContext> _options;
         private int _incdDay = 0;
 
@@ -36,7 +36,7 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseFourBooks();
-                _wrapped = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                _utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
             }
 
         }
@@ -65,7 +65,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _utData.Wrapped);
 
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
@@ -103,7 +103,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _utData.Wrapped);
 
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);

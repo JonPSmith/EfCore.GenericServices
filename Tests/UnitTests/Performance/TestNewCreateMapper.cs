@@ -31,7 +31,7 @@ namespace Tests.UnitTests.Performance
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             var context = new EfCoreContext(options);
-            var wrapperMapperConfigs = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
+            var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
             var entityInfo = typeof(Book).GetRegisteredEntityInfo();
 
             var myGeneric = typeof(CreateMapper.GenericMapper<,>);
@@ -41,7 +41,7 @@ namespace Tests.UnitTests.Performance
             {             
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
+                    dynamic instance = Activator.CreateInstance(genericType, context, utData.Wrapped, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Performance
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = CreateMapper.GetNewGenericMapper(genericType, constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
+                    dynamic instance = CreateMapper.GetNewGenericMapper(genericType, constructor).Invoke(context, utData.Wrapped, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
@@ -63,7 +63,7 @@ namespace Tests.UnitTests.Performance
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = CreateMapper.NewGenericMapper(constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
+                    dynamic instance = CreateMapper.NewGenericMapper(constructor).Invoke(context, utData.Wrapped, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }

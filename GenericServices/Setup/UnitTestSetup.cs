@@ -23,24 +23,35 @@ namespace GenericServices.Setup
         /// <param name="context">This is the DbContext conatining the entity clas your TDto refers to</param>
         /// <param name="publicConfig">Optional: you can provide a publicConfig. 
         /// NOTE: All use of this method must use the same config file, because it is read at startup and then cached.</param>
-        /// <returns></returns>
-        public static IWrappedAutoMapperConfig SetupSingleDtoAndEntities<TDto>(this DbContext context,
+        public static UnitTestData SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)
         {
-            var status = new StatusGenericHandler();
-            publicConfig = publicConfig ?? new GenericServicesConfig();
             context.RegisterEntityClasses();
+            var utData = new UnitTestData(publicConfig);
+            utData.AddSingleDto<TDto>();
+            return utData;
+        }
+
+        /// <summary>
+        /// This is designed to add one DTO to an existing UnitTestData
+        /// </summary>
+        /// <typeparam name="TDto">This should be the type of a class that has the <see cref="ILinkToEntity{TEntity}"/> applied to it</typeparam>
+        /// <param name="utData"></param>
+        /// <returns></returns>
+        public static UnitTestData AddSingleDto<TDto>(this UnitTestData utData)
+        {
+            var status = new StatusGenericHandler();
             var typesInAssembly = typeof(TDto).Assembly.GetTypes();
-            var dtoRegister = new RegisterOneDtoType(typeof(TDto), typesInAssembly, publicConfig);
+            var dtoRegister = new RegisterOneDtoType(typeof(TDto), typesInAssembly, utData.PublicConfig);
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n" 
                                                     + status.GetAllErrors());
 
-            var readProfile = new MappingProfile(false);
-            var saveProfile = new MappingProfile(true);
-            SetupDtosAndMappings.SetupMappingForDto(dtoRegister, readProfile, saveProfile);
-            return SetupDtosAndMappings.CreateWrappedAutoMapperConfig(readProfile, saveProfile);
+            SetupDtosAndMappings.SetupMappingForDto(dtoRegister, utData.ReadProfile, utData.SaveProfile);
+            return utData;
         }
+
+
     }
 }

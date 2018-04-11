@@ -19,7 +19,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodToUpdate1
     {
-        private IWrappedAutoMapperConfig _wrapped;
+        private UnitTestData _utData;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Benchmarking
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-                _wrapped = context.SetupSingleDtoAndEntities<AddReviewDto>();
+                _utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
             }
         }
 
@@ -46,7 +46,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _wrapped);
+                var service = new CrudServices<EfCoreContext>(context, _utData.Wrapped);
                 var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT

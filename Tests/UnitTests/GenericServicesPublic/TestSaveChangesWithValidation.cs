@@ -43,8 +43,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
 
-                var wrapped = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = "Name", Email = unique };
@@ -65,8 +65,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
 
-                var wrapped = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = null, Email = unique };
@@ -87,8 +87,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
 
-                var wrapped = context.SetupSingleDtoAndEntities<LocalAuthorDtoWithConfig>();
-                var service = new CrudServices(context, wrapped);
+                var utData = context.SetupSingleDtoAndEntities<LocalAuthorDtoWithConfig>();
+                var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
                 var author = new LocalAuthorDtoWithConfig { Name = null, Email = unique };

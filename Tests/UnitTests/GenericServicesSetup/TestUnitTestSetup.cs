@@ -34,10 +34,26 @@ namespace Tests.UnitTests.GenericServicesSetup
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
 
                 //VERIFY
-                mapper.ShouldNotBeNull();
+                utData.Wrapped.ShouldNotBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestSetupTwoDtoAndEntitiesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                //ATTEMPT
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                utData.AddSingleDto<BookTitleAndCount>();
+
+                //VERIFY
+                utData.Wrapped.ShouldNotBeNull();
             }
         }
 

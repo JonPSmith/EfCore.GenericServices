@@ -30,8 +30,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(1);
@@ -53,8 +53,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 1);
@@ -76,8 +76,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(99);
@@ -99,8 +99,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == 99);
@@ -122,8 +122,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
@@ -143,8 +143,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var books = await service.ReadManyNoTracked<Book>().ToListAsync();
@@ -168,8 +168,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var author = new Author { AuthorId = 1, Name = "New Name", Email = unique };
@@ -197,8 +197,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var author = await service.ReadSingleAsync<Author>(1);
@@ -226,8 +226,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
                 var logs = context.SetupLogging();
 
                 //ATTEMPT
@@ -256,8 +256,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);;
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);;
 
                 //ATTEMPT
                 var author = new Author { Name = "New Name", Email = unique };
@@ -280,8 +280,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 await service.DeleteAndSaveAsync<Book>(1);
@@ -317,8 +317,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 await service.DeleteWithActionAndSaveAsync<Book>(DeleteCheck, bookId);
@@ -345,8 +345,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var mapper = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, mapper);
+                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var service = new CrudServicesAsync(context, utData.Wrapped);
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<string>(1));
