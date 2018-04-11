@@ -8,7 +8,6 @@ using System.Linq;
 using DataLayer.EfClasses;
 using GenericServices;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace ServiceLayer.HomeController.Dtos
 {
@@ -39,26 +38,24 @@ namespace ServiceLayer.HomeController.Dtos
         //---------------------------------------------------------
         //Now the data for the front end
 
-        public struct IdText
+        public struct KeyName
         {
-            public IdText(int id, string text)
+            public KeyName(int authorId, string name)
             {
-                Id = id;
-                Text = text;
+                AuthorId = authorId;
+                Name = name;
             }
 
-            [JsonProperty(PropertyName = "id")]
-            public int Id { get; }
-            [JsonProperty(PropertyName = "text")]
-            public string Text { get; }
+            public int AuthorId { get; }
+            public string Name { get; }
         }
 
-        public List<IdText> AuthorList { get; private set; }
+        public List<KeyName> AllPossibleAuthors { get; private set; }
 
         public void BeforeDisplay(DbContext context)
         {
-            AuthorList = context.Set<Author>().Select(x => new IdText(x.AuthorId, x.Name))
-                .OrderBy(x => x.Text).ToList();
+            AllPossibleAuthors = context.Set<Author>().Select(x => new KeyName(x.AuthorId, x.Name))
+                .OrderBy(x => x.Name).ToList();
         }
 
         public List<int> BookAuthorIds { get; set; } = new List<int>();

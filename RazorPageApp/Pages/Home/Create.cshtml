@@ -53,11 +53,11 @@
                 <label class="control-label">Select Authors</label>
             </div>
             <select asp-for="Data.BookAuthorIds" id="select2-input" class="form-control col-sm-10" multiple="multiple">
-                @if (Model.Data?.AuthorList != null)
+                @if (Model.Data?.AllPossibleAuthors != null)
                 {
-                    foreach (var idText in Model.Data.AuthorList)
+                    foreach (var keyName in Model.Data.AllPossibleAuthors)
                     {
-                        <option value="@idText.Id">@idText.Text</option>
+                        <option value="@keyName.AuthorId">@keyName.Name</option>
                     }
                 }
             </select>
