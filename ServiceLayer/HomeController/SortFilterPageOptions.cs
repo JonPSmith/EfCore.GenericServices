@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.HomeController.QueryObjects;
 
 namespace ServiceLayer.HomeController
@@ -41,10 +43,10 @@ namespace ServiceLayer.HomeController
         public string PrevCheckState { get; set; }
 
 
-        public void SetupRestOfDto<T>(IQueryable<T> query)
+        public async Task SetupRestOfDto<T>(IQueryable<T> query)
         {
             NumPages = (int) Math.Ceiling(
-                (double) query.Count()/PageSize);
+                (double) (await query.CountAsync())/PageSize);
             PageNum = Math.Min(
                 Math.Max(1, PageNum), NumPages);                                                            
 
