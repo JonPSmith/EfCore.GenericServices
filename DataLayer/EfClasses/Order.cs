@@ -13,7 +13,6 @@ namespace DataLayer.EfClasses
     {
         private HashSet<LineItem> _lineItems;
 
-
         private Order() { }
 
         public int OrderId { get; private set; }
@@ -55,7 +54,7 @@ namespace DataLayer.EfClasses
             var status = new StatusGenericHandler();
             if (CustomerName != userId)
             {
-                status.AddError("I'm sorry, but that order does not belong to you");
+                status.AddError("I'm sorry, but there was a system error.");
                 //Log a security issue
                 return status;
             }
@@ -63,18 +62,6 @@ namespace DataLayer.EfClasses
             if (HasBeenDelivered)
             {
                 status.AddError("I'm sorry, but that order has been delivered.");
-                return status;
-            }
-
-            if (newDeliveryDate < DateTime.Today.AddDays(1))
-            {
-                status.AddError("I'm sorry, we cannot get the order to you that quickly. Please choose a new date.", "NewDeliveryDate");
-                return status;
-            }
-
-            if (newDeliveryDate.DayOfWeek == DayOfWeek.Sunday)
-            {
-                status.AddError("I'm sorry, we don't deliver on Sunday. Please choose a new date.", "NewDeliveryDate");
                 return status;
             }
 

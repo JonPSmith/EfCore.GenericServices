@@ -74,8 +74,6 @@ namespace Tests.UnitTests.DataLayer
 
             //ATTEMPT
             var newDeliverDate = DateTime.Today.AddDays(2);
-            if (newDeliverDate.DayOfWeek == DayOfWeek.Sunday)
-                newDeliverDate = newDeliverDate.AddDays(1);
             var status = order.ChangeDeliveryDate("user", newDeliverDate);
 
             //VERIFY
