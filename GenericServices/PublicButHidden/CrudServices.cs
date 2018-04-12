@@ -24,6 +24,9 @@ namespace GenericServices.PublicButHidden
         /// <param name="wapper"></param>
         public CrudServices(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
         {
+            if (context == null)
+                throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
+                     "or you are using the multi-DbContext version, in which case you need to use the CrudServices<TContext> and specify which DbContext to use.");
         }
     }
 
