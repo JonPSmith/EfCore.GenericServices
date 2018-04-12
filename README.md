@@ -92,13 +92,13 @@ to reimagine that library, but in a very different (hopefully simpler) way.*
 
 I have compared the performance of the GenericService library using the excellent
 [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
-The worst performance loss was 5% (25 us.), and that is for the simplest update on the fasted in-memory database.
+The worst performance loss was 5% (25 us.), and that is for the simplest update on the fastest in-memory database.
 See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
 wiki page for full details.
 
 ## Documentation and examples
 * The [GenericServices Wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki) has
 lots of documentation.
-* The public methods in the libraray are all commented for intellisense feedback.
+* The public methods in the library are all commented for intellisense feedback.
 * This repo contains a runnable example Razor Page application, with the database in the DataLayer.
 * This general article provides a longer introduction ???? link to come.
