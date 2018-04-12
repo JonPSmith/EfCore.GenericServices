@@ -4,11 +4,11 @@ This library helps you quickly code Create, Read, Update and Delete (CRUD) acces
 for a web/mobile/desktop application. It acts as a adapter between a database accessed
 by Entity Framework Core (EF Core) and the needs of the front-end system.
 
-Typical web applications have hundreds of CRUD pages - display this, edit this, delete that. 
+Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other. 
 And each CRUD access has to adapt the data in the database to show the user, and then
-ensure the action is applied to the database in the correct way. This library extracts 
-the pattern into a library, making the writing of the CRUD front-end code quick and
-simple to write.
+apply the changes to the database. This library extracts 
+the pattern into a library, making the writing of the CRUD front-end code both quicker and
+simpler to write.
 
 The code for each of the four access type (Create, Read, Update and Delete) are identical,
 apart from the ViewModel/DTO specific to the actual feature. So, you create one set of update
@@ -64,8 +64,8 @@ And the ViewModel/DTO isn't anything special (see the
 They just need to be marked with an empty 
 `ILinkToEntity<TEntity>` interface, which tells GenericServices which EF Core entity 
 class to map to. *For more security you can also mark any read-only properties with the 
-`[ReadOnly(true)]` attribute so that GenericServices will never try to update the 
-entity with that property.*
+`[ReadOnly(true)]` attribute - GenericServices will never try to update the 
+database with any read-only marked property.*
 
 ## Technical features
 The EfCore.GenericServices is an open-source (MIT licence) netcoreapp2.0 library that assumes
@@ -73,16 +73,22 @@ you use EF Core for your database accesses.
 
 It is designed to work with both standard-styled
 entity classes (e.g. public setters on the properties and a public, paremeterless constructor),
-or with a Domain-Driven Design (DDD) styled entity classes (e.g. where all updates are doen through named 
+or with a Domain-Driven Design (DDD) styled entity classes (e.g. where all updates are done through named 
 methods in the the entity class) - see 
 [this article](https://www.thereformedprogrammer.net/creating-domain-driven-design-entity-classes-with-entity-framework-core/)
-for more on the difference between standard-styled entity classes and DDD styled entity classes).
+for more on the difference between standard-styled entity classes and DDD styled entity classes.
 
 It also works well with with dependancy injection (DI), such as ASP.NET Core's DI service.
 But does also contain a simplified, non-DI based configuration system suitable for unit testing 
 and/or serverless applications.
 
-*NOTE: I created a similar library for EF6.x back in 2014, whihc has saved my many months of effort.
+I have compared the performance of the GenericService library using the
+[BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
+The worst performance loss is 5%, and that is for the simplest update on the fasted in-memory database.
+See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
+wiki page for full details.
+
+*NOTE: I created a similar library for EF6.x back in 2014, which has saved my many months of effort.
 This new version contains the learning from that library, and the new DDD-enabling feature of EF Core
 to reimagine that library, but in a very different (hopefully simpler) way.*
 
