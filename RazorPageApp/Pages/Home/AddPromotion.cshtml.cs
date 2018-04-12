@@ -27,7 +27,7 @@ namespace RazorPageApp.Pages.Home
             }
         }
 
-        public IActionResult OnPost(AddRemovePromotionDto formInput)
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {

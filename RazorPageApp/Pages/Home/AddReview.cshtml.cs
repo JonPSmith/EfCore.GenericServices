@@ -28,8 +28,7 @@ namespace RazorPageApp.Pages.Home
             }
         }
 
-        //There are two ways to get data. This takes the id as a parameter and picks up the other information from the [BindProperty]
-        public IActionResult OnPost(int id)
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
