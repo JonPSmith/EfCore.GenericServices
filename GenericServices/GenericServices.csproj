@@ -2,6 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Selective Analytics</Company>
+    <Authors>Jon P Smith</Authors>
+    <PackageId>EfCore.GenericServices</PackageId>
+    <Product>EfCore.GenericServices</Product>
+    <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system.</Description>
+    <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
+    <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
+    <RepositoryType>GuHub</RepositoryType>
+    <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
+
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

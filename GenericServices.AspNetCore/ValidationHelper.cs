@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GenericServices.AspNetCore
 {
+    /// <summary>
+    /// Extension methods for copying <see cref="IStatusGeneric"/> into the ASP.NET Core ModelState
+    /// </summary>
     public static class ValidationHelper
     {
         /// <summary>
@@ -19,7 +22,7 @@ namespace GenericServices.AspNetCore
         /// <param name="status">The status that came back from the BizRunner</param>
         /// <param name="modelState">The MVC modelState to add errors to</param>
         /// <param name="displayDto">This is the Dto that will be used to display the error messages</param>
-        /// <param name="modelName">When using razor pages with a DTO you need to prefix the member name by the name of the model's property</param>
+        /// <param name="modelName">When using razor pages you need to prefix the member name by the name of the model's property</param>
         public static void CopyErrorsToModelState<T>(this IStatusGeneric status, ModelStateDictionary modelState, T displayDto, string modelName = null) 
         {
             if (status.IsValid) return;
@@ -59,11 +62,9 @@ namespace GenericServices.AspNetCore
 
         //-----------------------------------------------------------------------------------
         //private methods
-
         private static IList<string> PropertyNamesInDto<T> ( T objectToCheck)
         {
-            return
-                objectToCheck.GetType()
+            return objectToCheck.GetType()
                              .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                              .Select(x => x.Name)
                              .ToList();

@@ -68,8 +68,8 @@ class to map to. *For more security you can also mark any read-only properties w
 database with any read-only marked property.*
 
 ## Technical features
-The EfCore.GenericServices is an open-source (MIT licence) netcoreapp2.0 library that assumes
-you use EF Core for your database accesses. 
+The EfCore.GenericServices [NuGet, EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/), 
+is an open-source (MIT licence) netcoreapp2.0 library that assumes you use EF Core for your database accesses. 
 
 It is designed to work with both standard-styled
 entity classes (e.g. public setters on the properties and a public, paremeterless constructor),
