@@ -68,8 +68,9 @@ class to map to. *For more security you can also mark any read-only properties w
 database with any read-only marked property.*
 
 ## Technical features
-The EfCore.GenericServices [NuGet, EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/), 
+The EfCore.GenericServices ([NuGet, EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/)), 
 is an open-source (MIT licence) netcoreapp2.0 library that assumes you use EF Core for your database accesses. 
+It has good documentation in the [repo's Wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
 
 It is designed to work with both standard-styled
 entity classes (e.g. public setters on the properties and a public, paremeterless constructor),
@@ -92,7 +93,8 @@ to reimagine that library, but in a very different (hopefully simpler) way.*
 
 I have compared the performance of the GenericService library using the excellent
 [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
-The worst performance loss was 5% (25 us.), and that is for the simplest update on the fastest in-memory database.
+The performance loss was an extra 25 us. - worst case, 5% of total time, and that is for the 
+simplest update on the fastest in-memory database.
 See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
 wiki page for full details.
 
