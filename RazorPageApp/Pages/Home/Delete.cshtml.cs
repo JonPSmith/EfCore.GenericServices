@@ -29,7 +29,7 @@ namespace RazorPageApp.Pages.Home
             Data = _service.ReadSingle<DeleteBookDto>(id);
             if (!_service.IsValid)
             {
-                _service.CopyErrorsToModelState(ModelState, Data, "Data");
+                _service.CopyErrorsToModelState(ModelState, Data, nameof(Data));
             }
         }
 
@@ -40,7 +40,7 @@ namespace RazorPageApp.Pages.Home
                 return RedirectToPage("BookUpdated", new { message = _service.Message });
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Data, "Data");
+            _service.CopyErrorsToModelState(ModelState, Data, nameof(Data));
             return Page();
         }
 

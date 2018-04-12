@@ -34,7 +34,7 @@ namespace RazorPageApp.Pages.Authors
                 return RedirectToPage("Index", new { message = _service.Message });
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Data, "Data");
+            _service.CopyErrorsToModelState(ModelState, Data, nameof(Data));
             return Page();
         }
     }

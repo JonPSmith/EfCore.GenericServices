@@ -38,7 +38,7 @@ namespace RazorPageApp.Pages.Home
                 return RedirectToPage("BookUpdated", new { message = _service.Message});
 
             //Error state
-            _service.CopyErrorsToModelState(ModelState, Data);
+            _service.CopyErrorsToModelState(ModelState, Data, nameof(Data));
             Data.BeforeDisplay(_service.Context);
             return Page();
         }
