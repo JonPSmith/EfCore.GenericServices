@@ -82,15 +82,19 @@ It also works well with with dependancy injection (DI), such as ASP.NET Core's D
 But does also contain a simplified, non-DI based configuration system suitable for unit testing 
 and/or serverless applications.
 
-I have compared the performance of the GenericService library using the
-[BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
-The worst performance loss is 5%, and that is for the simplest update on the fasted in-memory database.
-See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
-wiki page for full details.
-
-*NOTE: I created a similar library for EF6.x back in 2014, which has saved my many months of effort.
+*NOTE: I created a [similar library](https://github.com/JonPSmith/GenericServices)
+for EF6.x back in 2014, which has saved my many months of (boring) coding -
+on one project alone I think it saved 2 months out of 10.
 This new version contains the learning from that library, and the new DDD-enabling feature of EF Core
 to reimagine that library, but in a very different (hopefully simpler) way.*
+
+## Library performance
+
+I have compared the performance of the GenericService library using the excellent
+[BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
+The worst performance loss was 5% (25 us.), and that is for the simplest update on the fasted in-memory database.
+See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
+wiki page for full details.
 
 ## Documentation and examples
 * The [GenericServices Wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki) has
