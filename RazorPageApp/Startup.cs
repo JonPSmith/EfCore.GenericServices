@@ -29,7 +29,7 @@ namespace RazorPageApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             // thanks to https://exceptionnotfound.net/setting-a-custom-default-page-in-asp-net-core-razor-pages/
             services.AddMvc().AddRazorPagesOptions(options =>
@@ -49,15 +49,16 @@ namespace RazorPageApp
 
             services.GenericServicesSimpleSetup<EfCoreContext>(Assembly.GetAssembly(typeof(BookListDto)));
 
-            //Now I use AutoFac to do some of the more complex registering of services
-            var containerBuilder = new ContainerBuilder();
+            //I removed the code below, as this was only needed for the hand-coded versions of the services
+            ////Now I use AutoFac to do some of the more complex registering of services
+            //var containerBuilder = new ContainerBuilder();
 
-            //Now I use the ServiceLayer AutoFac module that registers all the other DI items, such as my biz logic
-            containerBuilder.RegisterModule(new ServiceLayerModule());
+            ////Now I use the ServiceLayer AutoFac module that registers all the other DI items, such as my biz logic
+            //containerBuilder.RegisterModule(new ServiceLayerModule());
 
-            containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
-            return new AutofacServiceProvider(container);
+            //containerBuilder.Populate(services);
+            //var container = containerBuilder.Build();
+            //return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
