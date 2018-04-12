@@ -47,8 +47,6 @@ namespace GenericServices.Setup
             if (!status.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n" 
                                                     + status.GetAllErrors());
-
-            SetupDtosAndMappings.SetupMappingForDto(dtoRegister, utData.ReadProfile, utData.SaveProfile);
             return utData;
         }
 
