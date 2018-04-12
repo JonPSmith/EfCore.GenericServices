@@ -1,8 +1,5 @@
-using System;
 using System.IO;
 using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
 using GenericServices.Setup;
 using Microsoft.AspNetCore.Builder;
@@ -13,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using RazorPageApp.Pages;
-using ServiceLayer;
 using ServiceLayer.HomeController.Dtos;
 
 namespace RazorPageApp
@@ -49,6 +44,12 @@ namespace RazorPageApp
 
             services.GenericServicesSimpleSetup<EfCoreContext>(Assembly.GetAssembly(typeof(BookListDto)));
 
+            //This is the version you would use if you were registering multiple DbContext
+            //services.ConfigureGenericServicesEntities(typeof(BookDbContext), typeof(OrderDbContext))
+            //    .ScanAssemblesForDtos(Assembly.GetAssembly(typeof(BookListDto)))
+            //    .RegisterGenericServices();
+
+            //--------------------------------------------------------------------------------------------
             //I removed the code below, as this was only needed for the hand-coded versions of the services
             ////Now I use AutoFac to do some of the more complex registering of services
             //var containerBuilder = new ContainerBuilder();
