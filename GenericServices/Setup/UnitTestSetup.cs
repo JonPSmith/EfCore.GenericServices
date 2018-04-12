@@ -4,7 +4,6 @@
 using System;
 using GenericServices.Configuration;
 using GenericServices.Setup.Internal;
-using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Setup
@@ -45,13 +44,11 @@ namespace GenericServices.Setup
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), typesInAssembly, utData.PublicConfig);
             status.CombineStatuses(dtoRegister);
             if (!status.IsValid)
-                throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n" 
+                throw new InvalidOperationException($"SETUP FAILED with {status.Errors.Count} errors. Errors are:\n"
                                                     + status.GetAllErrors());
 
             SetupDtosAndMappings.SetupMappingForDto(dtoRegister, utData.ReadProfile, utData.SaveProfile);
             return utData;
         }
-
-
     }
 }
