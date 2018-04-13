@@ -13,7 +13,7 @@ namespace DataLayer.EfCode
         public DbSet<Author> Authors { get; set; }
 
         public BookDbContext(
-            DbContextOptions<OrderDbContext> options)
+            DbContextOptions<BookDbContext> options)
             : base(options)
         {
         }
