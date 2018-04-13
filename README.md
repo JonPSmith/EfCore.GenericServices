@@ -1,10 +1,8 @@
 # EfCore.GenericServices
 
 [
-  ![Donate with PayPal]
-  (https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png)
-]
-(https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZPQD8XWPUTUZU)
+![Donate with PayPal](https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png)
+](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZPQD8XWPUTUZU)
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses
 for a web/mobile/desktop application. It acts as a adapter between a database accessed
