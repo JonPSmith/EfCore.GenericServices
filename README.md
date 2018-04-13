@@ -1,5 +1,7 @@
 # EfCore.GenericServices
 
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](ZPQD8XWPUTUZU)
+
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses
 for a web/mobile/desktop application. It acts as a adapter between a database accessed
 by Entity Framework Core (EF Core) and the needs of the front-end system.
