@@ -85,7 +85,7 @@ and/or serverless applications.
 
 *NOTE: I created a [similar library](https://github.com/JonPSmith/GenericServices)
 for EF6.x back in 2014, which has saved my many months of (boring) coding -
-on one project alone I think it saved 2 months out of 10.
+on one project alone I think it saved 2 months out of 12.
 This new version contains the learning from that library, and the new DDD-enabling feature of EF Core
 to reimagine that library, but in a very different (hopefully simpler) way.*
 
