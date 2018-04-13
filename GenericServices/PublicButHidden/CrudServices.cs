@@ -182,8 +182,9 @@ namespace GenericServices.PublicButHidden
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
-                return;
             }
+            if (!IsValid) return;
+
             _context.Remove(entity);
             _context.SaveChanges();
         }
