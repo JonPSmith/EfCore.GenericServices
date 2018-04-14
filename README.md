@@ -103,4 +103,5 @@ wiki page for full details.
 lots of documentation.
 * The public methods in the library are all commented for intellisense feedback.
 * This repo contains a runnable example Razor Page application, with the database in the DataLayer.
-* This general article provides a longer introduction ???? link to come.
+* This [intoductory article](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/)
+provides a longer introduction to EfCore.GenericServices.
