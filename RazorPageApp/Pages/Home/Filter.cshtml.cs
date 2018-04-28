@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataLayer.EfCode;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.HomeController;
 using ServiceLayer.HomeController.QueryObjects;
+using ServiceLayer.HomeController.Services;
 
 namespace RazorPageApp.Pages.Home
 {
@@ -9,9 +11,9 @@ namespace RazorPageApp.Pages.Home
     {
         private readonly IBookFilterDropdownService _filterService;
 
-        public FilterModel(IBookFilterDropdownService filterService)
+        public FilterModel(EfCoreContext context)
         {
-            _filterService = filterService;
+            _filterService = new BookFilterDropdownService(context);
         }
 
         public JsonResult OnGet(BooksFilterBy filterBy)

@@ -27,12 +27,12 @@ var BookList = (function($) {
         var ajaxSettings = {
             //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method name>
             //In this case it's '/?Handler=FilterSearchContent'
-            url: (false ? '/?handler=Filter' : '/Home/Filter'),
+            url: (false ? 'Home/?handler=Filter' : '/Home/Filter'),
             data: {
                 FilterBy: filterByValue
             }
         };
-        if (true) {
+        if (false) {
             //this make it into a POST - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
             ajaxSettings.type = 'POST';
             ajaxSettings.headers = {
