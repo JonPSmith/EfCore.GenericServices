@@ -23,20 +23,26 @@ var BookList = (function($) {
 
     function loadFilterValueDropdown(filterByValue, filterValue) {
         filterValue = filterValue || '';
+        var data = {
+            FilterBy: filterByValue,
+            MyString: 'Hello'
+        };
         var $fsearch = $('#filter-value-dropdown');
         var ajaxSettings = {
-            //The Razor pages format is <PageDir>/<Page>?handler=<Last part of method name>
-            //In this case it's '/?Handler=FilterSearchContent'
+            //The Razor handler pages format is <PageDir>/<Page>?handler=<Last part of method name>
+            //In this case it's '/?Handler=Filter' if I have a OnGetFilter or OnPostFilter
             url: (false ? 'Home/?handler=Filter' : '/Home/Filter'),
-            data: {
-                FilterBy: filterByValue
-            }
+            data: data
         };
         if (false) {
-            //this make it into a POST - see http://www.talkingdotnet.com/handle-ajax-requests-in-asp-net-core-razor-pages/
+            //ajaxSettings.dataType = 'json';
+            ajaxSettings.contentType = 'application/json; charset=utf-8';
+            ajaxSettings.data = JSON.stringify(data);
+        }
+        if (true) {
             ajaxSettings.type = 'POST';
             ajaxSettings.headers = {
-                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
             };
         }
 
