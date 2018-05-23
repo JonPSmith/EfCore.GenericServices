@@ -1,15 +1,10 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System;
-using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericServices;
 using GenericServices.Configuration;
-using GenericServices.Setup;
 using GenericServices.Setup.Internal;
 using ServiceLayer.HomeController.Dtos;
-using Tests.Dtos;
 using Tests.EfCode;
 using TestSupport.Attributes;
 using TestSupport.EfHelpers;

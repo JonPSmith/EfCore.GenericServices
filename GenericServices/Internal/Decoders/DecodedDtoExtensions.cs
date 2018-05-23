@@ -16,9 +16,6 @@ namespace GenericServices.Internal.Decoders
         public static readonly string HumanReadableILinkToEntity =
             InterfaceNameILinkToEntity.Substring(0, InterfaceNameILinkToEntity.Length - 2);
 
-        private class ClassWithNestedMapInterface : INestedMap<ClassWithNestedMapInterface> { }
-        public static readonly string InterfaceNameINestedMap = typeof(ClassWithNestedMapInterface).GetInterfaces().Single().Name;
-
         public static Type GetLinkedEntityFromDto(this Type entityOrDto, Action<string> addError = null)
         {
             try
