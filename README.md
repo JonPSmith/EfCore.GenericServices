@@ -1,3 +1,8 @@
+[
+![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)
+](https://www.buymeacoffee.com/l709oYtzp)
+
+
 # EfCore.GenericServices
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses
