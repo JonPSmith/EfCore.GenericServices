@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageId>EfCore.GenericServices.AspNetCore</PackageId>
+    <Authors>Jon P Smith</Authors>
+    <Company>Selective Analytics</Company>
+    <Product>EfCore.GenericServices</Product>
+    <Description>A support library to the EfCore.GenericServices library. It transfers IStatusGeneric errors into ASP.NET Core's ModelState</Description>
+    <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
+    <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Entity Framework Core, EfCore.GenericServices, ASP.NET Core</PackageTags>
+    <PackageReleaseNotes>First release.</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/EfCore-GenericServices-AspNetCoreNuGetIcon128.png</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\GenericServices.AspNetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenericServices\GenericServices.csproj" />
+  </ItemGroup>
+
+</Project>
