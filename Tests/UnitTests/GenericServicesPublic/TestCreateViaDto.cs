@@ -13,12 +13,20 @@ using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestCreateViaDto
     {
+        private readonly ITestOutputHelper _output;
+
+        public TestCreateViaDto(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         public class AuthorDto : ILinkToEntity<Author>
         {
             public string Name { get; set; }
@@ -39,8 +47,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
-                var author = new AuthorDto { Name = "New Name", Email = unique };
-                service.CreateAndSave(author);
+                using (new TimeThings(_output, "CreateAndSave"))
+                {
+                    var author = new AuthorDto { Name = "New Name", Email = unique };
+                    service.CreateAndSave(author);
+                }
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -165,8 +176,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var service = new CrudServices(context, utData.Wrapped);
 
                 //ATTEMPT
-                var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
-                service.CreateAndSave(dto, "ctor(2)");
+                using (new TimeThings(_output, "CreateAndSave"))
+                {
+                    var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
+                    service.CreateAndSave(dto, "ctor(2)");
+                }
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
