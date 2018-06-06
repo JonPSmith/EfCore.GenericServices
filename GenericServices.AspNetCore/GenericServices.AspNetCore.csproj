@@ -27,8 +27,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EfCore.GenericServices" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenericServices\GenericServices.csproj" />
   </ItemGroup>
 
 </Project>
