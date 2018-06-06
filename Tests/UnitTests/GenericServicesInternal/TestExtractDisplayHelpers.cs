@@ -10,12 +10,12 @@ namespace Tests.UnitTests.GenericServicesInternal
     {
         private Test _test = new Test();
 
-        [Description("ClassName")]
+        [Display(Name="ClassName")]
         private class Test
         {
-            [Description("Display Name")]
+            [Display(Name = "Display Name")]
             public int I { get; set; }
-            [Description("OneName")]
+            [Display(Name = "OneName")]
             public int J { get; set; }
             public int PascalName { get; set; }
             public int Longwordnotcamel { get; set; }
