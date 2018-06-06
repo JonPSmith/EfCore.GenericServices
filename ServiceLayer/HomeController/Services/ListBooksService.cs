@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
+using System.Threading.Tasks;
 using DataLayer.EfCode;
 using DataLayer.QueryObjects;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace ServiceLayer.HomeController.Services
             _context = context;
         }
 
-        public IQueryable<BookListDto> SortFilterPage
+        public async Task<IQueryable<BookListDto>> SortFilterPage
             (SortFilterPageOptions options)
         {
             var booksQuery = _context.Books            
@@ -29,7 +30,7 @@ namespace ServiceLayer.HomeController.Services
                 .FilterBooksBy(options.FilterBy,       
                                options.FilterValue);   
 
-            options.SetupRestOfDto(booksQuery);        
+            await options.SetupRestOfDto(booksQuery);        
 
             return booksQuery.Page(options.PageNum-1,  
                                    options.PageSize);  
