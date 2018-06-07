@@ -8,6 +8,7 @@ using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Profiling;
 
 namespace GenericServices.PublicButHidden
 {
@@ -17,6 +18,8 @@ namespace GenericServices.PublicButHidden
     /// </summary>
     public class CrudServices : CrudServices<DbContext>, ICrudServices
     {
+        public static MiniProfiler Profiler { get; set; }
+
         /// <summary>
         /// CrudServices needs the correct DbContext and the AutoMapper config
         /// </summary>
@@ -131,19 +134,41 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
-                var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
+                DecodedDto dtoInfo;                
+                using (CrudServices.Profiler.Step("DTO lookup"))
+                {
+                    dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                }
+                EntityCreateHandler<T> creator;
+                using (CrudServices.Profiler.Step("create EntityCreateHander"))
+                {
+                    creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
+                }
+                object entity;
+                using (CrudServices.Profiler.Step("CreateEntityAndFillFromDto"))
+                {
+                    entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
+                }
                 CombineStatuses(creator);
                 if (IsValid)
                 {
-                    _context.Add(entity);
+                    using (CrudServices.Profiler.Step("_context.Add"))
+                    {
+                        _context.Add(entity);
+                    }
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));
-                    if (IsValid)
-                        entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    using (CrudServices.Profiler.Step("CopyBackKeysFromEntityToDtoIfPresent"))
+                    {
+                        if (IsValid)
+                            entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    }
                 }
             }
-            return IsValid ? entityOrDto : null;
+            using (CrudServices.Profiler.Step("return"))
+            {
+                return IsValid ? entityOrDto : null;
+            }
+            
         }
 
         /// <inheritdoc />
@@ -161,11 +186,27 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
-                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
-                if (IsValid)
-                    CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));        
+                DecodedDto dtoInfo;
+                using (CrudServices.Profiler.Step("DTO lookup"))
+                {
+                    dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                }
+
+                EntityUpdateHandler<T> updater;
+                using (CrudServices.Profiler.Step("Create EntityUpdateHandler"))
+                {
+                    updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
+                }
+
+                using (CrudServices.Profiler.Step("Create ReadEntityAndUpdateViaDto"))
+                {
+                    CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
+                }
+                using (CrudServices.Profiler.Step("Create SaveChangesWithOptionalValidation"))
+                {
+                    if (IsValid)
+                        CombineStatuses(_context.SaveChangesWithOptionalValidation(dtoInfo.ValidateOnSave));
+                }
             }
         }
 
