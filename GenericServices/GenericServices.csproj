@@ -19,8 +19,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      Package: Updated to NET Core 2.1
-      Now uses Display attribute to override name returned in CRUD messages (for localization)
+      - Package: Updated to EF Core 2.1
+      - Now uses Display attribute to override name returned in CRUD messages (for localization)
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
 
