@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper.QueryableExtensions;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
@@ -117,6 +118,14 @@ namespace GenericServices.PublicButHidden
             //else its a DTO, so we need to project the entity to the DTO 
             var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
             return projector.Accessor.GetManyProjectedNoTracking();
+        }
+
+        /// <inheritdoc />
+        public IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
+           Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class
+        {
+            Message = $"Successfully read many {ExtractDisplayHelpers.GetNameForClass<TDto>()}";
+            return preQueryObject(_context.Set<TEntity>().AsNoTracking()).ProjectTo<TDto>(_wrapperMapperConfigs.MapperReadConfig);
         }
 
         /// <inheritdoc />
