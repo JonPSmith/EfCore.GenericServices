@@ -46,16 +46,16 @@ namespace GenericServices
         /// <returns>an <see cref="IQueryable{T}"/> result. You should apply a execute method, e.g. .ToList() or .ToListAsync() to execute the result</returns>
         IQueryable<T> ReadManyNoTracked<T>() where T : class;
 
-        /// <summary>
-        /// This allows you to do a preQuery on the entity classes before the data is then mapped to the DTO class
-        /// This is useful if you want to add a filter that needs to access the entity 
-        /// </summary>
-        /// <typeparam name="TEntity">The EF Core entity class mapped to the database</typeparam>
-        /// <typeparam name="TDto">This DTO class should have the <see cref="ILinkToEntity{TEntity}"/> interface </typeparam>
-        /// <param name="preQueryObject">This is a query that works directly on the <code cref="IQueryable{TEntity}"/> and returns a <code cref="IQueryable{TEntity}"/> result</param>
-        /// <returns></returns>
-        IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
-            Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class;
+        ///// <summary>
+        ///// This allows you to do a preQuery on the entity classes before the data is then mapped to the DTO class
+        ///// This is useful if you want to add a filter that needs to access the entity 
+        ///// </summary>
+        ///// <typeparam name="TEntity">The EF Core entity class mapped to the database</typeparam>
+        ///// <typeparam name="TDto">This DTO class should have the <see cref="ILinkToEntity{TEntity}"/> interface </typeparam>
+        ///// <param name="preQueryObject">This is a query that works directly on the <code cref="IQueryable{TEntity}"/> and returns a <code cref="IQueryable{TEntity}"/> result</param>
+        ///// <returns></returns>
+        //IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
+        //    Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class;
 
         /// <summary>
         /// This will create a new entity in the database. If you provide class which is an entity class (i.e. in your EF Core database) then

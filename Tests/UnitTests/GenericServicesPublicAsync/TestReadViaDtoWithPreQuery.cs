@@ -34,7 +34,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var list = await service.ReadManyWithPreQueryNoTracked<Book, BookTitle>(books =>
