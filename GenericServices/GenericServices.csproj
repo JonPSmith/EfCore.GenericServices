@@ -29,6 +29,10 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\GenericServices.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\GenericServices.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />

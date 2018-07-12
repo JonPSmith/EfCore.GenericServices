@@ -23,7 +23,7 @@ namespace GenericServices.Setup.Internal
             PublicConfig = publicConfig ?? throw new ArgumentNullException(nameof(publicConfig));
         }
 
-        public IWrappedAutoMapperConfig ScanAllAssemblies(Assembly[] assembliesToScan, bool initializeMapper)
+        public IWrappedConfigAndMapper ScanAllAssemblies(Assembly[] assembliesToScan, IGenericServicesConfig config, bool initializeMapper)
         {
             if (assembliesToScan == null || assembliesToScan.Length == 0)
                 throw new ArgumentException("There were no assembles to scan!", nameof(assembliesToScan));
@@ -44,10 +44,10 @@ namespace GenericServices.Setup.Internal
                     cfg.AddProfile(_saveProfile);
                 });
             }
-            return CreateWrappedAutoMapperConfig(_readProfile, _saveProfile);
+            return CreateWrappedAutoMapperConfig(config, _readProfile, _saveProfile);
         }
 
-        public static IWrappedAutoMapperConfig CreateWrappedAutoMapperConfig(MappingProfile readProfile, MappingProfile saveProfile)
+        public static IWrappedConfigAndMapper CreateWrappedAutoMapperConfig(IGenericServicesConfig config, MappingProfile readProfile, MappingProfile saveProfile)
         {
             var mapperReadConfig = new MapperConfiguration(cfg =>
             {
@@ -57,7 +57,7 @@ namespace GenericServices.Setup.Internal
             {
                 cfg.AddProfile(saveProfile);
             });
-            return new WrappedAutoMapperConfig(mapperReadConfig, mapperSaveConfig);
+            return new WrappedAndMapper(config, mapperReadConfig, mapperSaveConfig);
         }
 
         public static void SetupMappingForDto(RegisterOneDtoType dtoRegister, MappingProfile readProfile, MappingProfile saveProfile)

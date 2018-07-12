@@ -18,34 +18,34 @@ namespace GenericServices.Internal.MappingCode
     {
         public dynamic Accessor { get;  }
 
-        public CreateMapper(DbContext context, IWrappedAutoMapperConfig wrapperMapperConfigs, Type tDto, DecodedEntityClass entityInfo)
+        public CreateMapper(DbContext context, IWrappedConfigAndMapper configAndMapper, Type tDto, DecodedEntityClass entityInfo)
         {
             var myGeneric = typeof(GenericMapper<,>);
             var genericType = myGeneric.MakeGenericType(tDto, entityInfo.EntityType);
             var constructor = genericType.GetConstructors().Single();
-            Accessor = GetNewGenericMapper(genericType, constructor).Invoke(context, wrapperMapperConfigs, entityInfo);
+            Accessor = GetNewGenericMapper(genericType, constructor).Invoke(context, configAndMapper, entityInfo);
             //Using Activator.CreateInstance with dynamic takes twice as long as LINQ new - see TestNewCreateMapper
-            //Accessor = Activator.CreateInstance(genericType, context, wrapperMapperConfigs, entityInfo);
+            //Accessor = Activator.CreateInstance(genericType, context, configAndMapper, entityInfo);
         }
 
         private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
 
         //This is only public for performance tests
-        public static Func<DbContext, IWrappedAutoMapperConfig, DecodedEntityClass, dynamic> GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
+        public static Func<DbContext, IWrappedConfigAndMapper, DecodedEntityClass, dynamic> GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
         {
             return NewGenericMapperCache.GetOrAdd(genericType, value => NewGenericMapper(ctor));
         }
 
         //This is only public for performance tests
-        public static Func<DbContext, IWrappedAutoMapperConfig, DecodedEntityClass, dynamic> NewGenericMapper(ConstructorInfo ctor)
+        public static Func<DbContext, IWrappedConfigAndMapper, DecodedEntityClass, dynamic> NewGenericMapper(ConstructorInfo ctor)
         {
             var arg1 = Expression.Parameter(typeof(DbContext), "context");
-            var arg2 = Expression.Parameter(typeof(IWrappedAutoMapperConfig), "wrapperMapper");
+            var arg2 = Expression.Parameter(typeof(IWrappedConfigAndMapper), "configAndMapper");
             var arg3 = Expression.Parameter(typeof(DecodedEntityClass), "entityInfo");
             var newExp = Expression.New(ctor, arg1, arg2, arg3);
             var built = Expression.Lambda(newExp, false, arg1, arg2, arg3);
             var result = built.Compile();
-            return (Func<DbContext, IWrappedAutoMapperConfig, DecodedEntityClass, dynamic>)result;
+            return (Func<DbContext, IWrappedConfigAndMapper, DecodedEntityClass, dynamic>)result;
         }
 
         public class GenericMapper<TDto, TEntity>
@@ -53,12 +53,12 @@ namespace GenericServices.Internal.MappingCode
             where TEntity : class
         {
             private readonly DbContext _context;
-            private readonly IWrappedAutoMapperConfig _wrappedMapper;
+            private readonly IWrappedConfigAndMapper _wrappedMapper;
             private readonly DecodedEntityClass _entityInfo;
 
             public string EntityName => _entityInfo.EntityType.Name;
 
-            public GenericMapper(DbContext context, IWrappedAutoMapperConfig wrappedMapper, DecodedEntityClass entityInfo)
+            public GenericMapper(DbContext context, IWrappedConfigAndMapper wrappedMapper, DecodedEntityClass entityInfo)
             {
                 _context = context ?? throw new ArgumentNullException(nameof(context));
                 _wrappedMapper = wrappedMapper ?? throw new ArgumentNullException(nameof(wrappedMapper));

@@ -3,14 +3,20 @@
 
 using System;
 using AutoMapper;
+using GenericServices.Configuration;
 
 namespace GenericServices.PublicButHidden
 {
     /// <summary>
-    /// This is the interface used for dependency injection of the <see cref="WrappedAutoMapperConfig"/>
+    /// This is the interface used for dependency injection of the <see cref="WrappedAndMapper"/>
     /// </summary>
-    public interface IWrappedAutoMapperConfig
+    public interface IWrappedConfigAndMapper
     {
+        /// <summary>
+        /// This is the global configuration information
+        /// </summary>
+        IGenericServicesConfig Config { get; }
+
         /// <summary>
         /// This is the AutoMapper configuration used for reading/projection from entity class to DTO
         /// </summary>
@@ -25,13 +31,17 @@ namespace GenericServices.PublicButHidden
     /// <summary>
     /// This contains the AutoMapper setting needed by GenericServices
     /// </summary>
-    public class WrappedAutoMapperConfig : IWrappedAutoMapperConfig
+    public class WrappedAndMapper : IWrappedConfigAndMapper
     {
-        internal WrappedAutoMapperConfig(MapperConfiguration mapperReadConfig, MapperConfiguration mapperSaveConfig)
+        internal WrappedAndMapper(IGenericServicesConfig config, MapperConfiguration mapperReadConfig, MapperConfiguration mapperSaveConfig)
         {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
             MapperReadConfig = mapperReadConfig ?? throw new ArgumentNullException(nameof(mapperReadConfig));
             MapperSaveConfig = mapperSaveConfig ?? throw new ArgumentNullException(nameof(mapperSaveConfig));
         }
+
+        /// <inheritdoc />
+        public IGenericServicesConfig Config { get; }
 
         /// <inheritdoc />
         public MapperConfiguration MapperReadConfig { get; }

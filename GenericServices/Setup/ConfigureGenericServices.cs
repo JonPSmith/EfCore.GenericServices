@@ -70,7 +70,7 @@ namespace GenericServices.Setup
             params Assembly[] assembliesToScan)
         {
             var dtosRegister = new SetupDtosAndMappings(setupPart1.PublicConfig);
-            var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, true);
+            var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, setupPart1.PublicConfig, true);
             if (!dtosRegister.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {dtosRegister.Errors.Count} errors. Errors are:\n"
                                                     + dtosRegister.GetAllErrors());
@@ -102,7 +102,7 @@ namespace GenericServices.Setup
             }
 
             //Register AutoMapper configuration goes here
-            setupPart2.Services.AddSingleton(setupPart2.AutoMapperConfig);
+            setupPart2.Services.AddSingleton(setupPart2.ConfigAndMapper);
 
             return setupPart2.Services;
         }

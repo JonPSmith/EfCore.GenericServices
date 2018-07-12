@@ -14,11 +14,11 @@ namespace GenericServices.Setup.Internal
     public class GenericServicesSetupPart2 : IGenericServicesSetupPart2
     {
 
-        internal GenericServicesSetupPart2(IServiceCollection services, IGenericServicesConfig publicConfig, IWrappedAutoMapperConfig autoMapperConfig)
+        internal GenericServicesSetupPart2(IServiceCollection services, IGenericServicesConfig publicConfig, IWrappedConfigAndMapper configAndMapper)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
             PublicConfig = publicConfig ?? throw new ArgumentNullException(nameof(publicConfig));
-            AutoMapperConfig = autoMapperConfig ?? throw new ArgumentNullException(nameof(autoMapperConfig));
+            ConfigAndMapper = configAndMapper ?? throw new ArgumentNullException(nameof(configAndMapper));
         }
 
         /// <inheritdoc />
@@ -28,6 +28,6 @@ namespace GenericServices.Setup.Internal
         public IGenericServicesConfig PublicConfig { get; }
 
         /// <inheritdoc />
-        public IWrappedAutoMapperConfig AutoMapperConfig { get; }
+        public IWrappedConfigAndMapper ConfigAndMapper { get; }
     }
 }

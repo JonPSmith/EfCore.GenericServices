@@ -3,6 +3,7 @@
 
 using System;
 using AutoMapper;
+using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup.Internal;
 
@@ -22,7 +23,7 @@ namespace Tests.Helpers
             return readConfig;
         }
 
-        public static WrappedAutoMapperConfig CreateWrapperMapper<TDto, TEntity>()
+        public static WrappedAndMapper CreateWrapperMapper<TDto, TEntity>()
         {
             var readProfile = new MappingProfile(false);
             readProfile.CreateMap<TEntity, TDto>();
@@ -37,7 +38,7 @@ namespace Tests.Helpers
             {
                 cfg.AddProfile(saveProfile);
             });
-            return new WrappedAutoMapperConfig(readConfig, saveConfig);
+            return new WrappedAndMapper(new GenericServicesConfig(), readConfig, saveConfig);
         }
     }
 }

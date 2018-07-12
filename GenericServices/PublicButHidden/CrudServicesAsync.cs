@@ -23,8 +23,8 @@ namespace GenericServices.PublicButHidden
         /// CrudServicesAsync needs the correct DbContext and the AutoMapper config
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="wapper"></param>
-        public CrudServicesAsync(DbContext context, IWrappedAutoMapperConfig wapper) : base(context, wapper)
+        /// <param name="configAndMapper"></param>
+        public CrudServicesAsync(DbContext context, IWrappedConfigAndMapper configAndMapper) : base(context, configAndMapper)
         {
             if (context == null)
                 throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
@@ -42,7 +42,7 @@ namespace GenericServices.PublicButHidden
         ICrudServicesAsync<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
+        private readonly IWrappedConfigAndMapper _configAndMapper;
 
         /// <inheritdoc />
         public DbContext Context => _context;
@@ -52,10 +52,10 @@ namespace GenericServices.PublicButHidden
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        public CrudServicesAsync(TContext context, IWrappedAutoMapperConfig wapper)
+        public CrudServicesAsync(TContext context, IWrappedConfigAndMapper configAndMapper)
         {
             _context = context;
-            _wrapperMapperConfigs = wapper ?? throw new ArgumentException(nameof(wapper));
+            _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
         }
 
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
+                var projector = new CreateMapper(_context, _configAndMapper, typeof(T), entityInfo);
                 result = await ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys))
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
@@ -94,7 +94,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
-                var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
+                var projector = new CreateMapper(_context, _configAndMapper, typeof(T), entityInfo);
                 result = await ((IQueryable<T>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression))
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
@@ -116,7 +116,7 @@ namespace GenericServices.PublicButHidden
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
-            var projector = new CreateMapper(_context, _wrapperMapperConfigs, typeof(T), entityInfo);
+            var projector = new CreateMapper(_context, _configAndMapper, typeof(T), entityInfo);
             return projector.Accessor.GetManyProjectedNoTracking();
         }
 
@@ -125,7 +125,7 @@ namespace GenericServices.PublicButHidden
             Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class
         {
             Message = $"Successfully read many {ExtractDisplayHelpers.GetNameForClass<TDto>()}";
-            return preQueryObject(_context.Set<TEntity>().AsNoTracking()).ProjectTo<TDto>(_wrapperMapperConfigs.MapperReadConfig);
+            return preQueryObject(_context.Set<TEntity>().AsNoTracking()).ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
         }
 
         /// <inheritdoc />
@@ -141,7 +141,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
+                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
                 CombineStatuses(creator);
                 if (IsValid)
@@ -171,7 +171,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _wrapperMapperConfigs, _context);
+                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(dtoInfo.ValidateOnSave).ConfigureAwait(false));        

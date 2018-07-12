@@ -16,14 +16,14 @@ namespace GenericServices.Internal.MappingCode
     {
         private readonly DecodedDto _dtoInfo;
         private readonly DecodedEntityClass _entityInfo;
-        private readonly IWrappedAutoMapperConfig _wrapperMapperConfigs;
+        private readonly IWrappedConfigAndMapper _configAndMapper;
         private readonly DbContext _context;
 
-        public EntityCreateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedAutoMapperConfig wrapperMapperConfigs, DbContext context)
+        public EntityCreateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context)
         {
             _dtoInfo = dtoInfo ?? throw new ArgumentNullException(nameof(dtoInfo));
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
-            _wrapperMapperConfigs = wrapperMapperConfigs ?? throw new ArgumentNullException(nameof(wrapperMapperConfigs));
+            _configAndMapper = configAndMapper ?? throw new ArgumentNullException(nameof(configAndMapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -51,7 +51,7 @@ namespace GenericServices.Internal.MappingCode
             if (_entityInfo.HasPublicParameterlessCtor && _entityInfo.CanBeUpdatedViaProperties)
             {
                 var entityInstance = Activator.CreateInstance(_entityInfo.EntityType);
-                var mapper = new CreateMapper(_context, _wrapperMapperConfigs, typeof(TDto), _entityInfo);
+                var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
                 mapper.Accessor.MapDtoToEntity(dto, entityInstance);
                 return entityInstance;
             }

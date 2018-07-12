@@ -22,6 +22,6 @@ namespace GenericServices.Setup
         /// <summary>
         /// The AutoMapper setting needed by GenericServices
         /// </summary>
-        IWrappedAutoMapperConfig AutoMapperConfig { get; }
+        IWrappedConfigAndMapper ConfigAndMapper { get; }
     }
 }
