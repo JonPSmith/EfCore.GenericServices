@@ -2,7 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.Configuration
 {
@@ -23,6 +25,9 @@ namespace GenericServices.Configuration
     {
         /// <inheritdoc />
         public MatchNameAndType NameMatcher { get; set; } = DefaultNameMatcher.MatchCamelAndPascalName;
+
+        /// <inheritdoc />
+        public Func<DbUpdateException, ValidationResult> SqlErrorHandler { get; set; } = (exception) => null; // default is to return null
 
     }
 }

@@ -2,9 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericServices.Configuration;
 using GenericServices.Internal;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,12 +25,13 @@ namespace GenericServices
         /// </summary>
         /// <param name="context"></param>
         /// <param name="shouldValidate"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
         public static async Task<IStatusGeneric> SaveChangesWithOptionalValidationAsync(this DbContext context,
-            bool shouldValidate)
+            bool shouldValidate, IGenericServicesConfig config)
         {
             if (shouldValidate)
-                return await context.SaveChangesWithValidationAsync().ConfigureAwait(false);
+                return await context.SaveChangesWithValidationAsync(config).ConfigureAwait(false);
             await context.SaveChangesAsync().ConfigureAwait(false);
             return new StatusGenericHandler();
         }
@@ -38,12 +41,13 @@ namespace GenericServices
         /// </summary>
         /// <param name="context"></param>
         /// <param name="shouldValidate"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
         public static IStatusGeneric SaveChangesWithOptionalValidation(this DbContext context,
-            bool shouldValidate)
+            bool shouldValidate, IGenericServicesConfig config)
         {
             if (shouldValidate)
-                return context.SaveChangesWithValidation();
+                return context.SaveChangesWithValidation(config);
             context.SaveChanges();
             return new StatusGenericHandler();
         }
@@ -53,8 +57,9 @@ namespace GenericServices
         /// If the validation does not produce any errors then SaveChangesAsync will be called 
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="config"></param>
         /// <returns>List of errors, empty if there were no errors</returns>
-        public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context)
+        public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IGenericServicesConfig config)
         {
             var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
@@ -63,6 +68,14 @@ namespace GenericServices
             try
             {
                 await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (DbUpdateException e)
+            {
+                var error = config?.SqlErrorHandler(e);
+                if (error == null) throw;       //error wasn't handled, so rethrow
+                var exceptionStatus = new StatusGenericHandler();
+                exceptionStatus.AddValidationResult(error);
+                status.CombineStatuses(exceptionStatus);
             }
             finally
             {
@@ -80,8 +93,9 @@ namespace GenericServices
         /// If the validation does not produce any errors then SaveChanges will be called 
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="config"></param>
         /// <returns>List of errors, empty if there were no errors</returns>
-        public static IStatusGeneric SaveChangesWithValidation(this DbContext context)
+        public static IStatusGeneric SaveChangesWithValidation(this DbContext context, IGenericServicesConfig config)
         {
             var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
@@ -90,6 +104,14 @@ namespace GenericServices
             try
             {
                 context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                var error = config?.SqlErrorHandler(e);
+                if (error == null) throw;       //error wasn't handled, so rethrow
+                var exceptionStatus = new StatusGenericHandler();
+                exceptionStatus.AddValidationResult(error);
+                status.CombineStatuses(exceptionStatus);
             }
             finally
             {

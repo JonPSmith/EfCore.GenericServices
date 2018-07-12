@@ -41,7 +41,7 @@ namespace Tests.UnitTests.Performance
             {             
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = Activator.CreateInstance(genericType, context, utData.Wrapped, entityInfo);
+                    dynamic instance = Activator.CreateInstance(genericType, context, utData.ConfigAndMapper, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Performance
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = CreateMapper.GetNewGenericMapper(genericType, constructor).Invoke(context, utData.Wrapped, entityInfo);
+                    dynamic instance = CreateMapper.GetNewGenericMapper(genericType, constructor).Invoke(context, utData.ConfigAndMapper, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
@@ -63,7 +63,7 @@ namespace Tests.UnitTests.Performance
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    dynamic instance = CreateMapper.NewGenericMapper(constructor).Invoke(context, utData.Wrapped, entityInfo);
+                    dynamic instance = CreateMapper.NewGenericMapper(constructor).Invoke(context, utData.ConfigAndMapper, entityInfo);
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }

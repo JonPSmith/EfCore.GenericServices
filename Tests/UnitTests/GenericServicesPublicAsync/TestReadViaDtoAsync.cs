@@ -32,7 +32,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookTitle>(1);
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookTitleAndCount>(1);
@@ -78,7 +78,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookTitleAndCount>(x => x.BookId == 1);
@@ -101,7 +101,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookTitleAndCount>(999);
@@ -123,7 +123,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<BookTitleAndCount>(x => true));
@@ -149,7 +149,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookWithAuthors>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = await service.ReadSingleAsync<BookWithAuthors>(1);
@@ -175,7 +175,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var list = await service.ReadManyNoTracked<BookTitle>().ToListAsync();
@@ -198,7 +198,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
-                var service = new CrudServices(context, utData.Wrapped);
+                var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var list = await service.ReadManyNoTracked<BookTitleAndCount>().ToListAsync();
@@ -226,7 +226,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         //    }
         //    using (var context = new EfCoreContext(options))
         //    {
-        //        var service = new CrudServicesAsync(context, utData.Wrapped);
+        //        var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
         //        //ATTEMPT
         //        var dto = new AuthorNameDto { Name = "New Name" };

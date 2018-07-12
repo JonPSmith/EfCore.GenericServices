@@ -29,7 +29,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.Wrapped);
+                var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var list = service.ReadManyWithPreQueryNoTracked<Book, BookTitle>(books =>

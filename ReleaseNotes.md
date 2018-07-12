@@ -2,7 +2,8 @@
 
 ## 1.1.1
 
-- Added ReadManyWithPreQueryNoTracked method to allow filtering of entities before projection
+- New Feature: Added SqlErrorHandler to configuration and called in SaveChangesWithValidation/Async.
+Allows you to intercept `DbUpdateException` and turn SQL errors into user-friendly error messages.
 
 ## 1.1.0
 

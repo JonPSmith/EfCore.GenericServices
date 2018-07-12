@@ -13,7 +13,7 @@ namespace GenericServices.Setup
         internal MappingProfile ReadProfile { get; }
         internal MappingProfile SaveProfile { get; }
 
-        public IWrappedConfigAndMapper Wrapped => SetupDtosAndMappings.CreateWrappedAutoMapperConfig(PublicConfig, ReadProfile, SaveProfile);
+        public IWrappedConfigAndMapper ConfigAndMapper => SetupDtosAndMappings.CreateConfigAndMapper(PublicConfig, ReadProfile, SaveProfile);
 
         public IGenericServicesConfig PublicConfig { get; }
     

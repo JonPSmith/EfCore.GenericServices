@@ -45,7 +45,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = "Name", Email = unique };
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = null, Email = unique };
@@ -89,7 +89,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDtoWithConfig>();
-                var service = new CrudServicesAsync(context, utData.Wrapped);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var author = new LocalAuthorDtoWithConfig { Name = null, Email = unique };

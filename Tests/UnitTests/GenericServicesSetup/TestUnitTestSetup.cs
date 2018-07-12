@@ -37,7 +37,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
 
                 //VERIFY
-                utData.Wrapped.ShouldNotBeNull();
+                utData.ConfigAndMapper.ShouldNotBeNull();
             }
         }
 
@@ -53,7 +53,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 utData.AddSingleDto<BookTitleAndCount>();
 
                 //VERIFY
-                utData.Wrapped.ShouldNotBeNull();
+                utData.ConfigAndMapper.ShouldNotBeNull();
             }
         }
 

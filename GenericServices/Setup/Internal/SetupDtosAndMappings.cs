@@ -44,10 +44,10 @@ namespace GenericServices.Setup.Internal
                     cfg.AddProfile(_saveProfile);
                 });
             }
-            return CreateWrappedAutoMapperConfig(config, _readProfile, _saveProfile);
+            return CreateConfigAndMapper(config, _readProfile, _saveProfile);
         }
 
-        public static IWrappedConfigAndMapper CreateWrappedAutoMapperConfig(IGenericServicesConfig config, MappingProfile readProfile, MappingProfile saveProfile)
+        public static IWrappedConfigAndMapper CreateConfigAndMapper(IGenericServicesConfig config, MappingProfile readProfile, MappingProfile saveProfile)
         {
             var mapperReadConfig = new MapperConfiguration(cfg =>
             {

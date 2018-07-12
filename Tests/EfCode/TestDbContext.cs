@@ -14,7 +14,13 @@ namespace Tests.EfCode
         public DbSet<DddCtorAndFactEntity> DddCtorAndFactEntities { get; set; }
         public DbSet<NotUpdatableEntity> NotUpdatableEntities { get; set; }
         public DbSet<ReadOnlyEntity> ReadOnlyEntities { get; set; }
+        public DbSet<UniqueEntity> UniqueEntities { get; set; }
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasName("UniqueError_UniqueEntity_UniqueString");
+        }
     }
 }
