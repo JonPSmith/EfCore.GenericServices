@@ -136,7 +136,8 @@ namespace GenericServices.PublicButHidden
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
+                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
             else
             {
@@ -147,7 +148,8 @@ namespace GenericServices.PublicButHidden
                 if (IsValid)
                 {
                     _context.Add(entity);
-                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(dtoInfo.ValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                        dtoInfo.ValidateOnSave || _configAndMapper.Config.DtoAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
                     if (IsValid)
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
@@ -166,7 +168,8 @@ namespace GenericServices.PublicButHidden
                     throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
+                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
             else
             {
@@ -174,7 +177,8 @@ namespace GenericServices.PublicButHidden
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
-                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(dtoInfo.ValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));        
+                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                        dtoInfo.ValidateOnSave || _configAndMapper.Config.DtoAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
         }
 
@@ -191,7 +195,8 @@ namespace GenericServices.PublicButHidden
                 return;
             }
             _context.Remove(entity);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
         }
 
         /// <inheritdoc />
@@ -212,7 +217,8 @@ namespace GenericServices.PublicButHidden
             if (!IsValid) return;
 
             _context.Remove(entity);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
         }
 
     }

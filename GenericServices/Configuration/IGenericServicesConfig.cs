@@ -19,6 +19,16 @@ namespace GenericServices.Configuration
         MatchNameAndType NameMatcher { get; }
 
         /// <summary>
+        /// If this is set to true then all Create/Update/Delete done via a direct access to an entity
+        /// </summary>
+        bool DirectAccessValidateOnSave { get; }
+
+        /// <summary>
+        /// If this is set to true then all Create/Update/Delete done via a DTO will be validated
+        /// </summary>
+        bool DtoAccessValidateOnSave { get; }
+
+        /// <summary>
         /// When SaveChangesWithValidation is called if there is a DbUpdateException then this method
         /// is called. If it returns null then the error is rethrown, but if it returns a ValidationResult
         /// then that is turned into a error message that is shown to the user via the IBizActionStatus

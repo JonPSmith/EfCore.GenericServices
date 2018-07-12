@@ -7,7 +7,7 @@ using Tests.EfClasses;
 
 namespace Tests.Configs
 {
-    public class UniqueConfig : PerDtoConfig<UniqueDto, UniqueEntity>
+    public class UniqueConfig : PerDtoConfig<UniqueWithConfigDto, UniqueEntity>
     {
         public override bool? UseSaveChangesWithValidation { get; } = true;
     }

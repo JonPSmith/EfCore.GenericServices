@@ -27,6 +27,12 @@ namespace GenericServices.Configuration
         public MatchNameAndType NameMatcher { get; set; } = DefaultNameMatcher.MatchCamelAndPascalName;
 
         /// <inheritdoc />
+        public bool DirectAccessValidateOnSave { get; set; }
+
+        /// <inheritdoc />
+        public bool DtoAccessValidateOnSave { get; set;  }
+
+        /// <inheritdoc />
         public Func<DbUpdateException, ValidationResult> SqlErrorHandler { get; set; } = (exception) => null; // default is to return null
 
     }

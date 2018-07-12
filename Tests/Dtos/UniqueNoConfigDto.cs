@@ -7,10 +7,9 @@ using Tests.EfClasses;
 
 namespace Tests.Dtos
 {
-    public class UniqueDto : ILinkToEntity<UniqueEntity>
+    public class UniqueNoConfigDto : ILinkToEntity<UniqueEntity>
     {
         public int Id { get; set; }
-        [MaxLength(100)]
         public string UniqueString { get; set; }
     }
 }

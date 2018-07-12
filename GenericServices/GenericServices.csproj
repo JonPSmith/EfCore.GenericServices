@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.1.1-preview1</PackageVersion>
+    <PackageVersion>1.1.1-preview2</PackageVersion>
     <Version>1.1.1</Version>
     <AssemblyVersion>1.1.1.0</AssemblyVersion>
     <FileVersion>1.1.1.0</FileVersion>
@@ -19,7 +19,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Feature: Added ReadManyWithPreQueryNoTracked to allow filtering of entities before projection
+      - New Feature: Added SqlErrorHandler to allow you to catch SQL errors (such as unique index violation) and turn them into user-friendly error messages
+      - New Setting: You can now set validation on direct and via DTO calls to CreateAndSave/UpdateAndSave/DeleteAndSave (sync and async)
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
 
