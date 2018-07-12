@@ -21,7 +21,7 @@ namespace Benchmarking
 {
     public class PerfListMany
     {
-        private UnitTestData _utData;
+        private SpecificUseData _utData;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]

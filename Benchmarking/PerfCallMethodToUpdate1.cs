@@ -19,7 +19,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodToUpdate1
     {
-        private UnitTestData _utData;
+        private SpecificUseData _utData;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]

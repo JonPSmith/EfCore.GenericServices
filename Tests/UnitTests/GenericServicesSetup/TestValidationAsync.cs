@@ -344,7 +344,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     await service.CreateAndSaveAsync(new UniqueWithConfigDto { UniqueString = "Hello"});
                 }
                 //VERIFY
-                catch (Exception e)
+                catch (Exception)
                 {
                     shouldThrowException.ShouldBeTrue();
                     return;

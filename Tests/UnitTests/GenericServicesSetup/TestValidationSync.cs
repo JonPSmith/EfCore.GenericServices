@@ -343,7 +343,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     service.CreateAndSave(new UniqueWithConfigDto {UniqueString = "Hello"});
                 }
                 //VERIFY
-                catch (Exception e)
+                catch (Exception)
                 {
                     shouldThrowException.ShouldBeTrue();
                     return;

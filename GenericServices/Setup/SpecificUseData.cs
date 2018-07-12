@@ -8,16 +8,29 @@ using GenericServices.Setup.Internal;
 
 namespace GenericServices.Setup
 {
-    public class UnitTestData
+    /// <summary>
+    /// This holds specific config and mapping data - useful in unit testing and serverless applications
+    /// </summary>
+    public class SpecificUseData
     { 
         internal MappingProfile ReadProfile { get; }
         internal MappingProfile SaveProfile { get; }
 
+        /// <summary>
+        /// This holds the global configuration and the AutoMapper data
+        /// </summary>
         public IWrappedConfigAndMapper ConfigAndMapper => SetupDtosAndMappings.CreateConfigAndMapper(PublicConfig, ReadProfile, SaveProfile);
 
+        /// <summary>
+        /// This is the global config
+        /// </summary>
         public IGenericServicesConfig PublicConfig { get; }
     
-        public UnitTestData(IGenericServicesConfig publicConfig)
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="publicConfig"></param>
+        public SpecificUseData(IGenericServicesConfig publicConfig)
         {
             PublicConfig = publicConfig ?? new GenericServicesConfig();
             ReadProfile = new MappingProfile(false);

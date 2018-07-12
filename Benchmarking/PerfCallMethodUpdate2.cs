@@ -17,7 +17,7 @@ namespace Benchmarking
 {
     public class PerfCallMethodUpdate2
     {
-        private UnitTestData _utData;
+        private SpecificUseData _utData;
         private DbContextOptions<EfCoreContext> _options;
         private int _incdDay = 0;
 
