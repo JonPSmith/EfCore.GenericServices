@@ -15,6 +15,8 @@ namespace Tests.EfCode
         public DbSet<NotUpdatableEntity> NotUpdatableEntities { get; set; }
         public DbSet<ReadOnlyEntity> ReadOnlyEntities { get; set; }
         public DbSet<UniqueEntity> UniqueEntities { get; set; }
+        public DbSet<TenantAddress> TenantAddresses { get; set; }
+        public DbSet<ContactAddress> ContactAddresses { get; set; }
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
 

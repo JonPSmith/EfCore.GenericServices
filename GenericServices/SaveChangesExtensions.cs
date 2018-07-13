@@ -44,7 +44,7 @@ namespace GenericServices
         /// <param name="config"></param>
         /// <returns></returns>
         public static IStatusGeneric SaveChangesWithOptionalValidation(this DbContext context,
-            bool shouldValidate, IGenericServicesConfig config)
+            bool shouldValidate, IGenericServicesConfig config = null)
         {
             if (shouldValidate)
                 return context.SaveChangesWithValidation(config);
@@ -59,7 +59,7 @@ namespace GenericServices
         /// <param name="context"></param>
         /// <param name="config"></param>
         /// <returns>List of errors, empty if there were no errors</returns>
-        public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IGenericServicesConfig config)
+        public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IGenericServicesConfig config = null)
         {
             var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
