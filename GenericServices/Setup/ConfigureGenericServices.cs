@@ -31,6 +31,22 @@ namespace GenericServices.Setup
                 .RegisterGenericServices(typeof(TContext));
         }
 
+
+        /// <summary>
+        /// This will configure GenericServices if you are using one DbContext and you are happy to use the default GenericServices configuration.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="assembliesToScan">You can define the assemblies to scan for DTOs/ViewModels. Otherwise it will scan all assemblies (slower, but simple)</param>
+        /// <returns></returns>
+        public static IServiceCollection GenericServicesSimpleSetup<TContext>(this IServiceCollection services,
+                    IGenericServicesConfig configuration, params Assembly[] assembliesToScan) where TContext : DbContext
+        {
+            return services.ConfigureGenericServicesEntities(configuration, typeof(TContext))
+                .ScanAssemblesForDtos(assembliesToScan)
+                .RegisterGenericServices(typeof(TContext));
+        }
+
         /// <summary>
         /// If you want to use multiple DbContexts then you should use this, plus <see cref="ScanAssemblesForDtos"/> and <see cref="RegisterGenericServices"/>
         /// to set up GenericServices
