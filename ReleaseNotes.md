@@ -1,13 +1,16 @@
 # Release Notes
 
-## 1.1.1
+## 1.2.1
 
 - New Feature: Added SqlErrorHandler to configuration and called in SaveChangesWithValidation/Async.
-Allows you to intercept `DbUpdateException` and turn SQL errors into user-friendly error messages.
-- Added `bool DirectAccessValidateOnSave` to GenericServicesConfig to globally 
+Allows you to intercept an exception in SaveChanges and do things like capture 
+SQL errors and turn them into user-friendly error messages.
+- New Feature: `bool DirectAccessValidateOnSave` to GenericServicesConfig to globally 
 configure all direct CreateAndSave/UpdateAndSave/DeleteAndSave to use validation.
-- Added `bool DtoAccessValidateOnSave` to GenericServicesConfig to globally 
+- New Feature: `bool DtoAccessValidateOnSave` to GenericServicesConfig to globally 
 configure all via DTO  CreateAndSave/UpdateAndSave to use validation.
+- New Feature: New GenericServicesSimpleSetup DI setup method that takes 
+in a IGenericServicesConfig parameter
 
 ## 1.1.0
 
