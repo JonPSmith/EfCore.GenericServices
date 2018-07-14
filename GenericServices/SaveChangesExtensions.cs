@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
@@ -69,13 +70,11 @@ namespace GenericServices
             {
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (DbUpdateException e)
+            catch (Exception e)
             {
-                var error = config?.SqlErrorHandler(e);
-                if (error == null) throw;       //error wasn't handled, so rethrow
-                var exceptionStatus = new StatusGenericHandler();
-                exceptionStatus.AddValidationResult(error);
-                status.CombineStatuses(exceptionStatus);
+                var exStatus = config?.SaveChangesExceptionHandler(e, context);
+                if (exStatus == null) throw;       //error wasn't handled, so rethrow
+                status.CombineStatuses(exStatus);
             }
             finally
             {
@@ -105,13 +104,11 @@ namespace GenericServices
             {
                 context.SaveChanges();
             }
-            catch (DbUpdateException e)
+            catch (Exception e)
             {
-                var error = config?.SqlErrorHandler(e);
-                if (error == null) throw;       //error wasn't handled, so rethrow
-                var exceptionStatus = new StatusGenericHandler();
-                exceptionStatus.AddValidationResult(error);
-                status.CombineStatuses(exceptionStatus);
+                var exStatus = config?.SaveChangesExceptionHandler(e, context);
+                if (exStatus == null) throw;       //error wasn't handled, so rethrow
+                status.CombineStatuses(exStatus);
             }
             finally
             {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DataLayer.Dtos;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
@@ -67,7 +68,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var config = new GenericServicesConfig()
                 {
                     DirectAccessValidateOnSave = true,
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -93,7 +94,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 var config = new GenericServicesConfig()
                 {
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -120,7 +121,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var config = new GenericServicesConfig()
                 {
                     DtoAccessValidateOnSave = true,
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueNoConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -178,7 +179,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var config = new GenericServicesConfig()
                 {
                     DirectAccessValidateOnSave = true,
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -207,7 +208,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 var config = new GenericServicesConfig()
                 {
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -236,7 +237,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var config = new GenericServicesConfig()
                 {
                     DtoAccessValidateOnSave = true,
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueNoConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -294,7 +295,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 var config = new GenericServicesConfig()
                 {
                     DirectAccessValidateOnSave = true,
-                    SqlErrorHandler = CatchUniqueError19
+                    SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -308,19 +309,21 @@ namespace Tests.UnitTests.GenericServicesSetup
         }
 
         //-------------------------------------------------------------------
-        //Check the SqlErrorHandler
+        //Check the SaveChangesExceptionHandler
 
         [Theory]
         [InlineData(1, true)]
         [InlineData(19, false)]
         public async Task TestSqlErrorHandlerWorksOkAsync(int sqlErrorCode, bool shouldThrowException)
         {
-            ValidationResult CatchUniqueError(DbUpdateException e)
+
+            IStatusGeneric CatchUniqueError(Exception e, DbContext context)
             {
-                var sqliteError = e.InnerException as SqliteException;
-                if (sqliteError?.SqliteErrorCode == sqlErrorCode)
-                    return new ValidationResult("Unique constraint failed");
-                return null;
+                var dbUpdateEx = e as DbUpdateException;
+                var sqliteError = dbUpdateEx?.InnerException as SqliteException;
+                return sqliteError?.SqliteErrorCode == sqlErrorCode
+                    ? new StatusGenericHandler().AddError("Unique constraint failed")
+                    : null;
             }
 
             //SETUP  
@@ -333,7 +336,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 var config = new GenericServicesConfig()
                 {
-                    SqlErrorHandler = CatchUniqueError
+                    SaveChangesExceptionHandler = CatchUniqueError
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -359,12 +362,13 @@ namespace Tests.UnitTests.GenericServicesSetup
         //------------------------------------------------
         //private
 
-        ValidationResult CatchUniqueError19(DbUpdateException e)
+        IStatusGeneric CatchUniqueError19(Exception e, DbContext context)
         {
-            var sqliteError = e.InnerException as SqliteException;
-            if (sqliteError?.SqliteErrorCode == 19)
-                return new ValidationResult("Unique constraint failed");
-            return null;
+            var dbUpdateEx = e as DbUpdateException;
+            var sqliteError = dbUpdateEx?.InnerException as SqliteException;
+            return sqliteError?.SqliteErrorCode == 19 
+                ? new StatusGenericHandler().AddError("Unique constraint failed") 
+                : null;
         }
     }
 }
