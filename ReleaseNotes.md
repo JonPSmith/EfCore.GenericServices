@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.2.2
+
+- Internal change - Does not initialize AutoMapper as uses injected config.
+This makes it work with AddAutoMapper extension method, which defaults to calling Mapper.Initialize
+
 ## 1.2.1
 
 - New Feature: Added SqlErrorHandler to configuration and called in SaveChangesWithValidation/Async.

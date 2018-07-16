@@ -86,7 +86,7 @@ namespace GenericServices.Setup
             params Assembly[] assembliesToScan)
         {
             var dtosRegister = new SetupDtosAndMappings(setupPart1.PublicConfig);
-            var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, setupPart1.PublicConfig, true);
+            var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, setupPart1.PublicConfig);
             if (!dtosRegister.IsValid)
                 throw new InvalidOperationException($"SETUP FAILED with {dtosRegister.Errors.Count} errors. Errors are:\n"
                                                     + dtosRegister.GetAllErrors());

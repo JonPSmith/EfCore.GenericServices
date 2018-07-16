@@ -27,7 +27,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 //ATTEMPT
                 var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
-                var wrappedMappings = setupDtos.ScanAllAssemblies(new[] {typeof(BookListDto).Assembly}, config, false);
+                var wrappedMappings = setupDtos.ScanAllAssemblies(new[] {typeof(BookListDto).Assembly}, config);
 
                 //VERIFY
                 setupDtos.IsValid.ShouldBeTrue(setupDtos.GetAllErrors());
@@ -46,7 +46,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 //ATTEMPT
                 var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
-                var wrappedMappings = setupDtos.ScanAllAssemblies(new[] { typeof(BookListDto).Assembly }, config, true);
+                var wrappedMappings = setupDtos.ScanAllAssemblies(new[] { typeof(BookListDto).Assembly }, config);
 
                 //VERIFY
                 setupDtos.IsValid.ShouldBeTrue(setupDtos.GetAllErrors());
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
             //ATTEMPT
             var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
-            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, config, true);
+            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, config);
 
             //VERIFY
             setupDtos.IsValid.ShouldBeFalse();
@@ -91,7 +91,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
             //ATTEMPT
             var setupDtos = new SetupDtosAndMappings(new GenericServicesConfig());
-            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, config, true);
+            setupDtos.ScanAllAssemblies(new[] { GetType().Assembly }, config);
 
             //VERIFY
             setupDtos.IsValid.ShouldBeFalse();

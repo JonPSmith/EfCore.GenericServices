@@ -23,7 +23,7 @@ namespace GenericServices.Setup.Internal
             PublicConfig = publicConfig ?? throw new ArgumentNullException(nameof(publicConfig));
         }
 
-        public IWrappedConfigAndMapper ScanAllAssemblies(Assembly[] assembliesToScan, IGenericServicesConfig config, bool initializeMapper)
+        public IWrappedConfigAndMapper ScanAllAssemblies(Assembly[] assembliesToScan, IGenericServicesConfig config)
         {
             if (assembliesToScan == null || assembliesToScan.Length == 0)
                 throw new ArgumentException("There were no assembles to scan!", nameof(assembliesToScan));
@@ -36,14 +36,6 @@ namespace GenericServices.Setup.Internal
                 //If errors then don't set up the mappings
                 return null;
 
-            if (initializeMapper)
-            {
-                Mapper.Initialize(cfg =>
-                {
-                    cfg.AddProfile(_readProfile);
-                    cfg.AddProfile(_saveProfile);
-                });
-            }
             return CreateConfigAndMapper(config, _readProfile, _saveProfile);
         }
 
