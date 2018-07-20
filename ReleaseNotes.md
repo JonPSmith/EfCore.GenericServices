@@ -1,5 +1,7 @@
 # Release Notes
 
+Suggestion: Add `ClearAllErrors` to status - see issue #4
+
 ## 1.2.2
 
 - Internal change - Does not initialize AutoMapper as uses injected config.
