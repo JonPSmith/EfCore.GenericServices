@@ -24,10 +24,16 @@ namespace GenericServices.Internal.Decoders
         public Type DtoType { get; }
         public DecodedEntityClass LinkedEntityInfo { get; }
         public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
+
         /// <summary>
         /// This is true if the the validating SaveChanges extention method should be called 
         /// </summary>
         public bool ValidateOnSave { get; }
+
+        /// <summary>
+        /// If false ReadSingle will add an error if the returned item is null
+        /// </summary>
+        public bool NoErrorOnReadSingleNull { get; }
 
         /// <summary>
         /// This contains the different way the entity can be created
@@ -43,8 +49,8 @@ namespace GenericServices.Internal.Decoders
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
 
-            if (_perDtoConfig?.UseSaveChangesWithValidation != null)
-                ValidateOnSave = (bool) _perDtoConfig?.UseSaveChangesWithValidation;
+            ValidateOnSave = _perDtoConfig?.UseSaveChangesWithValidation ?? publicConfig.DtoAccessValidateOnSave;
+            NoErrorOnReadSingleNull = _perDtoConfig?.NoErrorOnReadSingleNull ?? publicConfig.NoErrorOnReadSingleNull;
 
             PropertyInfos = dtoType.GetProperties()
                 .Select(x => new DecodedDtoProperty(x, 

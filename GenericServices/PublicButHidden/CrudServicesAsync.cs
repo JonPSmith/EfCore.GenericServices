@@ -149,7 +149,7 @@ namespace GenericServices.PublicButHidden
                 {
                     _context.Add(entity);
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
-                        dtoInfo.ValidateOnSave || _configAndMapper.Config.DtoAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+                        dtoInfo.ValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
                     if (IsValid)
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
@@ -178,7 +178,7 @@ namespace GenericServices.PublicButHidden
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
-                        dtoInfo.ValidateOnSave || _configAndMapper.Config.DtoAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+                        dtoInfo.ValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
         }
 
