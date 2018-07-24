@@ -3,7 +3,7 @@
 
 ## 1.2.3
 
-- New Feature: Can turn off error on ReadSingle being null - useful in Web Api situations.  
+- New Feature: Can turn off error on ReadSingle being null - useful in Web Api and other situations.  
 
 
 ## 1.2.2
