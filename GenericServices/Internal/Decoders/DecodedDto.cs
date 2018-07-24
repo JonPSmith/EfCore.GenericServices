@@ -31,11 +31,6 @@ namespace GenericServices.Internal.Decoders
         public bool ValidateOnSave { get; }
 
         /// <summary>
-        /// If false ReadSingle will add an error if the returned item is null
-        /// </summary>
-        public bool NoErrorOnReadSingleNull { get; }
-
-        /// <summary>
         /// This contains the different way the entity can be created
         /// </summary>
         public ImmutableList<MethodCtorMatch> MatchedCtorsAndStaticMethods =>
@@ -50,7 +45,6 @@ namespace GenericServices.Internal.Decoders
             LinkedEntityInfo = entityInfo;
 
             ValidateOnSave = _perDtoConfig?.UseSaveChangesWithValidation ?? publicConfig.DtoAccessValidateOnSave;
-            NoErrorOnReadSingleNull = _perDtoConfig?.NoErrorOnReadSingleNull ?? publicConfig.NoErrorOnReadSingleNull;
 
             PropertyInfos = dtoType.GetProperties()
                 .Select(x => new DecodedDtoProperty(x, 

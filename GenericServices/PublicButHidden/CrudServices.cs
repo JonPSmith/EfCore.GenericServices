@@ -73,12 +73,14 @@ namespace GenericServices.PublicButHidden
                 result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
             }
 
-            if (result == null)
-            {
-                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
-            }
+            if (result != null) return result;
 
-            return result;
+            if (_configAndMapper.Config.NoErrorOnReadSingleNull)
+                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+            else
+                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
+
+            return null;
         }
 
         /// <inheritdoc />
@@ -97,12 +99,14 @@ namespace GenericServices.PublicButHidden
                 result = ((IQueryable<T>)projector.Accessor.ProjectAndThenApplyWhereExpression(whereExpression)).SingleOrDefault();
             }
 
-            if (result == null)
-            {
-                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
-            }
+            if (result != null) return result;
 
-            return result;
+            if (_configAndMapper.Config.NoErrorOnReadSingleNull)
+                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+            else
+                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
+
+            return null;
         }
 
         /// <inheritdoc />

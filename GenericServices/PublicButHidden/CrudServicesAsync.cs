@@ -75,11 +75,14 @@ namespace GenericServices.PublicButHidden
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
 
-            if (result == null)
-            {
+            if (result != null) return result;
+
+            if (_configAndMapper.Config.NoErrorOnReadSingleNull)
+                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+            else
                 AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
-            }
-            return result;
+
+            return null;
         }
 
         /// <inheritdoc />
@@ -99,11 +102,14 @@ namespace GenericServices.PublicButHidden
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
 
-            if (result == null)
-            {
+            if (result != null) return result;
+
+            if (_configAndMapper.Config.NoErrorOnReadSingleNull)
+                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+            else
                 AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
-            }
-            return result;
+
+            return null;
         }
 
         /// <inheritdoc />

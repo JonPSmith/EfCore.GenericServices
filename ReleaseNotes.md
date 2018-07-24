@@ -1,6 +1,10 @@
 # Release Notes
 
-Suggestion: Add `ClearAllErrors` to status - see issue #4
+
+## 1.2.3
+
+- New Feature: Can turn off error on ReadSingle being null - useful in Web Api situations.  
+
 
 ## 1.2.2
 

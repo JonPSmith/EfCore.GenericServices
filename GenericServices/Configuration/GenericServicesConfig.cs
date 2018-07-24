@@ -27,6 +27,9 @@ namespace GenericServices.Configuration
         public MatchNameAndType NameMatcher { get; set; } = DefaultNameMatcher.MatchCamelAndPascalName;
 
         /// <inheritdoc />
+        public bool NoErrorOnReadSingleNull { get; set; }
+
+        /// <inheritdoc />
         public bool DirectAccessValidateOnSave { get; set; }
 
         /// <inheritdoc />

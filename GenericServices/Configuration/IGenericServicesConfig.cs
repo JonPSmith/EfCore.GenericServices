@@ -19,6 +19,13 @@ namespace GenericServices.Configuration
         MatchNameAndType NameMatcher { get; }
 
         /// <summary>
+        /// By default the method ReadSingle/Async returns an error if the item asked for is null.
+        /// But in Web API this isn't an error, but is handled by returning NotFound status.
+        /// Setting this property to true will stop an error being reported on ReadSingle returning null
+        /// </summary>
+        bool NoErrorOnReadSingleNull { get; }
+
+        /// <summary>
         /// If this is set to true then all Create/Update/Delete done via a direct access to an entity
         /// </summary>
         bool DirectAccessValidateOnSave { get; }
