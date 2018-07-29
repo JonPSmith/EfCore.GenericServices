@@ -1,10 +1,13 @@
 # Release Notes
 
+## 1.2.4
+
+- Bug fix: CrudServices were registered as Scoped - they should be registered as Transient
+- Minor change: The default success message is changed from "Success!" to "Success"
 
 ## 1.2.3
 
 - New Feature: Can turn off error on ReadSingle being null - useful in Web Api and other situations.  
-
 
 ## 1.2.2
 

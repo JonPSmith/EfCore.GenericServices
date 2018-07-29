@@ -48,7 +48,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         }
 
         [Theory]
-        [InlineData(1, "Success!")]
+        [InlineData(1, "Success")]
         [InlineData(99, "The Book was not found.")]
         public void TestReadSingleNullIsNotError(int bookId, string message)
         {
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         }
 
         [Theory]
-        [InlineData(1, "Success!")]
+        [InlineData(1, "Success")]
         [InlineData(99, "The Book was not found.")]
         public void TestReadSingleWhereNullIsNotError(int bookId, string message)
         {
@@ -150,7 +150,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         }
 
         [Theory]
-        [InlineData(1, "Success!")]
+        [InlineData(1, "Success")]
         [InlineData(99, "The Book was not found.")]
         public async Task TestReadSingleNullIsNotErrorAsync(int bookId, string message)
         {
@@ -199,7 +199,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         }
 
         [Theory]
-        [InlineData(1, "Success!")]
+        [InlineData(1, "Success")]
         [InlineData(99, "The Book was not found.")]
         public async Task TestReadSingleWhereNullIsNotErrorAsync(int bookId, string message)
         {

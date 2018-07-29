@@ -106,15 +106,15 @@ namespace GenericServices.Setup
         public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
             Type singleContextToRegister = null)
         {
-            setupPart2.Services.AddScoped(typeof(ICrudServices<>), typeof(CrudServices<>));
-            setupPart2.Services.AddScoped(typeof(ICrudServicesAsync<>), typeof(CrudServicesAsync<>));
+            setupPart2.Services.AddTransient(typeof(ICrudServices<>), typeof(CrudServices<>));
+            setupPart2.Services.AddTransient(typeof(ICrudServicesAsync<>), typeof(CrudServicesAsync<>));
 
             //If there is only one DbContext then the developer can use the non-generic CrudServices
             if (singleContextToRegister != null)
             {
-                setupPart2.Services.AddScoped<ICrudServices, CrudServices>();
-                setupPart2.Services.AddScoped<ICrudServicesAsync, CrudServicesAsync>();
-                setupPart2.Services.AddScoped(s => (DbContext)s.GetRequiredService(singleContextToRegister));
+                setupPart2.Services.AddTransient<ICrudServices, CrudServices>();
+                setupPart2.Services.AddTransient<ICrudServicesAsync, CrudServicesAsync>();
+                setupPart2.Services.AddTransient(s => (DbContext)s.GetRequiredService(singleContextToRegister));
             }
 
             //Register AutoMapper configuration goes here
