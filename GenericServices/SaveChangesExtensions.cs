@@ -94,7 +94,7 @@ namespace GenericServices
         /// <param name="context"></param>
         /// <param name="config"></param>
         /// <returns>List of errors, empty if there were no errors</returns>
-        public static IStatusGeneric SaveChangesWithValidation(this DbContext context, IGenericServicesConfig config)
+        public static IStatusGeneric SaveChangesWithValidation(this DbContext context, IGenericServicesConfig config = null)
         {
             var status = context.ExecuteValidation();
             if (!status.IsValid) return status;

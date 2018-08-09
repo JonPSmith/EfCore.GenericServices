@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UnitTests\DataLayer\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\GenericServices\GenericServices.csproj" />
     <ProjectReference Include="..\RazorPageApp\RazorPageApp.csproj" />
