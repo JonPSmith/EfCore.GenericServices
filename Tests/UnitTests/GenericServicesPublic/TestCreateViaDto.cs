@@ -225,6 +225,32 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
+        public void TestCreateEntityViaDtoCtorDddKeyIsString()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+            using (var context = new TestDbContext(options))
+            {
+                var utData = context.SetupSingleDtoAndEntities<DddCompositeIntStringCreateDto>();
+                var service = new CrudServices(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var dto = new DddCompositeIntStringCreateDto { MyString = "Hello", MyInt = 1 };
+                service.CreateAndSave(dto);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Ddd Composite Int String");
+                context.DddCompositeIntStrings.Single().MyString.ShouldEqual("Hello");
+                context.DddCompositeIntStrings.Single().MyInt.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
         public void TestCreateEntityViaDtoCtorCreateCtorBad()
         {
             //SETUP

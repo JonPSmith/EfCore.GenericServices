@@ -18,12 +18,14 @@ namespace Tests.EfCode
         public DbSet<TenantAddress> TenantAddresses { get; set; }
         public DbSet<ContactAddress> ContactAddresses { get; set; }
         public DbSet<KeyIsString> KeyIsStrings { get; set; }
+        public DbSet<DddCompositeIntString> DddCompositeIntStrings { get; set; }
 
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DddCompositeIntString>().HasKey(p => new {p.MyInt, p.MyString});
             modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasName("UniqueError_UniqueEntity_UniqueString");
         }
     }
