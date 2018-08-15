@@ -78,7 +78,7 @@ namespace GenericServices.Internal.Decoders
                 case CrudTypes.Update:
                     return new DecodeName(_perDtoConfig?.UpdateMethod);
                 default:
-                    throw new ArgumentException("You should only use Create ot Update here", nameof(createOrUpdate));
+                    throw new ArgumentException("You should only use Create or Update here", nameof(createOrUpdate));
             }
         }
         public MethodCtorMatch GetMethodToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
