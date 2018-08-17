@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using GenericServices.Internal.Decoders;
@@ -20,7 +21,9 @@ namespace GenericServices.Internal.MappingCode
                 var dtoMatchingProperty =
                     dtoKeyProperies.SingleOrDefault(
                         x => x.Name == entityKeys.Name && x.PropertyType == entityKeys.PropertyType);
-                if (dtoMatchingProperty == null) continue;
+                if (dtoMatchingProperty == null 
+                    || !dtoMatchingProperty.SetMethod.IsPublic)  //ignore if cannot write to it
+                    continue;
 
                 dtoMatchingProperty.SetValue(dto, entityKeys.GetValue(newEntity));
             }

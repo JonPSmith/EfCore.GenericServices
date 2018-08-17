@@ -143,6 +143,29 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
         }
 
+        [Fact]
+        public async Task TestCreateEntityNotCopyKeyBackBecauseDtoPropertyHasPrivateSetterOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var utData = context.SetupSingleDtoAndEntities<NormalEntityKeyPrivateSetDto>();
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var dto = new NormalEntityKeyPrivateSetDto();
+                await service.CreateAndSaveAsync(dto, CrudValues.UseAutoMapper);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                context.NormalEntities.Count().ShouldEqual(1);
+                dto.Id.ShouldEqual(0);
+            }
+        }
+
         //------------------------------------------------------
         //via ctors/statics
 

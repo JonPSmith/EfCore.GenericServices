@@ -16,7 +16,21 @@ namespace GenericServices.Setup
     public static class UnitTestSetup
     {
         /// <summary>
-        /// This is designed to set up the system for using one DTO and the entity classes in a unit test of a service
+        /// This is designed to set up the system for using direct access entity classes in a unit test or a service
+        /// </summary>
+        /// <param name="context">This is the DbContext conatining the entity clas your TDto refers to</param>
+        /// <param name="publicConfig">Optional: you can provide a publicConfig. 
+        /// NOTE: All use of this method must use the same config file, because it is read at startup and then cached.</param>
+        public static SpecificUseData SetupEntitiesDirect(this DbContext context,
+            IGenericServicesConfig publicConfig = null)
+        {
+            context.RegisterEntityClasses();
+            var utData = new SpecificUseData(publicConfig);
+            return utData;
+        }
+
+        /// <summary>
+        /// This is designed to set up the system for using one DTO and the entity classes in a unit test or a service
         /// </summary>
         /// <typeparam name="TDto">This should be the type of a class that has the <see cref="ILinkToEntity{TEntity}"/> applied to it</typeparam>
         /// <param name="context">This is the DbContext conatining the entity clas your TDto refers to</param>

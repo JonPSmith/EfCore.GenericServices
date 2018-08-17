@@ -30,7 +30,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -53,7 +53,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -99,7 +99,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -122,7 +122,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -143,7 +143,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -168,7 +168,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -197,7 +197,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -226,7 +226,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
                 var logs = context.SetupLogging();
 
@@ -256,7 +256,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);;
 
                 //ATTEMPT
@@ -280,7 +280,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -317,7 +317,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
@@ -345,7 +345,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<BookTitle>();
+                var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT

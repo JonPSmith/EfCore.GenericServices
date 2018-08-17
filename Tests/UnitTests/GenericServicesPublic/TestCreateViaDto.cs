@@ -29,6 +29,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
         public class AuthorDto : ILinkToEntity<Author>
         {
+            public int AuthorId { get; set; }
             public string Name { get; set; }
             public string Email { get; set; }
         }
@@ -61,6 +62,30 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
+            }
+        }
+
+        [Fact]
+        public void TestCreateAuthorViaAutoMapperPrimaryKeyCopiedBackOk()
+        {
+            //SETUP
+            var unique = Guid.NewGuid().ToString();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var utData = context.SetupSingleDtoAndEntities<AuthorDto>();
+                var service = new CrudServices(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var dto = new AuthorDto {Name = "New Name", Email = unique};
+                service.CreateAndSave(dto);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                service.Message.ShouldEqual("Successfully created a Author");
+                dto.AuthorId.ShouldNotEqual(0);
             }
         }
 
@@ -123,34 +148,29 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityUsingDefaults_AutoMapperMappingSetOk()
+        public void TestCreateEntityNotCopyKeyBackBecauseDtoPropertyHasPrivateSetterOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                var utData = context.SetupSingleDtoAndEntities<AuthorNameDto>();
+
+                var utData = context.SetupSingleDtoAndEntities<NormalEntityKeyPrivateSetDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new AuthorNameDto { Name = "New Name" };
+                var dto = new NormalEntityKeyPrivateSetDto();
                 service.CreateAndSave(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                context.Authors.Count().ShouldEqual(1);
-                context.Authors.Single().Name.ShouldEqual("New Name");
-                context.Authors.Single().Email.ShouldBeNull();
+                context.NormalEntities.Count().ShouldEqual(1);
+                dto.Id.ShouldEqual(0);
             }
         }
+
+
 
         //------------------------------------------------------
         //via ctors/statics
