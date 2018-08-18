@@ -30,7 +30,7 @@ namespace GenericServices.Internal.MappingCode
         public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName)
         {
             //first we need to load it 
-            var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _entityInfo.EntityType, _dtoInfo);
+            var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
             var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
             var entity = mapper.Accessor.ReturnExistingEntity(keys);
             if (entity == null)

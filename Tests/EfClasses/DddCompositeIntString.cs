@@ -8,7 +8,7 @@ namespace Tests.EfClasses
     public class DddCompositeIntString
     { 
 
-        public int MyInt { get; set; }
+        public int MyInt { get; private set; }
 
         public string MyString { get; private set; }
 

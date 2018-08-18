@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
+
+[assembly: InternalsVisibleTo("Tests")]
 
 namespace GenericServices.Internal.MappingCode
 {
@@ -36,15 +39,14 @@ namespace GenericServices.Internal.MappingCode
         /// <typeparam name="TDto"></typeparam>
         /// <param name="context"></param>
         /// <param name="dto"></param>
-        /// <param name="entityType"></param>
         /// <param name="dtoInfo"></param>
         /// <returns></returns>
-        public static object[] GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, Type entityType, DecodedDto dtoInfo)
+        public static object[] GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, DecodedDto dtoInfo)
             where TDto : class
         {
             var keys = new List<object>();
 
-            foreach (var entityKey in context.Model.FindEntityType(entityType).FindPrimaryKey().Properties)
+            foreach (var entityKey in context.Model.FindEntityType(dtoInfo.LinkedEntityInfo.EntityType).FindPrimaryKey().Properties)
             {
                 var dtoKeyProperty = dtoInfo.PropertyInfos.SingleOrDefault(x => x.PropertyInfo.Name == entityKey.Name);
                 if (dtoKeyProperty == null)
