@@ -25,10 +25,6 @@ namespace GenericServices.Internal.Decoders
         public DecodedEntityClass LinkedEntityInfo { get; }
         public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
 
-        /// <summary>
-        /// This is true if the the validating SaveChanges extention method should be called 
-        /// </summary>
-        public bool ValidateOnSave { get; }
 
         /// <summary>
         /// This contains the different way the entity can be created
@@ -44,8 +40,6 @@ namespace GenericServices.Internal.Decoders
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
 
-            ValidateOnSave = _perDtoConfig?.UseSaveChangesWithValidation ?? publicConfig.DtoAccessValidateOnSave;
-
             PropertyInfos = dtoType.GetProperties()
                 .Select(x => new DecodedDtoProperty(x, 
                         BestPropertyMatch.FindMatch(x, entityInfo.PrimaryKeyProperties ).Score >= PropertyMatch.PerfectMatchValue))
@@ -57,6 +51,17 @@ namespace GenericServices.Internal.Decoders
             if (entityInfo.CanBeCreatedByCtorOrStaticMethod)
                 _matchedCtorsAndStaticMethods = PreloadPossibleMethodCtorMatches(MatchCtorsAndStaticMethodsToProperties(entityInfo),
                     new DecodeName(_perDtoConfig?.UpdateMethod), null);
+        }
+
+        /// <summary>
+        /// This returns true if the SaveChanges should be validated
+        /// Done this way to allow unit tests to have different DtoAccessValidateOnSave settings
+        /// </summary>
+        /// <param name="publicConfig"></param>
+        /// <returns></returns>
+        public bool ShouldValidateOnSave(IGenericServicesConfig publicConfig)
+        {
+            return _perDtoConfig?.UseSaveChangesWithValidation ?? publicConfig.DtoAccessValidateOnSave;
         }
 
         /// <summary>
