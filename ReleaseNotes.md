@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.2.6
+
+- Minor bug fix: Fixed issues of trying to write key value back to a DTO property with a non-public setter
+- Minor new feature: There is now a SetupEntitiesDirect for setting up unit tests that use a direct access to the entity
+
 ## 1.2.5
 
 - Minor bug fix: Fixed issues of trying to write key value back to a DTO property with a non-public setter
