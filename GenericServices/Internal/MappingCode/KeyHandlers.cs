@@ -24,11 +24,10 @@ namespace GenericServices.Internal.MappingCode
                 var dtoMatchingProperty =
                     dtoKeyProperies.SingleOrDefault(
                         x => x.Name == entityKeys.Name && x.PropertyType == entityKeys.PropertyType);
-                if (dtoMatchingProperty == null 
-                    || !dtoMatchingProperty.SetMethod.IsPublic)  //ignore if cannot write to it
-                    continue;
-
-                dtoMatchingProperty.SetValue(dto, entityKeys.GetValue(newEntity));
+                if (dtoMatchingProperty != null //found one
+                    && dtoMatchingProperty.CanWrite //CanWrite
+                    && dtoMatchingProperty.SetMethod.IsPublic)  //setter is public
+                    dtoMatchingProperty.SetValue(dto, entityKeys.GetValue(newEntity));
             }
         }
 

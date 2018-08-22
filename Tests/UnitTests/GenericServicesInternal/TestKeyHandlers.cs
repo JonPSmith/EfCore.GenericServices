@@ -9,6 +9,8 @@ using GenericServices.Configuration;
 using Xunit;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
+using GenericServices.PublicButHidden;
+using GenericServices.Setup;
 using Microsoft.AspNetCore.Mvc;
 using Tests.Dtos;
 using Tests.EfClasses;
@@ -79,6 +81,26 @@ namespace Tests.UnitTests.GenericServicesInternal
             }
         }
 
+
+        [Fact]
+        public void TestAbstractSetterKeyNotCopiedBack()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                var decodedEntity = new DecodedEntityClass(typeof(NormalEntity), context);
+
+                //ATTEMPT
+                var entity = new NormalEntity { Id = 123 };
+                var dto = new NormalEntityKeyAbstractDto();
+                entity.CopyBackKeysFromEntityToDtoIfPresent(dto, decodedEntity);
+
+                //VERIFY
+                dto.Id.ShouldEqual(0);
+            }
+        }
+
         [Fact]
         public void TestCompositeKeyCopyBack()
         {
@@ -98,5 +120,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 dto.MyInt.ShouldEqual(999);
             }
         }
+
+        
     }
 }
