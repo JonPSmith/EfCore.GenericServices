@@ -125,14 +125,6 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
-           Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class
-        {
-            Message = $"Successfully read many {ExtractDisplayHelpers.GetNameForClass<TDto>()}";
-            return preQueryObject(_context.Set<TEntity>().AsNoTracking()).ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
-        }
-
-        /// <inheritdoc />
         public T CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));

@@ -27,19 +27,23 @@ var BookList = (function($) {
             FilterBy: filterByValue,
             MyString: 'Hello'
         };
-        var $fsearch = $('#filter-value-dropdown');
+        const filterValueDropdown = '#filter-value-dropdown';
+        const useHandler = false;
+        const usePost = false;
+        const url = (useHandler ? 'Home/?handler=Filter' : '/Home/Filter');
+        var $fsearch = $(filterValueDropdown);
         var ajaxSettings = {
             //The Razor handler pages format is <PageDir>/<Page>?handler=<Last part of method name>
             //In this case it's '/?Handler=Filter' if I have a OnGetFilter or OnPostFilter
-            url: (false ? 'Home/?handler=Filter' : '/Home/Filter'),
+            url: url,
             data: data
         };
-        if (false) {
+        if (!usePost) {
             //ajaxSettings.dataType = 'json';
             ajaxSettings.contentType = 'application/json; charset=utf-8';
             ajaxSettings.data = JSON.stringify(data);
         }
-        if (true) {
+        if (usePost) {
             ajaxSettings.type = 'POST';
             ajaxSettings.headers = {
                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
