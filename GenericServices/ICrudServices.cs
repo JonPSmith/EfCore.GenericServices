@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices
@@ -82,6 +83,26 @@ namespace GenericServices
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
         void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;
+
+        /// <summary>
+        /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
+        /// The keys allow you to define which entity class you want updated
+        /// </summary>
+        /// <typeparam name="TEntity">The entity class you want to update. It should be an entity in the DbContext you are referring to.</typeparam>
+        /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
+        /// <param name="keys">These are the primary key(s) to access the entity</param>
+        /// <returns></returns>
+        TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class;
+
+        /// <summary>
+        /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
+        /// The whereExpression allow you to define which entity class you want updated
+        /// </summary>
+        /// <typeparam name="TEntity">The entity class you want to update. It should be an entity in the DbContext you are referring to.</typeparam>
+        /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
+        /// <param name="whereExpression">This is a filter command that will return a single entity (or no entity)</param>
+        /// <returns></returns>
+        TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
 
         /// <summary>
         /// This will delete the entity class with the given primary key

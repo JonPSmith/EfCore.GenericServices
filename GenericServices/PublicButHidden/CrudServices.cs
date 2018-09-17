@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
@@ -175,6 +176,47 @@ namespace GenericServices.PublicButHidden
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
             }
+        }
+
+        /// <inheritdoc />
+        public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
+        {         
+            return LocalUpdateAndSave(patch, () => _context.Find<TEntity>(keys));
+        }
+
+        /// <inheritdoc />
+        public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        {
+            return LocalUpdateAndSave(patch, () => _context.Set<TEntity>().SingleOrDefault(whereExpression));
+        }
+
+        /// <summary>
+        /// Local version of UpdateAndSave with JsonPatch - contains the common code
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="patch"></param>
+        /// <param name="getEntity"></param>
+        /// <returns></returns>
+        private TEntity LocalUpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Func<TEntity> getEntity)
+            where TEntity : class
+        {
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            if (entityInfo.EntityType != typeof(TEntity))
+                throw new NotImplementedException(
+                    $"I could not find the entity class {typeof(TEntity).Name}. JsonPatch only works on entity classes.");
+
+            var entity = getEntity();
+            if (entity != null)
+                patch.ApplyTo(entity);
+            else
+                AddError(
+                    $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
+            if (IsValid)
+                CombineStatuses(_context.SaveChangesWithOptionalValidation(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
+
+            return entity;
         }
 
         /// <inheritdoc />

@@ -9,6 +9,7 @@ using AutoMapper.QueryableExtensions;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericServices.PublicButHidden
@@ -186,6 +187,47 @@ namespace GenericServices.PublicButHidden
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
             }
+        }
+
+        /// <inheritdoc />
+        public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
+        {
+            return await LocalUpdateAndSaveAsync(patch, () => _context.FindAsync<TEntity>(keys)).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        {
+            return await LocalUpdateAndSaveAsync(patch, () => _context.Set<TEntity>().SingleOrDefaultAsync(whereExpression)).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Local version of UpdateAndSave with JsonPatch - contains the common code
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="patch"></param>
+        /// <param name="getEntity"></param>
+        /// <returns></returns>
+        private async Task<TEntity> LocalUpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Func<Task<TEntity>> getEntity)
+            where TEntity : class
+        {
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            if (entityInfo.EntityType != typeof(TEntity))
+                throw new NotImplementedException(
+                    $"I could not find the entity class {typeof(TEntity).Name}. JsonPatch only works on entity classes.");
+
+            var entity = await getEntity().ConfigureAwait(false);
+            if (entity != null)
+                patch.ApplyTo(entity);
+            else
+                AddError(
+                    $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
+            if (IsValid)
+                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+
+            return entity;
         }
 
         /// <inheritdoc />
