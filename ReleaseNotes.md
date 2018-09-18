@@ -1,5 +1,13 @@
 # Release Notes
 
+## 1.3.0
+
+- New feature: Now supports JsonPatch in `UpdateAndSave`. Two versions:
+    - `UpDateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys)`
+    - `UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression)`
+
+*NOTE: JsonPatch only works on properties with public setters.*
+
 ## 1.2.6
 
 - Minor bug fix: Fixed issues of trying to write key value back to a DTO property with a non-public setter
