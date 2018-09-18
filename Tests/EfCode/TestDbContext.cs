@@ -20,6 +20,8 @@ namespace Tests.EfCode
         public DbSet<KeyIsString> KeyIsStrings { get; set; }
         public DbSet<DddCompositeIntString> DddCompositeIntStrings { get; set; }
 
+        public DbSet<TestAbstractMain> TestAbstractMains { get; set; }
+
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
 
