@@ -4,7 +4,7 @@
 
 **Now supports JSON Patch updates.**
 
-# EfCore.GenericServices
+# EfCore.GenericServices ([NuGet link](https://www.nuget.org/packages/EfCore.GenericServices/))
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses
 for a web/mobile/desktop application. It acts as a adapter between a database accessed
