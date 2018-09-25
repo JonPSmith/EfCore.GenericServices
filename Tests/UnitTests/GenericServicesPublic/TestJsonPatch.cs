@@ -77,6 +77,35 @@ namespace Tests.UnitTests.GenericServicesPublic
         //------------------------------------------------------------
         //errors
 
+
+        [Fact]
+        public void TestUpdateJsonPatchTestFailsOk()
+        {
+            //SETUP
+            var unique = Guid.NewGuid().ToString();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                var utData = context.SetupEntitiesDirect();
+                var service = new CrudServices(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var patch = new JsonPatchDocument<Book>();
+                patch.Test(x => x.Title, "XXX");
+                patch.Replace(x => x.Title, unique);
+                service.UpdateAndSave(patch, 1);
+
+                //VERIFY
+                service.IsValid.ShouldBeFalse();
+                service.GetAllErrors().ShouldStartWith("The current value 'Refactoring' at path 'Title' is not equal to the test value 'XXX'.");
+            }
+        }
+
         [Fact]
         public void TestUpdateJsonPatchNoUpdateBecauseSetterIsPrivateOk()
         {
@@ -96,10 +125,11 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //ATTEMPT
                 var patch = new JsonPatchDocument<Book>();
                 patch.Replace(x => x.Title, unique);
-                var ex = Assert.Throws<JsonPatchException>(() => service.UpdateAndSave(patch, 1));
+                service.UpdateAndSave(patch, 1);
 
                 //VERIFY
-                ex.Message.ShouldEqual("The property at path 'Title' could not be updated.");
+                service.IsValid.ShouldBeFalse();
+                service.GetAllErrors().ShouldStartWith("The property at path 'Title' could not be updated.");
             }
         }
 

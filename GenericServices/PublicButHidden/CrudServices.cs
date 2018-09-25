@@ -209,7 +209,7 @@ namespace GenericServices.PublicButHidden
 
             var entity = getEntity();
             if (entity != null)
-                patch.ApplyTo(entity);
+                patch.ApplyTo(entity, error => AddError(error.ErrorMessage));
             else
                 AddError(
                     $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
