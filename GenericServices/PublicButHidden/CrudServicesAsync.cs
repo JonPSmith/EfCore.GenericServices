@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
+using GenericServices.Internal.LinqBuilders;
 using GenericServices.Internal.MappingCode;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
@@ -236,7 +237,8 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
-            var entity = await _context.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
+            var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+            var entity = await _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefaultAsync(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
@@ -254,7 +256,8 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
-            var entity = await _context.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
+            var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+            var entity = await _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefaultAsync(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");

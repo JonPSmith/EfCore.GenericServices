@@ -19,6 +19,7 @@ namespace Tests.EfCode
         public DbSet<ContactAddress> ContactAddresses { get; set; }
         public DbSet<KeyIsString> KeyIsStrings { get; set; }
         public DbSet<DddCompositeIntString> DddCompositeIntStrings { get; set; }
+        public DbSet<SoftDelEntity> SoftDelEntities { get; set; }
 
         public DbSet<TestAbstractMain> TestAbstractMains { get; set; }
 
@@ -29,6 +30,8 @@ namespace Tests.EfCode
         {
             modelBuilder.Entity<DddCompositeIntString>().HasKey(p => new {p.MyInt, p.MyString});
             modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasName("UniqueError_UniqueEntity_UniqueString");
+
+            modelBuilder.Entity<SoftDelEntity>().HasQueryFilter(x => !x.SoftDeleted);
         }
     }
 }

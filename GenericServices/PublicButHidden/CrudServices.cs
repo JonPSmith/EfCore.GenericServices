@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
+using GenericServices.Internal.LinqBuilders;
 using GenericServices.Internal.MappingCode;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
@@ -228,7 +229,8 @@ namespace GenericServices.PublicButHidden
                 throw new NotImplementedException(
                     "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
 
-            var entity = _context.Set<TEntity>().Find(keys);
+            var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+            var entity = _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefault(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
@@ -250,7 +252,8 @@ namespace GenericServices.PublicButHidden
                 throw new NotImplementedException(
                     "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
 
-            var entity = _context.Set<TEntity>().Find(keys);
+            var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+            var entity = _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefault(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
