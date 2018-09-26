@@ -20,6 +20,7 @@
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
       - Change : DeleteAndSave and similar now use a query that includes IgnoreQueryFilters so that it can delete SoftDeleted items
+      - New feature: Update via JSON Patch now handles test and returns any errors via the status.
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
 

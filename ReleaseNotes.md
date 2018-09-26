@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.3.1
+- Change : DeleteAndSave and similar now use a query that includes IgnoreQueryFilters so that it can delete SoftDeleted items etc.
+- New feature: Update via JSON Patch now handles test and returns any errors via the status.
+
 ## 1.3.0
 
 - New feature: Now supports JsonPatch in `UpdateAndSave`. Two versions:
