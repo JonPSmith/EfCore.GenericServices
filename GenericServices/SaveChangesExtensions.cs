@@ -121,11 +121,11 @@ namespace GenericServices
         private static IStatusGeneric ExecuteValidation(this DbContext context)
         {
             var status = new StatusGenericHandler();
-            foreach (var entry in
-                context.ChangeTracker.Entries()
-                    .Where(e =>
-                        (e.State == EntityState.Added) ||
-                        (e.State == EntityState.Modified)))
+            var entriesToCheck = context.ChangeTracker.Entries()
+                .Where(e =>
+                    (e.State == EntityState.Added) ||
+                    (e.State == EntityState.Modified)).ToList(); //This is needed, otherwise you get a "collection has changed" exception
+            foreach (var entry in entriesToCheck)
             {
                 var entity = entry.Entity;
                 status.Header = entity.GetType().GetNameForClass();

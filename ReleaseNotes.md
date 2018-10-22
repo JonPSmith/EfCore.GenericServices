@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.3.2
+- Bug Fix : Fixed "Collection has changed" exception when validating entities
+
 ## 1.3.1
 - Change : DeleteAndSave and similar now use a query that includes IgnoreQueryFilters so that it can delete SoftDeleted items etc.
 - New feature: Update via JSON Patch now handles test and returns any errors via the status.
