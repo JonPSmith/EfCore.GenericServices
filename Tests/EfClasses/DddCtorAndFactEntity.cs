@@ -52,5 +52,13 @@ namespace Tests.EfClasses
             MyString = myString;
             return status;
         }
+
+        public IStatusGeneric SetIntAndString(int myInt, string myString)
+        {
+            MyInt = myInt;
+            return SetString(myString);
+        }
+
+
     }
 }

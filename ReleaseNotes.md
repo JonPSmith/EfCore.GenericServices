@@ -1,5 +1,7 @@
 # Release Notes
 
+- Fix bug - see ##12
+
 ## 1.3.2
 - Bug Fix : Fixed "Collection has changed" exception when validating entities
 
