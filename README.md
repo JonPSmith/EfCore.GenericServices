@@ -6,11 +6,7 @@
 
 # EfCore.GenericServices ([NuGet link](https://www.nuget.org/packages/EfCore.GenericServices/))
 
-This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
-
-Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other. And each CRUD access has to adapt the data in the database to show the user, and then apply the changes to the database. This library extracts the pattern into a library, making the writing of the CRUD front-end code both quicker and simpler to write.
-
-The code for each of the four access type (Create, Read, Update and Delete) are identical, apart from the ViewModel/DTO specific to the actual feature. So, you create one set of update code for your specific applictation and then cut/paste + change one line for all the other versions. Here is the code from the example Razor Page application contained in this repo for adding a review to a Book (the example site is a tiny Amazon-like site).
+This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other. And each CRUD access has to adapt the data in the database to show the user, and then apply the changes to the database. This library extracts the pattern into a library, making the writing of the CRUD front-end code both quicker and simpler to write. The code for each of the four access type (Create, Read, Update and Delete) are identical, apart from the ViewModel/DTO specific to the actual feature. So, you create one set of update code for your specific applictation and then cut/paste + change one line for all the other versions. Here is the code from the example Razor Page application contained in this repo for adding a review to a Book (the example site is a tiny Amazon-like site).
 
 ```csharp
 public class AddReviewModel : PageModel

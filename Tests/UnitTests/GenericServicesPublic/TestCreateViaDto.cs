@@ -271,21 +271,24 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestCreateEntityViaDtoCtorCreateCtorBad()
+        public void TestCreateEntityViaDtoCtorCreateCtorMatchesLongerOne()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
             using (var context = new TestDbContext(options))
             {
+                context.Database.EnsureCreated();
+
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
-                var ex = Assert.Throws<InvalidOperationException>(() => service.CreateAndSave(dto));
+                service.CreateAndSave(dto);
 
                 //VERIFY
-                ex.Message.ShouldStartWith("There are multiple ctor/static method, so you need to define which one you want used via the ctor/static method parameter. ");
+                context.DddCtorEntities.Single().MyInt.ShouldEqual(123);
+                context.DddCtorEntities.Single().MyString.ShouldEqual("Hello");
             }
         }
 

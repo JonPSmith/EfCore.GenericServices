@@ -90,7 +90,7 @@ namespace GenericServices.Internal.Decoders
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
             {
-                var result = GetDefaultSetterMethod(_matchedSetterMethods, "method");
+                var result = GetDefaultCtorOrMethod(_matchedSetterMethods, "method");
                 if (result != null)
                     return result;
 
@@ -106,7 +106,7 @@ namespace GenericServices.Internal.Decoders
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
             {
-                var result = GetDefaultSetterMethod(_matchedCtorsAndStaticMethods, "ctor/static method");
+                var result = GetDefaultCtorOrMethod(_matchedCtorsAndStaticMethods, "ctor/static method");
                 if (result != null)
                     return result;
 
@@ -145,9 +145,17 @@ namespace GenericServices.Internal.Decoders
             return result.SingleOrDefault();
         }
 
-        private MethodCtorMatch GetDefaultSetterMethod(List<MethodCtorMatch> listToScan, string errorString)
+        private MethodCtorMatch GetDefaultCtorOrMethod(List<MethodCtorMatch> listToScan, string errorString)
         {
-            var methodsWithParams = listToScan.Where(x => !x.IsParameterlessMethod).ToList();
+            //we group by the number of parameters and take the one with the longest parameter match
+            var groupedByParams = from ctorMethod in listToScan.Where(x => !x.IsParameterlessMethod)
+                let numParams = ctorMethod.Method == null
+                    ? ctorMethod.Constructor.GetParameters().Length
+                    : ctorMethod.Method.GetParameters().Length
+                group ctorMethod by numParams;
+            var methodsWithParams = groupedByParams.OrderByDescending(x => x.Key).First().ToList();
+            //var methodsWithParams = listToScan.Where(x => !x.IsParameterlessMethod)
+            //    .GroupBy(x => x.Method.GetParameters().Length).OrderByDescending(x => x.Key).First().ToList();
             if (methodsWithParams.Count == 1)
                 return methodsWithParams.Single();
 

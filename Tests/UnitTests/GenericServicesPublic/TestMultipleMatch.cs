@@ -17,39 +17,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestMultipleMatch
     {
-        [Fact]
-        public void TestDeleteWithQueryFilterOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<TestDbContext>();
-            using (var context = new TestDbContext(options))
-            {
-                context.Database.EnsureCreated();
-                var author = new SoftDelEntity { SoftDeleted = true };
-                context.Add(author);
-                context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
-                var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
-
-                context.SoftDelEntities.Count().ShouldEqual(0);
-                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
-
-                //ATTEMPT
-                service.DeleteAndSave<SoftDelEntity>(1);
-
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully deleted a Soft Del Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
-                context.SoftDelEntities.Count().ShouldEqual(0);
-            }
-        }
-
+        //This is a test for the fix if issue #12
         [Fact]
         public void TestUpdateWithMultipleMatchOk()
         {

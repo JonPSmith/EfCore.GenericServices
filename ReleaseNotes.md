@@ -1,6 +1,7 @@
 # Release Notes
 
-- Fix bug - see ##12
+## 1.3.3
+- Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match
 
 ## 1.3.2
 - Bug Fix : Fixed "Collection has changed" exception when validating entities
