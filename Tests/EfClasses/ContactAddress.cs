@@ -7,13 +7,8 @@ namespace Tests.EfClasses
     {
         public int ContactAddressId { get; private set; }
 
-        public Address Address { get; private set; }
+        public string Name { get; set; }
 
-        private ContactAddress() { }
-
-        public ContactAddress(Address address)
-        {
-            Address = address ?? throw new ArgumentNullException(nameof(address));
-        }
+        public AddressNotOwned Address { get; set; }
     }
 }
