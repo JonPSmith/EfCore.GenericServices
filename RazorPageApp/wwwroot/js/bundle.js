@@ -41,7 +41,7 @@ var BookList = (function($) {
         if (!usePost) {
             //ajaxSettings.dataType = 'json';
             ajaxSettings.contentType = 'application/json; charset=utf-8';
-            ajaxSettings.data = JSON.stringify(data);
+            ajaxSettings.data = data;
         }
         if (usePost) {
             ajaxSettings.type = 'POST';
