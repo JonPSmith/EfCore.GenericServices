@@ -132,6 +132,14 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
+        public IQueryable<TDto> ProjectFromEntityToDto<TEntity, TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query) where TEntity : class
+        {
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            return query(entityInfo.GetReadableEntity<TEntity>(_context))
+                .ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
+        }
+
+        /// <inheritdoc />
         public async Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));

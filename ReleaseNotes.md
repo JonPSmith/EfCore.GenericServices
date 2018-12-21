@@ -2,7 +2,6 @@
 
 ## planned changes
 
-- Add `ProjectTo` - see issue #10
 - Add ` IGenericStatus BeforeSaveChanges(DbContext)` - see issue #14
 - Breaking change: Separate SQL error, BeforeSaveChanges and validation so they can be in any combination
 
@@ -10,7 +9,7 @@
 - Breaking change: In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` included IgnoreQueryFilters so that soft deleted items would be found. 
 However in 2.0.0 only `DeleteWithActionAndSave` will bypass query filter. That is safer in multi-tenant systems.
 - New feature: Now handles DbQuery for reads only - fixes Issue #16.
-- 
+- New Feature: Added `ProjectFromEntityToDto<TEntity,TDto>` to the services. This allows you to read data with a query prior to the projection to a DTO. Fixes issue #10 and #15
 
 ## 1.3.3
 - Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match

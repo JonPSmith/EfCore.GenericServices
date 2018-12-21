@@ -45,16 +45,17 @@ namespace GenericServices
         /// <returns>an <see cref="IQueryable{T}"/> result. You should apply a execute method, e.g. .ToList() or .ToListAsync() to execute the result</returns>
         IQueryable<T> ReadManyNoTracked<T>() where T : class;
 
-        ///// <summary>
-        ///// This allows you to do a preQuery on the entity classes before the data is then mapped to the DTO class
-        ///// This is useful if you want to add a filter that needs to access the entity 
-        ///// </summary>
-        ///// <typeparam name="TEntity">The EF Core entity class mapped to the database</typeparam>
-        ///// <typeparam name="TDto">This DTO class should have the <see cref="ILinkToEntity{TEntity}"/> interface </typeparam>
-        ///// <param name="preQueryObject">This is a query that works directly on the <code cref="IQueryable{TEntity}"/> and returns a <code cref="IQueryable{TEntity}"/> result</param>
-        ///// <returns></returns>
-        //IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
-        //    Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class;
+        /// <summary>
+        /// This allows you to read data with a query prior to the projection to a DTO.
+        /// This is useful if you want to filter the data on properties not in the final DTO.
+        /// It is also useful when wanting to apply a method such as IgnoreQueryFilters
+        /// </summary>
+        /// <typeparam name="TEntity">This must be a entity or query class in the current DbContext</typeparam>
+        /// <typeparam name="TDto">This should be a class with an <see cref="ILinkToEntity{TEntity}"/> </typeparam>
+        /// <param name="query">The queryable source will come from an entity or query class in the current DbContext</param>
+        /// <returns></returns>
+        IQueryable<TDto> ProjectFromEntityToDto<TEntity, TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query)
+            where TEntity : class;
 
         /// <summary>
         /// This will create async a new entity in the database. If you provide class which is an entity class (i.e. in your EF Core database) then
