@@ -6,7 +6,9 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using GenericServices.Configuration.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GenericServices.Internal.Decoders
@@ -23,7 +25,9 @@ namespace GenericServices.Internal.Decoders
         [Display(Description = "The entity cannot be update, but is can be created, read or deleted")]
         NotUpdatable,
         [Display(Description = "The entity cannot be created or updated, but it can be read or deleted.")]
-        ReadOnly
+        ReadOnly,
+        [Display(Description = "This is a DbQuery which can only be read.")]
+        DbQuery
     }
 
     internal class DecodedEntityClass
@@ -52,6 +56,13 @@ namespace GenericServices.Internal.Decoders
             {
                 throw new InvalidOperationException($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext."+
                                                     " The class must be either be an entity class derived from the GenericServiceDto/Async class.");
+            }
+
+            if (efType.IsQueryType)
+            {
+                //QueryType is read only, so we don't do any further setup
+                EntityStyle = EntityStyles.DbQuery;
+                return;
             }
 
             var primaryKeys = efType.GetKeys().Where(x => x.IsPrimaryKey()).ToImmutableList();
@@ -104,11 +115,29 @@ namespace GenericServices.Internal.Decoders
 
         }
 
+        public IQueryable<T> GetReadableEntity<T>(DbContext content) where T : class
+        {
+            return EntityStyle == EntityStyles.DbQuery
+                ? content.Query<T>().AsQueryable()
+                : content.Set<T>().AsQueryable();
+        }
+
+        /// <summary>
+        /// This will throw an exception if the cud type doesn't fit the entity style
+        /// </summary>
+        /// <param name="cudType">either create, update or delete</param>
+        public void CheckCanDoOperation(CrudTypes cudType)
+        {
+            if (EntityStyle == EntityStyles.DbQuery || (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
+                throw new InvalidOperationException($"The class {EntityType.Name} of style {EntityStyle} cannot be used in {cudType}.");
+
+        }
+
         public override string ToString()
         {
             return $"Entity {EntityType.Name} is {EntityStyle.ToString().SplitPascalCase()} " + (EntityStyle == EntityStyles.Standard
-                       ? $"with {PropertiesWithPublicSetter.Length} settable properties"
-                       : $"with {PublicSetterMethods.Length} methods, {PublicCtors.Length} public ctors, and {PublicStaticCreatorMethods.Length} static class factories.");
+                       ? $"with {PropertiesWithPublicSetter?.Length ?? 0} settable properties"
+                       : $"with {PublicSetterMethods?.Length ?? 0} methods, {PublicCtors?.Length == 0} public ctors, and {PublicStaticCreatorMethods?.Length ?? 0} static class factories.");
         }
     }
 }

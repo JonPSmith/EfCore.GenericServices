@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+using GenericServices.Configuration.Internal;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
@@ -65,6 +66,8 @@ namespace GenericServices.PublicButHidden
         {
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            if (entityInfo.EntityStyle == EntityStyles.DbQuery)
+                throw new InvalidOperationException($"The class {entityInfo.EntityType.Name} of style {entityInfo.EntityStyle} cannot be used in a Find.");
             if (entityInfo.EntityType == typeof(T))
             {
                 result = await _context.Set<T>().FindAsync(keys).ConfigureAwait(false);
@@ -94,7 +97,7 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
-                result = await _context.Set<T>().Where(whereExpression).SingleOrDefaultAsync().ConfigureAwait(false);
+                result = await entityInfo.GetReadableEntity<T>(_context).Where(whereExpression).SingleOrDefaultAsync().ConfigureAwait(false);
             }
             else
             {
@@ -120,7 +123,7 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
-                return _context.Set<T>().AsNoTracking();
+                return entityInfo.GetReadableEntity<T>(_context).AsNoTracking();
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
@@ -129,17 +132,10 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public IQueryable<TDto> ReadManyWithPreQueryNoTracked<TEntity, TDto>(
-            Func<IQueryable<TEntity>, IQueryable<TEntity>> preQueryObject) where TEntity : class where TDto : class
-        {
-            Message = $"Successfully read many {ExtractDisplayHelpers.GetNameForClass<TDto>()}";
-            return preQueryObject(_context.Set<TEntity>().AsNoTracking()).ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
-        }
-
-        /// <inheritdoc />
         public async Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            entityInfo.CheckCanDoOperation(CrudTypes.Create);
             Message = $"Successfully created a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
@@ -169,6 +165,7 @@ namespace GenericServices.PublicButHidden
         public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
@@ -213,6 +210,7 @@ namespace GenericServices.PublicButHidden
             where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(
@@ -235,6 +233,7 @@ namespace GenericServices.PublicButHidden
         public async Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            entityInfo.CheckCanDoOperation(CrudTypes.Delete);
             Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
@@ -254,6 +253,7 @@ namespace GenericServices.PublicButHidden
             params object[] keys) where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            entityInfo.CheckCanDoOperation(CrudTypes.Delete);
             Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);

@@ -1,5 +1,13 @@
 # Release Notes
 
+## planned changes
+
+- Add `ProjectTo` - see issue #10
+- Add ` IGenericStatus BeforeSaveChanges(DbContext)` - see issue #14
+- Look at DbQuery - comment on thereformedprogrammer.net and Issue #16.
+- Breaking change: Separate SQL error, BeforeSaveChanges and validation so they can be in any combination
+- Breaking change: Change `DeleteAndSave` to obey Query Filter. Only `DeleteWithActionAndSave` will bypass query filter.
+
 ## 1.3.3
 - Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match
 
