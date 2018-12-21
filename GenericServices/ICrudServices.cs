@@ -115,6 +115,8 @@ namespace GenericServices
         /// This will find entity class with the given primary key, then call the method you provide before calling the Remove method + SaveChanges.
         /// Your method has access to the database and can handle any relationships, and returns an <see cref="IStatusGeneric"/>. The Remove will 
         /// only go ahead if the status your method returns is Valid, i.e. no errors
+        /// NOTE: This method ignore any query filters when deleting. If you are working in a multi-tenant system you should include a test
+        /// that the entity you are deleting has the correct TenantId
         /// </summary>
         /// <typeparam name="TEntity">The entity class you want to delete. It should be an entity in the DbContext you are referring to.</typeparam>
         /// <param name="runBeforeDelete">You provide a method, which is called after the entity to delete has been loaded, but before the Remove method is called.

@@ -237,7 +237,7 @@ namespace GenericServices.PublicButHidden
                     "You cannot delete a DTO/ViewModel. You must provide a real entity class.");
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
-            var entity = _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefault(whereWithKeys);
+            var entity = _context.Set<TEntity>().SingleOrDefault(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");

@@ -41,12 +41,12 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.DeleteAndSave<SoftDelEntity>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully deleted a Soft Del Entity");
+                service.IsValid.ShouldBeFalse();
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Soft Del Entity you wanted to delete.");
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(0);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }    
         }
         
@@ -85,7 +85,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(0);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(0);
             }
         }
 
@@ -124,7 +124,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(1);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }
 

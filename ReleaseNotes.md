@@ -4,9 +4,13 @@
 
 - Add `ProjectTo` - see issue #10
 - Add ` IGenericStatus BeforeSaveChanges(DbContext)` - see issue #14
-- Look at DbQuery - comment on thereformedprogrammer.net and Issue #16.
 - Breaking change: Separate SQL error, BeforeSaveChanges and validation so they can be in any combination
-- Breaking change: Change `DeleteAndSave` to obey Query Filter. Only `DeleteWithActionAndSave` will bypass query filter.
+
+## 2.0.0
+- Breaking change: In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` included IgnoreQueryFilters so that soft deleted items would be found. 
+However in 2.0.0 only `DeleteWithActionAndSave` will bypass query filter. That is safer in multi-tenant systems.
+- New feature: Now handles DbQuery for reads only - fixes Issue #16.
+- 
 
 ## 1.3.3
 - Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match

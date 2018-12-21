@@ -19,7 +19,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
     {
 
         [Fact]
-        public async Task TestDeleteAsyncWithQueryFilterOk()
+        public async Task TestDeleteAsyncWithQueryFilterFailsOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -42,12 +42,12 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 await service.DeleteAndSaveAsync<SoftDelEntity>(1);
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                service.Message.ShouldEqual("Successfully deleted a Soft Del Entity");
+                service.IsValid.ShouldBeFalse();
+                service.GetAllErrors().ShouldEqual("Sorry, I could not find the Soft Del Entity you wanted to delete.");
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(0);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(0);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(0);
             }
         }
 
@@ -129,7 +129,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
             using (var context = new TestDbContext(options))
             {
-                context.SoftDelEntities.Count().ShouldEqual(1);
+                context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }
 

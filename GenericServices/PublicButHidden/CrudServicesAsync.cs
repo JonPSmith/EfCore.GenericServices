@@ -237,7 +237,7 @@ namespace GenericServices.PublicButHidden
             Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
-            var entity = await _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefaultAsync(whereWithKeys);
+            var entity = await _context.Set<TEntity>().SingleOrDefaultAsync(whereWithKeys);
             if (entity == null)
             {
                 AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
