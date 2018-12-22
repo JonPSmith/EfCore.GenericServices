@@ -29,7 +29,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         //Create
 
         [Fact]
-        public void TestCreateValidationNotTurnedOn()
+        public void TestCreateNoSqlErrorHandlerOn()
         {
             //SETUP  
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -82,7 +82,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         //Update
 
         [Fact]
-        public void TestUpdateValidationNotTurnedOn()
+        public void TestUpdateNoSqlErrorHandlerOn()
         {
             //SETUP  
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -140,7 +140,7 @@ namespace Tests.UnitTests.GenericServicesSetup
         //delete
 
         [Fact]
-        public void TestDeleteWithValidationNotTurnedOn()
+        public void TestDeleteNoSqlErrorHandler()
         {
             //SETUP  
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();

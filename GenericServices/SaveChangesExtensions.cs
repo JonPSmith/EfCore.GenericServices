@@ -60,19 +60,9 @@ namespace GenericServices
         public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IGenericServicesConfig config = null)
         {
             var status = context.ExecuteValidation();
-            if (!status.IsValid) return status;
-
-            context.ChangeTracker.AutoDetectChangesEnabled = false;
-            try
-            {
-                status.CombineStatuses(await context.SaveChangesWithExtrasAsync( config));
-            }
-            finally
-            {
-                context.ChangeTracker.AutoDetectChangesEnabled = true;
-            }
-
-            return status;
+            return !status.IsValid
+                ? status
+                : await context.SaveChangesWithExtrasAsync(config, true);
         }
 
         //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
@@ -88,31 +78,25 @@ namespace GenericServices
         public static IStatusGeneric SaveChangesWithValidation(this DbContext context, IGenericServicesConfig config = null)
         {
             var status = context.ExecuteValidation();
-            if (!status.IsValid) return status;
-
-            context.ChangeTracker.AutoDetectChangesEnabled = false;
-            try
-            {
-                status.CombineStatuses(context.SaveChangesWithExtras(config));
-            }
-            finally
-            {
-                context.ChangeTracker.AutoDetectChangesEnabled = true;
-            }
-
-            return status;
+            return !status.IsValid 
+                ? status 
+                : context.SaveChangesWithExtras(config, true);
         }
 
         //-----------------------------------------------------------------
         //private methods
 
-        private static IStatusGeneric SaveChangesWithExtras(this DbContext context, IGenericServicesConfig config)
+        private static IStatusGeneric SaveChangesWithExtras(this DbContext context, 
+            IGenericServicesConfig config, bool turnOffChangeTracker = false)
         {
             var status = config?.BeforeSaveChanges != null
                 ? config.BeforeSaveChanges(context)
                 : new StatusGenericHandler();
             if (!status.IsValid)
                 return status;
+
+            if (turnOffChangeTracker)
+                context.ChangeTracker.AutoDetectChangesEnabled = false;
             try
             {
                 context.SaveChanges();
@@ -123,17 +107,25 @@ namespace GenericServices
                 if (exStatus == null) throw;       //error wasn't handled, so rethrow
                 status.CombineStatuses(exStatus);
             }
+            finally
+            {
+                context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
 
             return status;
         }
 
-        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, IGenericServicesConfig config)
+        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, 
+            IGenericServicesConfig config, bool turnOffChangeTracker = false)
         {
-            var status = config?.BeforeSaveChanges != null 
-                ? config.BeforeSaveChanges(context) 
+            var status = config?.BeforeSaveChanges != null
+                ? config.BeforeSaveChanges(context)
                 : new StatusGenericHandler();
             if (!status.IsValid)
                 return status;
+
+            if (turnOffChangeTracker)
+                context.ChangeTracker.AutoDetectChangesEnabled = false;
             try
             {
                 await context.SaveChangesAsync().ConfigureAwait(false);
@@ -143,6 +135,10 @@ namespace GenericServices
                 var exStatus = config?.SaveChangesExceptionHandler(e, context);
                 if (exStatus == null) throw;       //error wasn't handled, so rethrow
                 status.CombineStatuses(exStatus);
+            }
+            finally
+            {
+                context.ChangeTracker.AutoDetectChangesEnabled = true;
             }
 
             return status;

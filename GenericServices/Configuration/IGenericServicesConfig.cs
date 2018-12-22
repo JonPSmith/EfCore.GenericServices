@@ -8,6 +8,13 @@ using Microsoft.EntityFrameworkCore;
 namespace GenericServices.Configuration
 {
     /// <summary>
+    /// This is the signature for the method you can add which will be called before SaveChanges
+    /// </summary>
+    /// <param name="context">Access to DbContext</param>
+    /// <returns></returns>
+    public delegate IStatusGeneric BeforeSaveChanges(DbContext context);
+
+    /// <summary>
     /// This is the interface for global configuration for GenericServices. 
     /// </summary>
     public interface IGenericServicesConfig
@@ -49,6 +56,6 @@ namespace GenericServices.Configuration
         /// I allows you to do things like your own validation, logging, etc. without needing to put code inside your application's DbContext
         /// If the status returned by BeforeSaveChanges has errors, then SaveChanges won't be called. 
         /// </summary>
-        Func<DbContext, IStatusGeneric> BeforeSaveChanges { get; }
+        BeforeSaveChanges BeforeSaveChanges { get; }
     }
 }
