@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,10 +30,9 @@ namespace GenericServices
         public static async Task<IStatusGeneric> SaveChangesWithOptionalValidationAsync(this DbContext context,
             bool shouldValidate, IGenericServicesConfig config)
         {
-            if (shouldValidate)
-                return await context.SaveChangesWithValidationAsync(config).ConfigureAwait(false);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            return new StatusGenericHandler();
+            return shouldValidate
+                ? await context.SaveChangesWithValidationAsync(config).ConfigureAwait(false)
+                : await context.SaveChangesWithExtrasAsync(config).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -45,12 +43,11 @@ namespace GenericServices
         /// <param name="config"></param>
         /// <returns></returns>
         public static IStatusGeneric SaveChangesWithOptionalValidation(this DbContext context,
-            bool shouldValidate, IGenericServicesConfig config = null)
+            bool shouldValidate, IGenericServicesConfig config)
         {
-            if (shouldValidate)
-                return context.SaveChangesWithValidation(config);
-            context.SaveChanges();
-            return new StatusGenericHandler();
+            return shouldValidate
+                ? context.SaveChangesWithValidation(config)
+                : context.SaveChangesWithExtras( config);
         }
 
         /// <summary>
@@ -68,13 +65,7 @@ namespace GenericServices
             context.ChangeTracker.AutoDetectChangesEnabled = false;
             try
             {
-                await context.SaveChangesAsync().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                if (exStatus == null) throw;       //error wasn't handled, so rethrow
-                status.CombineStatuses(exStatus);
+                status.CombineStatuses(await context.SaveChangesWithExtrasAsync( config));
             }
             finally
             {
@@ -102,6 +93,28 @@ namespace GenericServices
             context.ChangeTracker.AutoDetectChangesEnabled = false;
             try
             {
+                status.CombineStatuses(context.SaveChangesWithExtras(config));
+            }
+            finally
+            {
+                context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+
+            return status;
+        }
+
+        //-----------------------------------------------------------------
+        //private methods
+
+        private static IStatusGeneric SaveChangesWithExtras(this DbContext context, IGenericServicesConfig config)
+        {
+            var status = config?.BeforeSaveChanges != null
+                ? config.BeforeSaveChanges(context)
+                : new StatusGenericHandler();
+            if (!status.IsValid)
+                return status;
+            try
+            {
                 context.SaveChanges();
             }
             catch (Exception e)
@@ -110,9 +123,26 @@ namespace GenericServices
                 if (exStatus == null) throw;       //error wasn't handled, so rethrow
                 status.CombineStatuses(exStatus);
             }
-            finally
+
+            return status;
+        }
+
+        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, IGenericServicesConfig config)
+        {
+            var status = config?.BeforeSaveChanges != null 
+                ? config.BeforeSaveChanges(context) 
+                : new StatusGenericHandler();
+            if (!status.IsValid)
+                return status;
+            try
             {
-                context.ChangeTracker.AutoDetectChangesEnabled = true;
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                var exStatus = config?.SaveChangesExceptionHandler(e, context);
+                if (exStatus == null) throw;       //error wasn't handled, so rethrow
+                status.CombineStatuses(exStatus);
             }
 
             return status;
@@ -139,6 +169,7 @@ namespace GenericServices
                 }
             }
 
+            status.Header = null; //reset the header, as could cause incorrect error message
             return status;
         }
     }

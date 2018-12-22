@@ -38,5 +38,7 @@ namespace GenericServices.Configuration
         /// <inheritdoc />
         public Func<Exception, DbContext, IStatusGeneric> SaveChangesExceptionHandler { get; set; } = (exception, dbContext) => null; // default is to return null
 
+        /// <inheritdoc />
+        public Func<DbContext, IStatusGeneric> BeforeSaveChanges { get; set; }
     }
 }

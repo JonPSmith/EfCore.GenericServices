@@ -16,7 +16,7 @@ namespace Tests.UnitTests.DataLayer
     {
 
         [Fact]
-        public void TestCreateWithValidationOk()
+        public void TestSaveChangesWithValidationNoErrorsOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -27,18 +27,20 @@ namespace Tests.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Add(entity);
-                context.SaveChangesWithValidation();
+                var status = context.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldBeTrue(status.GetAllErrors());
             }
             using (var context = new TestDbContext(options))
             {
-                //VERIFY
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
         }
 
         [Fact]
-        public void TestUpdateWithValidationOk()
+        public void TestSaveChangesWithValidationWithErrorsOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -54,15 +56,19 @@ namespace Tests.UnitTests.DataLayer
                 //ATTEMPT
                 context.NormalEntities.Count().ShouldEqual(1);
                 var entity = context.NormalEntities.Single();
-                entity.MyInt = 2;
-                context.SaveChangesWithValidation();
+                entity.MyInt = 1000;
+                var status = context.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldBeFalse();
+                status.GetAllErrors().ShouldEqual("Normal Entity: The field MyInt must be between 0 and 100.");
             }
             using (var context = new TestDbContext(options))
             {
-                //VERIFY
                 context.NormalEntities.Count().ShouldEqual(1);
-                context.NormalEntities.Single().MyInt.ShouldEqual(2);
+                context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
+
         }
 
         //------------------------------------------------------------
@@ -80,11 +86,13 @@ namespace Tests.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Add(entity);
-                await context.SaveChangesWithValidationAsync();
+                var status = await context.SaveChangesWithValidationAsync();
+
+                //VERIFY
+                status.IsValid.ShouldBeTrue(status.GetAllErrors());
             }
             using (var context = new TestDbContext(options))
             {
-                //VERIFY
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
@@ -98,26 +106,29 @@ namespace Tests.UnitTests.DataLayer
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new NormalEntity { MyInt = 1 };
+                var entity = new NormalEntity {MyInt = 1};
                 context.Add(entity);
                 await context.SaveChangesWithValidationAsync();
             }
+
             using (var context = new TestDbContext(options))
             {
                 //ATTEMPT
                 context.NormalEntities.Count().ShouldEqual(1);
                 var entity = context.NormalEntities.Single();
-                entity.MyInt = 2;
-                await context.SaveChangesWithValidationAsync();
+                entity.MyInt = 1000;
+                var status = await context.SaveChangesWithValidationAsync();
+
+                //VERIFY
+                status.IsValid.ShouldBeFalse();
+                status.GetAllErrors().ShouldEqual("Normal Entity: The field MyInt must be between 0 and 100.");
             }
             using (var context = new TestDbContext(options))
             {
-                //VERIFY
                 context.NormalEntities.Count().ShouldEqual(1);
-                context.NormalEntities.Single().MyInt.ShouldEqual(2);
+                context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
         }
-
     }
 
 }

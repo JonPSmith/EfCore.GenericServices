@@ -31,8 +31,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryReadManyDirectOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
                 context.Add(new Parent
@@ -40,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SaveChanges();
             }
 
-            using (var context = new QueryDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -58,8 +58,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryReadManyViaDtoOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
                 context.Add(new Parent
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SaveChanges();
             }
 
-            using (var context = new QueryDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -85,8 +85,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryReadSingleWhereDirectOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
                 context.Add(new Parent
@@ -94,7 +94,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SaveChanges();
             }
 
-            using (var context = new QueryDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -112,8 +112,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryReadSingleWhereViaDtoOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
                 context.Add(new Parent
@@ -121,7 +121,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SaveChanges();
             }
 
-            using (var context = new QueryDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -142,8 +142,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryReadSingleFindFail()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -160,8 +160,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryCreateFail()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -178,8 +178,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryUpdateFail()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -196,8 +196,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryDeleteFail()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -214,8 +214,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         public async Task TestDbQueryDeleteWithRulesFail()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);

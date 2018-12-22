@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
             //VERIFY
             setupDtos.IsValid.ShouldBeFalse();
-            setupDtos.Errors.Count.ShouldEqual(4);    
+            setupDtos.Errors.Count.ShouldEqual(3);    
         }
 
 

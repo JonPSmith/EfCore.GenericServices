@@ -24,8 +24,8 @@ namespace Tests.UnitTests.DataLayer
         public void TestDbQueryChildReadOnlyOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<QueryDbContext>();
-            using (var context = new QueryDbContext(options))
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
                 context.Add(new Parent
@@ -33,7 +33,7 @@ namespace Tests.UnitTests.DataLayer
                 context.SaveChanges();
             }
 
-            using (var context = new QueryDbContext(options))
+            using (var context = new TestDbContext(options))
             {
                 //ATTEMPT
                 var children = context.Children.ToList();

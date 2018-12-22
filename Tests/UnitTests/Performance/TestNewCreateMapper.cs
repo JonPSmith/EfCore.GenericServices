@@ -51,7 +51,15 @@ namespace Tests.UnitTests.Performance
                 CreateMapper.GetNewGenericMapper(genericType, constructor);
             }
 
-            using (new TimeThings(_output, "LINQ new (cached)", 100))
+            using (new TimeThings(_output, "LINQ new not dynamic (cached)", 100))
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    var instance = CreateMapper.GetNewGenericMapper(genericType, constructor).Invoke(context, utData.ConfigAndMapper, entityInfo);
+                    ((string)instance.EntityName).ShouldEqual("Book");
+                }
+            }
+            using (new TimeThings(_output, "LINQ new dynamic (cached)", 100))
             {
                 for (int i = 0; i < 100; i++)
                 {
@@ -59,7 +67,7 @@ namespace Tests.UnitTests.Performance
                     ((string)instance.EntityName).ShouldEqual("Book");
                 }
             }
-            using (new TimeThings(_output, "LINQ new (no cache)", 100))
+            using (new TimeThings(_output, "LINQ new dynamic (no cache)", 100))
             {
                 for (int i = 0; i < 100; i++)
                 {

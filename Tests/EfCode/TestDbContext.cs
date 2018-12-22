@@ -23,6 +23,10 @@ namespace Tests.EfCode
 
         public DbSet<TestAbstractMain> TestAbstractMains { get; set; }
 
+        public DbSet<Parent> Parents { get; set; }
+        public DbSet<Child> WritableChildren { get; set; }
+        public DbQuery<ChildReadOnly> Children { get; set; }
+
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
 
@@ -32,6 +36,8 @@ namespace Tests.EfCode
             modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasName("UniqueError_UniqueEntity_UniqueString");
 
             modelBuilder.Entity<SoftDelEntity>().HasQueryFilter(x => !x.SoftDeleted);
+
+            modelBuilder.Entity<Child>().ToTable(nameof(Children));
         }
     }
 }

@@ -43,5 +43,12 @@ namespace GenericServices.Configuration
         /// SQL errors into user-friendly errors
         /// </summary>
         Func<Exception, DbContext, IStatusGeneric> SaveChangesExceptionHandler { get; }
+
+        /// <summary>
+        /// This will be called just before SaveChanges/SaveChangesAsync is called.
+        /// I allows you to do things like your own validation, logging, etc. without needing to put code inside your application's DbContext
+        /// If the status returned by BeforeSaveChanges has errors, then SaveChanges won't be called. 
+        /// </summary>
+        Func<DbContext, IStatusGeneric> BeforeSaveChanges { get; }
     }
 }
