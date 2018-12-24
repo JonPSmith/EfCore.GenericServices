@@ -7,6 +7,7 @@ using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using GenericServices.Internal.Decoders;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.HomeController.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
@@ -36,6 +37,10 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
+            }
+
+            using (var context = new EfCoreContext(options))
+            {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
 
@@ -92,6 +97,7 @@ namespace Tests.UnitTests.Performance
 
             using (var context = new TestDbContext(options))
             {
+                context.WipeAllDataFromDatabase();
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
 
@@ -106,6 +112,7 @@ namespace Tests.UnitTests.Performance
 
             using (var context = new TestDbContext(options))
             {
+                context.WipeAllDataFromDatabase();
                 using (new TimeThings(_output, "RunHandCoded Create", 100))
                 {
                     for (int i = 0; i < 100; i++)
@@ -118,6 +125,7 @@ namespace Tests.UnitTests.Performance
 
             using (var context = new TestDbContext(options))
             {
+                context.WipeAllDataFromDatabase();
                 var utData = context.SetupEntitiesDirect();
                 using (new TimeThings(_output, "new CrudServices<TestDbContext>", 100))
                 {
@@ -132,78 +140,76 @@ namespace Tests.UnitTests.Performance
         [Fact]
         public void TestPerformanceAddReview()
         {
-            using (new TimeThings(_output, "RunHandCoded AddReview", 1))
+            var options1 = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options1))
             {
-                RunHandCodedAddReview();
-            }
-            using (new TimeThings(_output, "RunGenericService AddReview", 1))
-            {
-                RunGenericServiceAddReview();
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
             }
 
-            using (new TimeThings(_output, "RunGenericService AddReview", 100))
+            using (var context = new EfCoreContext(options1))
             {
-                for (int i = 0; i < 100; i++)
+                var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
+                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                using (new TimeThings(_output, "RunHandCoded AddReview", 1))
                 {
-                    RunGenericServiceAddReview();
-                }     
+                    RunHandCodedAddReview(context);
+                }
+
+                using (new TimeThings(_output, "RunGenericService AddReview", 1))
+                {
+                    RunGenericServiceAddReview(service);
+                }
+
+                using (new TimeThings(_output, "RunGenericService AddReview", 100))
+                {
+                    context.Database.ExecuteSqlCommand("DELETE FROM reviews");
+                    for (int i = 0; i < 100; i++)
+                    {
+                        RunGenericServiceAddReview(service);
+                    }
+                }
             }
-            using (new TimeThings(_output, "RunHandCoded AddReview", 100))
+            var options2 = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options2))
             {
-                for (int i = 0; i < 100; i++)
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options2))
+            {
+                using (new TimeThings(_output, "RunHandCoded AddReview", 100))
                 {
-                    RunHandCodedAddReview();
+                    for (int i = 0; i < 100; i++)
+                    {
+                        RunHandCodedAddReview(context);
+                    }
                 }
             }
         }
 
-        private void RunGenericServiceAddReview()
+        private void RunGenericServiceAddReview(CrudServices<EfCoreContext> service)
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
-                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
-                var numReviews = context.Set<Review>().Count();
 
-                //ATTEMPT
-                var dto = new AddReviewDto { BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
-                service.UpdateAndSave(dto, nameof(Book.AddReview));
+            //ATTEMPT
+            var dto = new AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user"};
+            service.UpdateAndSave(dto, nameof(Book.AddReview));
 
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                context.Set<Review>().Count().ShouldEqual(numReviews + 1);
-            }
+            //VERIFY
+            service.IsValid.ShouldBeTrue(service.GetAllErrors());
         }
 
-        private void RunHandCodedAddReview()
+        private void RunHandCodedAddReview(EfCoreContext context)
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
-                var numReviews = context.Set<Review>().Count();
 
-                //ATTEMPT
-                var book = context.Find<Book>(1);
-                book.AddReview(5, "comment", "user", context);
-                context.SaveChanges();
+            //ATTEMPT
+            var book = context.Find<Book>(1);
+            book.AddReview(5, "comment", "user", context);
+            context.SaveChanges();
 
-                //VERIFY
-                context.Set<Review>().Count().ShouldEqual(numReviews + 1);
-            }
+            //VERIFY
         }
-
     }
 }
