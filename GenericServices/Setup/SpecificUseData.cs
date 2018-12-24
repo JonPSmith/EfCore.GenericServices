@@ -12,14 +12,22 @@ namespace GenericServices.Setup
     /// This holds specific config and mapping data - useful in unit testing and serverless applications
     /// </summary>
     public class SpecificUseData
-    { 
+    {
+        /// <summary>
+        /// We only create the IWrappedConfigAndMapper when someone needs it.
+        /// This allows you to add multiple DTOs and the AutoMapper mapping is only worked out once they are all in.
+        /// </summary>
+        private IWrappedConfigAndMapper _configAndMapper;
+
         internal MappingProfile ReadProfile { get; }
         internal MappingProfile SaveProfile { get; }
 
         /// <summary>
         /// This holds the global configuration and the AutoMapper data
         /// </summary>
-        public IWrappedConfigAndMapper ConfigAndMapper => SetupDtosAndMappings.CreateConfigAndMapper(PublicConfig, ReadProfile, SaveProfile);
+        public IWrappedConfigAndMapper ConfigAndMapper => _configAndMapper ?? (_configAndMapper =
+             SetupDtosAndMappings.CreateConfigAndMapper(PublicConfig, ReadProfile, SaveProfile));
+
 
         /// <summary>
         /// This is the global config

@@ -48,7 +48,6 @@ namespace Tests.UnitTests.Performance
             {
 
                 var utData = context.SetupEntitiesDirect();
-                var configAndMapper = utData.ConfigAndMapper;
 
                 using (new TimeThings(_output, "Create Test<EfCoreContext>"))
                 {
@@ -62,13 +61,6 @@ namespace Tests.UnitTests.Performance
                         var instance = new Test<EfCoreContext>(context);
                     }
                 }
-                using (new TimeThings(_output, "Create StatusGenericHandler", 1000))
-                {
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        var instance = new StatusGenericHandler();
-                    }
-                }
                 using (new TimeThings(_output, "CrudServices<TestDbContext>"))
                 {
                     var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
@@ -79,13 +71,6 @@ namespace Tests.UnitTests.Performance
                     for (int i = 0; i < 1000; i++)
                     {
                         var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
-                    }
-                }
-                using (new TimeThings(_output, "CrudServices<TestDbContext> with cached configAndMapper", 1000))
-                {
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        var service = new CrudServices<EfCoreContext>(context, configAndMapper);
                     }
                 }
             }
@@ -182,19 +167,6 @@ namespace Tests.UnitTests.Performance
                     {
                         context.Add(new DddCtorEntity(1, "hello"));
                         context.SaveChanges();
-                    }
-                }
-            }
-
-            using (var context = new TestDbContext(options))
-            {
-                context.WipeAllDataFromDatabase();
-                var utData = context.SetupEntitiesDirect();
-                using (new TimeThings(_output, "new CrudServices<TestDbContext>", 100))
-                {
-                    for (int i = 0; i < 100; i++)
-                    {
-                        var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
                     }
                 }
             }
