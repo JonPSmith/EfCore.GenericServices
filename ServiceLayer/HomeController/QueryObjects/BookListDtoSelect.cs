@@ -23,7 +23,7 @@ namespace ServiceLayer.HomeController.QueryObjects
                 AuthorsOrdered = string.Join(", ",        
                         p.AuthorsLink                         
                         .OrderBy(q => q.Order)                
-                        .Select(q => q.Author.Name)),         
+                        .Select(q => q.Author.Name).ToList()),         
                 ReviewsCount = p.Reviews.Count(),           
                 ReviewsAverageVotes =                  
                     p.Reviews.Select(y =>              
