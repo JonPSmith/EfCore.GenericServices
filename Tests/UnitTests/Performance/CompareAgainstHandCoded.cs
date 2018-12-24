@@ -4,6 +4,7 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using GenericServices;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using GenericServices.Internal.Decoders;
@@ -26,6 +27,68 @@ namespace Tests.UnitTests.Performance
         public CompareAgainstHandCoded(ITestOutputHelper output)
         {
             _output = output;
+        }
+
+        private class Test<T> where T : class
+        {
+            public Test(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; set; }
+        }
+
+        [Fact]
+        public void TestPerformanceGenericTypeCreate()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+
+                var utData = context.SetupEntitiesDirect();
+                var configAndMapper = utData.ConfigAndMapper;
+
+                using (new TimeThings(_output, "Create Test<EfCoreContext>"))
+                {
+                    var instance = new Test<EfCoreContext>(context);
+                }
+
+                using (new TimeThings(_output, "Create Test<EfCoreContext>", 1000))
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        var instance = new Test<EfCoreContext>(context);
+                    }
+                }
+                using (new TimeThings(_output, "Create StatusGenericHandler", 1000))
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        var instance = new StatusGenericHandler();
+                    }
+                }
+                using (new TimeThings(_output, "CrudServices<TestDbContext>"))
+                {
+                    var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                }
+
+                using (new TimeThings(_output, "CrudServices<TestDbContext>", 1000))
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                    }
+                }
+                using (new TimeThings(_output, "CrudServices<TestDbContext> with cached configAndMapper", 1000))
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        var service = new CrudServices<EfCoreContext>(context, configAndMapper);
+                    }
+                }
+            }
         }
 
         [Fact]
@@ -163,7 +226,6 @@ namespace Tests.UnitTests.Performance
 
                 using (new TimeThings(_output, "RunGenericService AddReview", 100))
                 {
-                    context.Database.ExecuteSqlCommand("DELETE FROM reviews");
                     for (int i = 0; i < 100; i++)
                     {
                         RunGenericServiceAddReview(service);
@@ -190,26 +252,15 @@ namespace Tests.UnitTests.Performance
 
         private void RunGenericServiceAddReview(CrudServices<EfCoreContext> service)
         {
-            //SETUP
-
-            //ATTEMPT
             var dto = new AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user"};
             service.UpdateAndSave(dto, nameof(Book.AddReview));
-
-            //VERIFY
-            service.IsValid.ShouldBeTrue(service.GetAllErrors());
         }
 
         private void RunHandCodedAddReview(EfCoreContext context)
         {
-            //SETUP
-
-            //ATTEMPT
             var book = context.Find<Book>(1);
             book.AddReview(5, "comment", "user", context);
             context.SaveChanges();
-
-            //VERIFY
         }
     }
 }
