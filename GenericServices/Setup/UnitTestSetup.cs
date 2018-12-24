@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GenericServices.Setup
 {
     /// <summary>
-    /// This contains an extension method if you want to use GenericServices in a unit test.
+    /// This contains an extension method if you want to use GenericServices in a unit test or non-DI situation
     /// It sets up a single DTO with all the entity classes
     /// NOTE because all the setups are cached other tests may have registered other DTOs
     /// </summary>
