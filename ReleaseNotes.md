@@ -6,17 +6,17 @@
 
 ## 2.0.0
 
-- New feature: Now handles EF Core's DbQuery type (DbQuery type is only for reads) - fixes Issue #16.
+- New feature: Now handles EF Core's DbQuery type (DbQuery type is only used for reads) - fixes Issue #16.
 - New Feature: Added `ProjectFromEntityToDto<TEntity,TDto>` to the services. This allows you to read data with a query prior to the projection to a DTO. Fixes issue #10 and #15
 - New Feature: Added `IGenericStatus BeforeSaveChanges(DbContext)` to configuration.
 This allows you to inject code that is called just before SaveChanges/SaveChangesAsync is run. This allows you
 to add some validation, logging etc. - see issue #14.
 - Improvement: Previously the Sql error handler was only used if validation was turned on. 
-Now, if the SaveChangesExceptionHandler property is not null, then the method is called, 
-i.e. it is not dependant on the state of the ...ValidateOnSave flag in the config.  
+Now, if the SaveChangesExceptionHandler property is not null, then taht method is called, 
+i.e. it is not longer dependant on the state of the ...ValidateOnSave flag in the config.  
 - Breaking change (Minor): In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` used `IgnoreQueryFilters` to get all entities.
-This was doen so that soft deleted items would be found, but its dangerous in multi-tenant systems.
-In 2.0.0 only `DeleteWithActionAndSave` will use `IgnoreQueryFilters` to get all entities. That is safer, as you can provide extra checks in the caled method.
+This was done so that soft deleted items would be found, but its dangerous in multi-tenant systems.
+In 2.0.0 only `DeleteWithActionAndSave` will use `IgnoreQueryFilters` to get all entities. That is safer, as you can provide extra checks in the method you provide.
 
 ## 1.3.3
 - Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match
