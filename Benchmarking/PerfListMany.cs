@@ -21,7 +21,7 @@ namespace Benchmarking
 {
     public class PerfListMany
     {
-        private SpecificUseData _utData;
+        private IWrappedConfigAndMapper _config;
         private DbContextOptions<EfCoreContext> _options;
 
         [Fact]
@@ -40,7 +40,8 @@ namespace Benchmarking
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                     context.SeedDatabaseDummyBooks(100);
-                _utData = context.SetupSingleDtoAndEntities<BookListDto>();
+                var utData = context.SetupSingleDtoAndEntities<BookListDto>();
+                _config = utData.ConfigAndMapper;
             }
         }
 
@@ -51,7 +52,7 @@ namespace Benchmarking
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
-                var books = context.Books.MapBookToDto().ToList();
+                var books = context.Books.AsNoTracking().MapBookToDto().ToList();
 
                 //VERIFY
                 books.Count.ShouldEqual(100);
@@ -64,13 +65,12 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _utData.ConfigAndMapper);
+                var service = new CrudServices<EfCoreContext>(context, _config);
 
                 //ATTEMPT
                 var books = service.ReadManyNoTracked<BookListDto>().ToList();
 
                 //VERIFY
-                service.IsValid.ShouldBeTrue();
                 books.Count.ShouldEqual(100);
             }
         }

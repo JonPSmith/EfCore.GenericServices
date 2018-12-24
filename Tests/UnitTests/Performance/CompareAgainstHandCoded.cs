@@ -9,7 +9,7 @@ using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
-using ServiceLayer.HomeController.Dtos;
+using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
 using Tests.Helpers;
@@ -17,6 +17,7 @@ using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
+using AddReviewDto = ServiceLayer.HomeController.Dtos.AddReviewDto;
 
 namespace Tests.UnitTests.Performance
 {
@@ -115,6 +116,59 @@ namespace Tests.UnitTests.Performance
                     for (int i = 0; i < 1000; i++)
                     {
                         context.Find<Book>(1);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void TestPerformanceReadMultipleToDto()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseDummyBooks(100);
+            }
+
+            using (var context = new EfCoreContext(options))
+            {
+                var utData = context.SetupEntitiesDirect();
+                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+
+                using (new TimeThings(_output, "RunHandCoded ReadMany", 1))
+                {
+                    context.Books.Select(x => new BookTitleAndCount {
+                        BookId = x.BookId,
+                        Title = x.Title,
+                        ReviewsCount = x.Reviews.Count()  
+                    }).ToList();
+                }
+
+                using (new TimeThings(_output, "RunGenericService ReadManyNoTracked", 1))
+                {
+                    service.ReadManyNoTracked<BookTitleAndCount>().ToList();
+                }
+
+                using (new TimeThings(_output, "RunGenericService ReadMany", 100))
+                {
+                    for (int i = 0; i < 100; i++)
+                    {
+                        context.Books.Select(x => new BookTitleAndCount
+                        {
+                            BookId = x.BookId,
+                            Title = x.Title,
+                            ReviewsCount = x.Reviews.Count()
+                        }).ToList();
+                    }
+                }
+
+                using (new TimeThings(_output, "RunHandCoded Find", 100))
+                {
+                    for (int i = 0; i < 100; i++)
+                    {
+                        service.ReadManyNoTracked<BookTitleAndCount>().ToList();
                     }
                 }
             }
