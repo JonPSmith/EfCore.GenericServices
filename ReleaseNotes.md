@@ -17,7 +17,7 @@ i.e. it is not longer dependant on the state of the ...ValidateOnSave flag in th
 - Breaking change (Minor): In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` used `IgnoreQueryFilters` to get all entities.
 This was done so that soft deleted items would be found, but its dangerous in multi-tenant systems.
 In 2.0.0 only `DeleteWithActionAndSave` will use `IgnoreQueryFilters` to get all entities. That is safer, as you can provide extra checks in the method you provide.
-- Performance bug fix: There was a performance issue in using the setup methods use in unit testing and non-DI situations
+- Performance bug fix: There was a performance issue when using the setup methods use in unit testing and non-DI situations
 
 ## 1.3.3
 - Bug Fix : Improved matching of DTOs to methods - orders by method params and picks the longest match

@@ -13,16 +13,25 @@
     <Product>EfCore.GenericServices</Product>
     <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system.</Description>
     <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
-    <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - ???????????????????????????????????????????????????
+- New feature: Now handles EF Core's DbQuery type (DbQuery type is only used for reads) - fixes Issue #16.
+- New Feature: Added `ProjectFromEntityToDto{TEntity,TDto}` to the services. This allows you to read data with a query prior to the projection to a DTO. Fixes issue #10 and #15
+- New Feature: Added `IGenericStatus BeforeSaveChanges(DbContext)` to configuration.
+This allows you to inject code that is called just before SaveChanges/SaveChangesAsync is run. This allows you
+to add some validation, logging etc. - see issue #14.
+- Improvement: Previously the Sql error handler was only used if validation was turned on. 
+Now, if the SaveChangesExceptionHandler property is not null, then taht method is called, 
+i.e. it is not longer dependant on the state of the ...ValidateOnSave flag in the config.  
+- Breaking change (Minor): In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` used `IgnoreQueryFilters` to get all entities.
+This was done so that soft deleted items would be found, but its dangerous in multi-tenant systems.
+In 2.0.0 only `DeleteWithActionAndSave` will use `IgnoreQueryFilters` to get all entities. That is safer, as you can provide extra checks in the method you provide.
+- Performance bug fix: There was a performance issue when using the setup methods use in unit testing and non-DI situations
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
-
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
