@@ -4,9 +4,62 @@
 
 **Now supports JSON Patch updates.**
 
-# EfCore.GenericServices ([NuGet link](https://www.nuget.org/packages/EfCore.GenericServices/))
+# EfCore.GenericServices
 
-This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other. And each CRUD access has to adapt the data in the database to show the user, and then apply the changes to the database. This library extracts the pattern into a library, making the writing of the CRUD front-end code both quicker and simpler to write. The code for each of the four access type (Create, Read, Update and Delete) are identical, apart from the ViewModel/DTO specific to the actual feature. So, you create one set of update code for your specific applictation and then cut/paste + change one line for all the other versions. Here is the code from the example Razor Page application contained in this repo for adding a review to a Book (the example site is a tiny Amazon-like site).
+This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. 
+It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
+
+This library takes advantage of the fact that each of the four CRUD database accesses differ in what they do, but they have a common set of data part they all use, which are: 
+a) What database class/table do you want to access?
+b) What properties in that class/table do you want to access or change?
+
+This library uses DTOs (data transfer objects), also known as ViewModels, plus a special interface to define the class/table and the properties to access.
+That allows the library to implement a generic solution for each of the four CRUD accesses, where the only thing that changes is the DTO you use.
+
+Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other -
+and each CRUD access has to adapt the data in the database to show the user, and then apply the changes to the database. 
+So, you create one set of update code for your specific application and then cut/paste + change one line (the DTO name) for all the other versions. 
+
+I personally work with ASP.NET Core, so my examples are from that, but it will work with any NET Core type of application
+*(I do know one person have used this libary with WPF).*
+
+[NuGet link](https://www.nuget.org/packages/EfCore.GenericServices/) and [link to documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
+
+MIT license.
+
+## Code examples of using EfCore.GenericServices
+
+I personally work with ASP.NET Core, so my examples are all around ASP.NET Core, but EfCore.GenericServices will work with any NET Core type of application
+*(I do know one person have used this libary with WPF).*
+
+### ASP.NET Core MVC - razor pages
+
+The classic way to produce HTML pages in ASP.NET is using the MVC approach, with razor pages.
+Here a simple example to show you the basic way to inject and then call the `ICrudServices`, in this case a simple List.
+
+```csharp
+public class BookController
+
+    private ICrudServices _service;
+
+    public BookController(ICrudServices service)
+    {
+        _service = service;
+    }
+
+    public ActionResult Index()
+    {
+        var dataToDisplay = _service.ReadManyNoTracked<BookListDto>().ToList()
+        return View(dataToDisplay);
+    }
+    //... etc.
+```
+
+### ASP.NET Core MVC - razor pages
+
+Here is the code from the example Razor Page application contained in this repo for adding a review to a Book (the example site is a tiny Amazon-like site).
+This example shows an more complex example where I am updating the Book class that uses a Domain-Driven Design (DDD) approach 
+to add a new review to a book. The code shown is the complete code in the [AddReview.cshtml.cs](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/RazorPageApp/Pages/Home/AddReview.cshtml.cs) class.
 
 ```csharp
 public class AddReviewModel : PageModel
@@ -46,10 +99,11 @@ public class AddReviewModel : PageModel
     }
 }
 ```
-If you compare that with the 
+
+NOTE: If you compare the code above with the 
 [AddPromotion](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/RazorPageApp/Pages/Home/AddPromotion.cshtml.cs) or
 [ChangePubDate](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/RazorPageApp/Pages/Home/ChangePubDate.cshtml.cs)
-update you will see they are identical apart from the type of the `Data` property.
+updates in the same example then you will see they are identical apart from the type of the `Data` property.
 
 And the ViewModel/DTO isn't anything special (see the 
 [AddReviewDto](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/ServiceLayer/HomeController/Dtos/AddReviewDto.cs)). 
@@ -58,6 +112,36 @@ They just need to be marked with an empty
 class to map to. *For more security you can also mark any read-only properties with the 
 `[ReadOnly(true)]` attribute - GenericServices will never try to update the 
 database with any read-only marked property.*
+
+## ASP.NET Web API
+
+When using ASP.NET Web API then another companion library called [EfCore.GenericServices.AspNetCore](https://github.com/JonPSmith/EfCore.GenericServices.AspNetCore)
+provides extension methods to help return the data in the correct form (plus other methods to allow unit testing of Web API actions using EfCore.GenericServices).
+
+The code below comes from the example [ToDoController](https://github.com/JonPSmith/EfCore.GenericServices.AspNetCore/blob/master/ExampleWebApi/Controllers/ToDoController.cs)
+example in the EfCore.GenericServices.AspNetCore GitHub repo.
+
+```csharp
+public class ToDoController : ControllerBase
+{
+
+    [HttpGet]
+    public async Task<ActionResult<WebApiMessageAndResult<List<TodoItem>>>> GetManyAsync([FromServices]ICrudServices service)
+    {
+        return service.Response(await service.ReadManyNoTracked<TodoItem>().ToListAsync());
+    }
+
+    [Route("name")]
+    [HttpPatch()]
+    public ActionResult<WebApiMessageOnly> Name(ChangeNameDto dto, [FromServices]ICrudServices service)
+    {
+        service.UpdateAndSave(dto);
+        return service.Response();
+
+    //... other action methods removed 
+}
+```
+
 
 ## Technical features
 The EfCore.GenericServices ([NuGet, EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/)), 
