@@ -10,10 +10,11 @@ This library helps you quickly code Create, Read, Update and Delete (CRUD) acces
 It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
 
 This library takes advantage of the fact that each of the four CRUD database accesses differ in what they do, but they have a common set of data part they all use, which are: 
+
 a) What database class/table do you want to access?
 b) What properties in that class/table do you want to access or change?
 
-This library uses DTOs (data transfer objects), also known as ViewModels, plus a special interface to define the class/table and the properties to access.
+This library uses DTOs (data transfer objects, also known as ViewModels) plus a special interface to define the class/table and the properties to access.
 That allows the library to implement a generic solution for each of the four CRUD accesses, where the only thing that changes is the DTO you use.
 
 Typical web applications have hundreds of CRUD pages - display this, edit that, delete the other -
@@ -169,7 +170,7 @@ to reimagine that library, but in a very different (hopefully simpler) way.*
 
 I have compared the performance of the GenericService library using the excellent
 [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) library, as part of the GitHub repo.
-The performance loss was an extra 25 us. - worst case, 5% of total time, and that is for the 
+The performance loss was an extra 25 us. - worst case, 6% of total time, and that is for the 
 simplest update on the fastest in-memory database.
 See the [Performance figures](https://github.com/JonPSmith/EfCore.GenericServices/wiki/Performance-figures)
 wiki page for full details.
