@@ -11,7 +11,7 @@
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
     <Product>EfCore.GenericServices</Product>
-    <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications. It acts as a adapter between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system.</Description>
+    <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications using Entity Framework Core for database access.</Description>
     <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
     <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
