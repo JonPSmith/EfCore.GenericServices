@@ -12,7 +12,7 @@
 This allows you to inject code that is called just before SaveChanges/SaveChangesAsync is run. This allows you
 to add some validation, logging etc. - see issue #14.
 - Improvement: Previously the Sql error handler was only used if validation was turned on. 
-Now, if the SaveChangesExceptionHandler property is not null, then taht method is called, 
+Now, if the SaveChangesExceptionHandler property is not null, then that method is called, 
 i.e. it is not longer dependant on the state of the ...ValidateOnSave flag in the config.  
 - Breaking change (Minor): In version 1.3.1 both `DeleteAndSave` and `DeleteWithActionAndSave` used `IgnoreQueryFilters` to get all entities.
 This was done so that soft deleted items would be found, but its dangerous in multi-tenant systems.
