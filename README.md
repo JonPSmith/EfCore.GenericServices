@@ -33,7 +33,7 @@ MIT license.
 I personally work with ASP.NET Core, so my examples are all around ASP.NET Core, but EfCore.GenericServices will work with any NET Core type of application
 *(I do know one person have used this libary with WPF).*
 
-### ASP.NET Core MVC - razor pages
+### ASP.NET Core MVC - Controllers with actions
 
 The classic way to produce HTML pages in ASP.NET is using the MVC approach, with razor pages.
 Here a simple example to show you the basic way to inject and then call the `ICrudServices`, in this case a simple List.
@@ -56,7 +56,7 @@ public class BookController
     //... etc.
 ```
 
-### ASP.NET Core MVC - razor pages
+### ASP.NET Core - Razor Pages
 
 Here is the code from the example Razor Page application contained in this repo for adding a review to a Book (the example site is a tiny Amazon-like site).
 This example shows an more complex example where I am updating the Book class that uses a Domain-Driven Design (DDD) approach 
@@ -114,7 +114,7 @@ class to map to. *For more security you can also mark any read-only properties w
 `[ReadOnly(true)]` attribute - GenericServices will never try to update the 
 database with any read-only marked property.*
 
-## ASP.NET Web API
+## ASP.NET Core Web API
 
 When using ASP.NET Web API then another companion library called [EfCore.GenericServices.AspNetCore](https://github.com/JonPSmith/EfCore.GenericServices.AspNetCore)
 provides extension methods to help return the data in the correct form (plus other methods to allow unit testing of Web API actions using EfCore.GenericServices).
