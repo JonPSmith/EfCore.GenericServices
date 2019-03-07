@@ -51,7 +51,7 @@ namespace GenericServices.Internal.Decoders
         public DecodedEntityClass(Type entityType, DbContext context)
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
-            var efType = context.Model.FindEntityType(entityType.FullName);
+            var efType = context.Model.FindEntityType(entityType);
             if (efType == null)
             {
                 throw new InvalidOperationException($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext."+
