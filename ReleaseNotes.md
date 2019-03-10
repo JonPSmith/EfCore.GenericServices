@@ -4,6 +4,10 @@
 
 - Nothing currently on backlog.
 
+## 2.0.1
+
+- Bug fix: @MartijnSchoemaker provided a pull request that fixed a problem - see pull requuest #22 
+
 ## 2.0.0
 
 - New feature: Now handles EF Core's DbQuery type (DbQuery type is only used for reads) - fixes Issue #16.
