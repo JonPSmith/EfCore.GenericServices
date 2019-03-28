@@ -87,6 +87,11 @@ namespace GenericServices
         void UpdateAndSave<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class;
 
         /// <summary>
+        /// Combination of UpdateAndSave and DeleteWithActionAndSave.
+        /// </summary>
+        void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, string[] includes = null) where TDto : class where TEntity : class;
+
+        /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
         /// The keys allow you to define which entity class you want updated
         /// </summary>
