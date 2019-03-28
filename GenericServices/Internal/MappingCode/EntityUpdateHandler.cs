@@ -27,12 +27,12 @@ namespace GenericServices.Internal.MappingCode
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName)
+        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName, string[] includes)
         {
             //first we need to load it 
             var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
             var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
-            var entity = mapper.Accessor.ReturnExistingEntity(keys);
+            var entity = mapper.Accessor.ReturnExistingEntity(keys, includes);
             if (entity == null)
                 return new StatusGenericHandler()
                     .AddError(

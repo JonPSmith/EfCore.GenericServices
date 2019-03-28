@@ -81,8 +81,9 @@ namespace GenericServices
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
+        /// <param name="includes"></param>
         /// <returns>Task, async</returns>
-        Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class;
+        Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>

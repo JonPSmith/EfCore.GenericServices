@@ -170,7 +170,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
+        public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
@@ -188,7 +188,7 @@ namespace GenericServices.PublicButHidden
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
-                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
+                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName, includes));
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
