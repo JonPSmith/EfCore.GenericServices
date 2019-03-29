@@ -71,13 +71,13 @@ namespace GenericServices.Internal.MappingCode
                 _wrappedMapper.MapperSaveConfig.CreateMapper().Map(dto, entity);
             }
 
-            public TEntity ReturnExistingEntity(Dictionary<string, object> keys, string[] includes)
+            public TEntity ReturnExistingEntity<TP>(Dictionary<string, object> keys, Expression<Func<TEntity, TP>>[] includes) where TP: class
             {
                 var result = (IQueryable<TEntity>)_context.Set<TEntity>();
 
                 if (includes != null)
                 {
-                    foreach (var include in includes)
+                    foreach (Expression<Func<TEntity, TP>> include in includes)
                     {
                         result = result.Include(include);
                     }

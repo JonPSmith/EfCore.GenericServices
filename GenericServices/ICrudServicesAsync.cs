@@ -83,7 +83,7 @@ namespace GenericServices
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
         /// <param name="includes"></param>
         /// <returns>Task, async</returns>
-        Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class;
+        Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, params Expression<Func<T, object>>[] includes) where T : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>

@@ -167,7 +167,13 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public void UpdateAndSave<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class
+        public void UpdateAndSave<T>(T entityOrDto, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            UpdateAndSave(entityOrDto, methodName: null, includes: includes);
+        }
+
+        /// <inheritdoc />
+        public void UpdateAndSave<T>(T entityOrDto, string methodName, params Expression<Func<T, object>>[] includes) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
@@ -193,7 +199,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, string[] includes = null) where TDto : class where TEntity : class
+        public void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, params Expression<Func<TDto, object>>[] includes) where TDto : class where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TDto));
 

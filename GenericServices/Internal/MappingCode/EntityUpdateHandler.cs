@@ -8,6 +8,7 @@ using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GenericServices.Internal.MappingCode
 {
@@ -27,7 +28,7 @@ namespace GenericServices.Internal.MappingCode
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName, string[] includes)
+        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName, params Expression<Func<TDto, object>>[] includes)
         {
             //first we need to load it 
             var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);

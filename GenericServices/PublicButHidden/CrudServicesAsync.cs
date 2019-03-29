@@ -170,7 +170,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, string[] includes = null) where T : class
+        public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null, params Expression<Func<T, object>>[] includes) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
