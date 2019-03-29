@@ -9,6 +9,7 @@ using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using GenericServices.Configuration;
 
 namespace GenericServices.Internal.MappingCode
 {
@@ -33,6 +34,7 @@ namespace GenericServices.Internal.MappingCode
             //first we need to load it 
             var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
             var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
+
             var entity = mapper.Accessor.ReturnExistingEntity(keys, includes);
             if (entity == null)
                 return new StatusGenericHandler()
