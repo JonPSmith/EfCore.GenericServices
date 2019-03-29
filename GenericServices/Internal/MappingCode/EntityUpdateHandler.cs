@@ -9,7 +9,6 @@ using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using GenericServices.Configuration;
 
 namespace GenericServices.Internal.MappingCode
 {
