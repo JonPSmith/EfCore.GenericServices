@@ -1,8 +1,9 @@
 # Release Notes
 
-## planned changes
 
-- Nothing currently on backlog.
+## 2.0.2
+
+- Fix bug #18 - When no default matching ctor/method is found it outputs a list of possible options.
 
 ## 2.0.1
 
