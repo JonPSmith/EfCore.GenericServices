@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper.QueryableExtensions;
+using GenericServices.ExtensionMethods;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
 using GenericServices.PublicButHidden;
@@ -79,9 +80,8 @@ namespace GenericServices.Internal.MappingCode
                 if (includes != null)
                 {
                     foreach(var include in includes)
-                    {
-                        MemberExpression me = (MemberExpression)include.Body;                       
-                        result = result.Include(me.Member.Name);
+                    {                   
+                        result = result.Include(include.ToFullMemberNameString());
                     }
                 }
 
@@ -119,7 +119,7 @@ namespace GenericServices.Internal.MappingCode
             public IQueryable<TDto> GetManyProjectedNoTracking()
             {
                 return _entityInfo.GetReadableEntity<TEntity>(_context).AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
-            }
-        }
-    }
+			}
+		}
+	}
 }

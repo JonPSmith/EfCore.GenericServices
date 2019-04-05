@@ -4,8 +4,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Configuration.Internal;
+using GenericServices.ExtensionMethods;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
@@ -178,9 +180,27 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
-            if (entityInfo.EntityType == typeof(T))
+
+			// NTW
+			foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+			{
+				Type entityType = propertyInfo.PropertyType;
+
+				Type interfaceType = entityType.GetInterface("ILinkToEntity`1");
+				if (interfaceType != null)
+				{
+					entityType = interfaceType.GenericTypeArguments.FirstOrDefault() ?? entityType;
+				}
+
+				string[] includesString = includes.Select(x => x.ToFullMemberNameString().Split('.').First()).ToArray();
+
+				if (this.Context.Model.FindEntityType(entityType) != null && (includes == null || !includesString.Contains(propertyInfo.Name)))
+					propertyInfo.SetValue(entityOrDto, null);
+			}
+
+			if (entityInfo.EntityType == typeof(T))
             {
-                if (!_context.Entry(entityOrDto).IsKeySet)
+				if (!_context.Entry(entityOrDto).IsKeySet)
                     throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
