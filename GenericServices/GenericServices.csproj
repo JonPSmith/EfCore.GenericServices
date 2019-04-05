@@ -3,22 +3,22 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>2.0.1</PackageVersion>
-    <Version>2.0.1</Version>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
+    <PackageVersion>2.0.2</PackageVersion>
+    <Version>2.0.2</Version>
+    <AssemblyVersion>2.0.2.0</AssemblyVersion>
+    <FileVersion>2.0.2.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
     <Product>EfCore.GenericServices</Product>
-    <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications using Entity Framework Core for database access.</Description>
+    <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications using Entity Framework Core.</Description>
     <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
     <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Bug fix: @MartijnSchoemaker provided a pull request that fixed a problem - see pull requuest #22
+      - Fix bug #18 - When no default matching ctor/method is found it outputs a list of possible options.
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
   </PropertyGroup>
