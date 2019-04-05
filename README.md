@@ -1,3 +1,8 @@
+Build status:
+
+[![Build status](https://ci.appveyor.com/api/projects/status/gaoh7j13rt38wmrs?svg=true)](https://ci.appveyor.com/project/bleissem/efcore-genericservices-hhf2h)
+
+
 [
 ![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)
 ](https://www.buymeacoffee.com/l709oYtzp)
