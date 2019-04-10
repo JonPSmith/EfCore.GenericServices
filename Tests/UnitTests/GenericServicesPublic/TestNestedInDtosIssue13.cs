@@ -6,6 +6,7 @@ using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -26,7 +27,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 var utData = context.SetupSingleDtoAndEntities<InContactAddressDto>();
                 utData.AddSingleDto<InAddressDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new InContactAddressDto

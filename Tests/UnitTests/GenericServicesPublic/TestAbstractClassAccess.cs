@@ -7,6 +7,7 @@ using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -33,7 +34,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SaveChanges();
 
                 var utData = context.SetupSingleDtoAndEntities<TestAbstractUpdateViaAutoMapper>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new TestAbstractUpdateViaAutoMapper {Id = 1, AbstractPropPublic = "Test"};
@@ -57,7 +58,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SaveChanges();
 
                 var utData = context.SetupSingleDtoAndEntities<TestAbstractUpdateViaMethod>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new TestAbstractUpdateViaMethod { Id = 1, AbstractPropPrivate = "Test" };
@@ -79,7 +80,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<TestAbstractCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(()=> new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new TestAbstractCreate
@@ -112,7 +113,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<DddCtorEntityAbstractMainDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DddCtorEntityAbstractMainDto()

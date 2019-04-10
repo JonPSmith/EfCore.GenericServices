@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
+using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Tests")]
@@ -23,7 +24,7 @@ namespace GenericServices.Internal.LinqBuilders
         //Also the dto and entity properties cannit be object, but dynamic works
 
         public static IStatusGeneric RunMethodViaLinq(MethodInfo methodInfo, dynamic dto, dynamic entity,
-            List<PropertyMatch> propertyMatches, DbContext context)
+            List<PropertyMatch> propertyMatches, DbContext context, ICreateNewDBContext createNewDBContext)
         {
             if (methodInfo.ReturnType == typeof(IStatusGeneric))
             {
@@ -41,7 +42,7 @@ namespace GenericServices.Internal.LinqBuilders
             }
 
             //Otherwise its an action
-            var action = CallMethodReturnVoid(methodInfo, dto.GetType(), entity.GetType(), propertyMatches);
+            var action = CallMethodReturnVoid(methodInfo, dto.GetType(), entity.GetType(), propertyMatches, createNewDBContext);
             if (propertyMatches.Any(x => x.MatchSource == MatchSources.DbContext))
             {
                 if (propertyMatches.Any())
@@ -80,13 +81,13 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
+        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, ICreateNewDBContext createNewDBContext)
         {
             return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(tDto), 
-                type => PrivateCallMethodReturnVoid(methodInfo, tDto, tEntity, propertyMatches));
+                type => PrivateCallMethodReturnVoid(methodInfo, tDto, tEntity, propertyMatches, createNewDBContext));
         }
 
-        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
+        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, ICreateNewDBContext createNewDBContext)
         {         
             var pIn = Expression.Parameter(tDto, "dto");
             var pCall = Expression.Parameter(tEntity, "method");
@@ -102,6 +103,7 @@ namespace GenericServices.Internal.LinqBuilders
                     args.Add(pContext);
                 }
             }
+
             var call = Expression.Call(pCall, methodInfo, args);
             var built = pContext == null
                 ? propertyMatches.Any()

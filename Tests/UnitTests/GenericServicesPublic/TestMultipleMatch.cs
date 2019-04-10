@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -32,7 +33,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<MultiMatchTestDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new MultiMatchTestDto {Id = 1, MyInt = 2, MyString = "Goodbye"};

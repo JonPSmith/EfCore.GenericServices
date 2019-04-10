@@ -64,14 +64,14 @@ namespace Tests.UnitTests.Performance
                 }
                 using (new TimeThings(_output, "CrudServices<TestDbContext>"))
                 {
-                    var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                    var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
                 }
 
                 using (new TimeThings(_output, "CrudServices<TestDbContext>", 1000))
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                        var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace Tests.UnitTests.Performance
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 using (new TimeThings(_output, "RunHandCoded Find", 1))
                 {
@@ -135,7 +135,7 @@ namespace Tests.UnitTests.Performance
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 using (new TimeThings(_output, "RunHandCoded ReadMany", 1))
                 {
@@ -183,7 +183,7 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
+                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 using (new TimeThings(_output, "RunHandCoded Create", 1))
                 {
@@ -201,7 +201,7 @@ namespace Tests.UnitTests.Performance
             {
                 context.WipeAllDataFromDatabase();
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
+                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 using (new TimeThings(_output, "RunGenericService Create", 100))
                 {
@@ -239,7 +239,7 @@ namespace Tests.UnitTests.Performance
             using (var context = new EfCoreContext(options1))
             {
                 var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
-                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
+                var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options1)));
                 using (new TimeThings(_output, "RunHandCoded AddReview", 1))
                 {
                     RunHandCodedAddReview(context);

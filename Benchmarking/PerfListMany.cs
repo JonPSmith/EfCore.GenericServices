@@ -65,7 +65,7 @@ namespace Benchmarking
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var service = new CrudServices<EfCoreContext>(context, _config);
+                var service = new CrudServices<EfCoreContext>(context, _config, new CreateNewDBContextHelper(() => new EfCoreContext(_options)));
 
                 //ATTEMPT
                 var books = service.ReadManyNoTracked<BookListDto>().ToList();

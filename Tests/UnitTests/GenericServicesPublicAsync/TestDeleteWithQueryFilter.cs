@@ -9,6 +9,7 @@ using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -33,7 +34,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 context.SoftDelEntities.Count().ShouldEqual(0);
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
@@ -74,7 +75,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 context.SoftDelEntities.Count().ShouldEqual(0);
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
@@ -115,7 +116,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 context.SoftDelEntities.Count().ShouldEqual(1);
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);

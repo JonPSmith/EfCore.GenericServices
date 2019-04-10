@@ -40,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SaveChanges();
 
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = Assert.Throws<DbUpdateException>(() =>
@@ -68,7 +68,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 service.CreateAndSave(new UniqueEntity { UniqueString = "Hello" });
@@ -95,7 +95,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SaveChanges();
 
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 entity.UniqueString = "Hello";
@@ -125,7 +125,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 entity.UniqueString = "Hello";
@@ -154,7 +154,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.Add(status.Result);
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var ex = Assert.Throws<DbUpdateException>(() => service.DeleteAndSave<Book>(firstBook.BookId));
@@ -183,7 +183,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     SaveChangesExceptionHandler = CatchUniqueError19
                 };
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 service.DeleteAndSave<Book>(firstBook.BookId);
@@ -223,7 +223,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     SaveChangesExceptionHandler = CatchUniqueError
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 try

@@ -11,6 +11,7 @@ using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
 using GenericServices.Internal.MappingCode;
+using GenericServices.Setup;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +28,8 @@ namespace GenericServices.PublicButHidden
         /// </summary>
         /// <param name="context"></param>
         /// <param name="configAndMapper"></param>
-        public CrudServicesAsync(DbContext context, IWrappedConfigAndMapper configAndMapper) : base(context, configAndMapper)
+        /// <param name="createNewDBContext"></param>
+        public CrudServicesAsync(DbContext context, IWrappedConfigAndMapper configAndMapper, ICreateNewDBContext createNewDBContext) : base(context, configAndMapper, createNewDBContext)
         {
             if (context == null)
                 throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
@@ -46,6 +48,7 @@ namespace GenericServices.PublicButHidden
     {
         private readonly TContext _context;
         private readonly IWrappedConfigAndMapper _configAndMapper;
+        private readonly ICreateNewDBContext _createNewDBContext;
 
         /// <inheritdoc />
         public DbContext Context => _context;
@@ -55,10 +58,11 @@ namespace GenericServices.PublicButHidden
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        public CrudServicesAsync(TContext context, IWrappedConfigAndMapper configAndMapper)
+        public CrudServicesAsync(TContext context, IWrappedConfigAndMapper configAndMapper, ICreateNewDBContext createNewDBContext)
         {
             _context = context;
             _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
+            _createNewDBContext = createNewDBContext ?? null;
         }
 
         /// <inheritdoc />
@@ -153,17 +157,20 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
-                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
-                var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
-                CombineStatuses(creator);
-                if (IsValid)
+                using (DbContext context = _createNewDBContext.CreateNew())
                 {
-                    _context.Add(entity);
-                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
-                        dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
+                    var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                    var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _configAndMapper, context);
+                    var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
+                    CombineStatuses(creator);
                     if (IsValid)
-                        entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    {
+                        _context.Add(entity);
+                        CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                            dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
+                        if (IsValid)
+                            entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
+                    }
                 }
             }
             return IsValid ? entityOrDto : null;
@@ -187,7 +194,7 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
+                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context, _createNewDBContext);
                 CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName, includes));
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(

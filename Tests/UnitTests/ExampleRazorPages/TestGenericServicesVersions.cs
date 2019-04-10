@@ -32,7 +32,7 @@ namespace Tests.UnitTests.ExampleRazorPages
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<CreateBookDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new CreateBookDto { Title = "Hello", Price = 50, PublishedOn = new DateTime(2010,1,1)};
@@ -60,7 +60,7 @@ namespace Tests.UnitTests.ExampleRazorPages
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<CreateBookDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new CreateBookDto { Title = "", Price = 50, PublishedOn = new DateTime(2010, 1, 1) };
@@ -84,7 +84,7 @@ namespace Tests.UnitTests.ExampleRazorPages
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<CreatorOfBooksDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new CreatorOfBooksDto
@@ -114,7 +114,7 @@ namespace Tests.UnitTests.ExampleRazorPages
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<CreatorOfBooksDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new CreatorOfBooksDto
@@ -144,7 +144,7 @@ namespace Tests.UnitTests.ExampleRazorPages
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<CreatorOfBooksDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new CreatorOfBooksDto();
@@ -169,7 +169,7 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new AddReviewDto {BookId = 1, NumStars = 2};
@@ -196,7 +196,7 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new AddRemovePromotionDto {BookId = 1, ActualPrice = 20, PromotionalText = "Half price today!"};
@@ -224,7 +224,7 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new AddRemovePromotionDto { BookId = 1, PromotionalText = "" };
@@ -249,7 +249,7 @@ namespace Tests.UnitTests.ExampleRazorPages
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 var dto = new AddRemovePromotionDto { BookId = 1, ActualPrice = 20, PromotionalText = "Half price today!" };
                 service.UpdateAndSave(dto);

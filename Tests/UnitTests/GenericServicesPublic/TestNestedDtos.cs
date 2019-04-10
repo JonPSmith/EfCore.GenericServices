@@ -32,7 +32,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 var utData = context.SetupSingleDtoAndEntities<BookListNestedV1Dto>();
                 utData.AddSingleDto<AuthorNestedV1Dto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookListNestedV1Dto>(1);
@@ -59,7 +59,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 var utData = context.SetupSingleDtoAndEntities<BookListNestedV2Dto>();
                 utData.AddSingleDto<AuthorNestedV2Dto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = service.ReadSingle<BookListNestedV2Dto>(1);
