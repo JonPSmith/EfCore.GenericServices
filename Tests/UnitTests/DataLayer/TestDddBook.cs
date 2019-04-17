@@ -187,7 +187,7 @@ namespace Tests.UnitTests.DataLayer
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var book = context.Books.AsNoTracking().Single(x => x.Reviews.Count() == 2);
+                var book = context.Books.Single(x => x.Reviews.Count() == 2);
                 book.RemoveReview(context.Set<Review>().First(), context);
                 context.SaveChanges();
 
