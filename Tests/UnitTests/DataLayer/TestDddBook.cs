@@ -150,7 +150,7 @@ namespace Tests.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestRemoveReviewBookOk()
+        public void TestRemoveReviewBookWithIncludeOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -170,6 +170,52 @@ namespace Tests.UnitTests.DataLayer
                 //VERIFY
                 book.Reviews.Count().ShouldEqual(1);
                 context.Set<Review>().Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestRemoveReviewBookNoExistingReviewsOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+
+            using (var context = new EfCoreContext(options))
+            {
+                //ATTEMPT
+                var book = context.Books.AsNoTracking().Single(x => x.Reviews.Count() == 2);
+                book.RemoveReview(context.Set<Review>().First(), context);
+                context.SaveChanges();
+
+                //VERIFY
+                context.Set<Review>().Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestRemoveReviewBookNotLinkedToBookOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+
+            using (var context = new EfCoreContext(options))
+            {
+                //ATTEMPT
+                var book = context.Books.First(x => !x.Reviews.Any());
+                var ex = Assert.Throws<InvalidOperationException>(() => 
+                    book.RemoveReview(context.Set<Review>().First(), context));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The review either hasn't got a valid primary key or was not linked to the Book.");
             }
         }
 
