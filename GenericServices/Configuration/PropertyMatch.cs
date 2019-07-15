@@ -20,6 +20,8 @@ namespace GenericServices.Configuration
     /// </summary>
     public class PropertyMatch
     {
+        internal static readonly PropertyMatch Empty = new PropertyMatch(false, TypeMatchLevels.NoMatch, null);
+
         /// <summary>
         /// Use "score >= PerfectMatchValue" to check if there is a perfect match
         /// </summary>

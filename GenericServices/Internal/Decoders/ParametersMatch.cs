@@ -48,7 +48,7 @@ namespace GenericServices.Internal.Decoders
                 if (bestMatch == null || bestMatch.Score < match.Score)
                     bestMatch = match;
             }
-            return bestMatch;
+            return bestMatch ?? PropertyMatch.Empty;
         }
 
     }
