@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>2.0.2</PackageVersion>
-    <Version>2.0.2</Version>
-    <AssemblyVersion>2.0.2.0</AssemblyVersion>
-    <FileVersion>2.0.2.0</FileVersion>
+    <PackageVersion>2.0.3</PackageVersion>
+    <Version>2.0.3</Version>
+    <AssemblyVersion>2.0.3.0</AssemblyVersion>
+    <FileVersion>2.0.3.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -18,7 +18,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Fix bug #18 - When no default matching ctor/method is found it outputs a list of possible options.
+      - Fix bug #31 - Now you can use a specific DbContext, e.g. EFCoreContext, in your DDD methods/ctors.
+      - Fix bug #30 - If DTO has no properties then it will give sensible error message.
     </PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
   </PropertyGroup>

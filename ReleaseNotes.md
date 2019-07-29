@@ -1,6 +1,11 @@
 # Release Notes
 
 
+## 2.0.3
+
+- Fix bug #31 - Now you can use a specific DbContext, e.g. EFCoreContext, in your DDD methods/ctors.
+- Fix bug #30 - If DTO has no properties then it will give sensible error message.
+
 ## 2.0.2
 
 - Fix bug #18 - When no default matching ctor/method is found it outputs a list of possible options.

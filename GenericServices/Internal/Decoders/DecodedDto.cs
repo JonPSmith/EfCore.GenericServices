@@ -48,6 +48,9 @@ namespace GenericServices.Internal.Decoders
                         BestPropertyMatch.FindMatch(x, entityInfo.PrimaryKeyProperties ).Score >= PropertyMatch.PerfectMatchValue))
                 .ToImmutableList();
 
+            if(!PropertyInfos.Any())
+                throw new InvalidOperationException("A DTO using the ILinkToEntity<T> must contain at least one Property!");
+
             if (entityInfo.CanBeUpdatedViaMethods)
                 _matchedSetterMethods = PreloadPossibleMethodCtorMatches(MatchMethodsToProperties(entityInfo), 
                     new DecodeName(_perDtoConfig?.UpdateMethod), null);
