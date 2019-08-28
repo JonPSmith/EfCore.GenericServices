@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -43,8 +44,8 @@ namespace GenericServices.PublicButHidden
     /// You need to define the DbContext you need to carry out the CRUD actions 
     /// You should use this with dependency injection to get an instance of the sync CrudServices
     /// </summary>
-    public class CrudServices<TContext> : 
-        StatusGenericHandler, 
+    public class CrudServices<TContext> :
+        StatusGenericHandler,
         ICrudServices<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
@@ -69,7 +70,7 @@ namespace GenericServices.PublicButHidden
 
         /// <inheritdoc />
         public T ReadSingle<T>(params object[] keys) where T : class
-        {    
+        {
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityStyle == EntityStyles.DbQuery)
@@ -82,7 +83,7 @@ namespace GenericServices.PublicButHidden
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
                 var projector = new CreateMapper(_context, _configAndMapper, typeof(T), entityInfo);
-                result = ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
+                result = ((IQueryable<T>)projector.Accessor.GetViaKeysWithProject(keys)).SingleOrDefault();
             }
 
             if (result != null) return result;
@@ -137,7 +138,7 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public IQueryable<TDto> ProjectFromEntityToDto<TEntity,TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query) where TEntity : class
+        public IQueryable<TDto> ProjectFromEntityToDto<TEntity, TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query) where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             return query(entityInfo.GetReadableEntity<TEntity>(_context))
@@ -190,26 +191,11 @@ namespace GenericServices.PublicButHidden
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
 
-			// NTW
-			foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
-			{
-				Type entityType = propertyInfo.PropertyType;
+            CheckIncludes<T>(entityOrDto, includes?.Select(x => x.ToFullMemberNameString().Split('.').First()).ToList());
 
-				Type interfaceType = entityType.GetInterface("ILinkToEntity`1");
-				if (interfaceType != null)
-				{
-					entityType = interfaceType.GenericTypeArguments.FirstOrDefault() ?? entityType;
-				}
-
-				string[] includesString = includes.Select(x => x.ToFullMemberNameString().Split('.').First()).ToArray();
-
-				if (this.Context.Model.FindEntityType(entityType) != null && (includes == null || !includesString.Contains(propertyInfo.Name)))
-					propertyInfo.SetValue(entityOrDto, null);
-			}
-
-			if (entityInfo.EntityType == typeof(T))
+            if (entityInfo.EntityType == typeof(T))
             {
-				if (!_context.Entry(entityOrDto).IsKeySet)
+                if (!_context.Entry(entityOrDto).IsKeySet)
                     throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
@@ -227,12 +213,53 @@ namespace GenericServices.PublicButHidden
             }
         }
 
+        internal void CheckIncludes<T>(T entityOrDto, List<string> includesStrings)
+        {
+            if (entityOrDto == null)
+                return;
+
+            // NTW
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+            {
+                Type entityType = propertyInfo.PropertyType;
+
+                if(entityType.Name.Equals(typeof(ICollection<>).Name) && entityType.IsGenericType)
+                {
+                    entityType = entityType.GetGenericArguments().First();
+                }
+
+                Type interfaceType = entityType.GetInterface(typeof(ILinkToEntity<>).Name);
+                if (interfaceType != null)
+                {
+                    entityType = interfaceType.GenericTypeArguments.FirstOrDefault() ?? entityType;
+                }
+
+                if (this.Context.Model.FindEntityType(entityType) != null && (includesStrings == null || !includesStrings.Contains(propertyInfo.Name)))
+                    propertyInfo.SetValue(entityOrDto, null);
+                else if (this.Context.Model.FindEntityType(entityType) != null)
+                {
+                    List<object> args = new List<object>();
+                    args.Add(propertyInfo.GetValue(entityOrDto));
+                    args.Add(includesStrings.Where(x => x.StartsWith(propertyInfo.Name)).Select(x => String.Join(".", x.Split('.').Skip(1))).Where(x => !String.IsNullOrEmpty(x)).ToList());
+
+                    this.GetType().GetMethod("CheckIncludes", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(propertyInfo.PropertyType).Invoke(this, args.ToArray());
+                }
+            }
+        }
+
         /// <inheritdoc />
         public void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, params Expression<Func<TDto, object>>[] includes) where TDto : class where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TDto));
 
-            var entity = _context.Set<TEntity>().Find(entityOrDto.GetType().GetProperty(entityInfo.PrimaryKeyProperties[0].Name).GetValue(entityOrDto));
+            object[] idPropertyValues = new object[entityInfo.PrimaryKeyProperties.Count];
+
+            int idx = -1;
+
+            entityInfo.PrimaryKeyProperties.ForEach(kP => idPropertyValues[++idx] = entityOrDto.GetType().GetProperty(kP.Name).GetValue(entityOrDto));
+
+            var entity = _context.Set<TEntity>().Find(idPropertyValues);
+
             CombineStatuses(runBeforeUpdate(_context, entity));
             if (!IsValid) return;
 
@@ -259,7 +286,7 @@ namespace GenericServices.PublicButHidden
 
         /// <inheritdoc />
         public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
-        {         
+        {
             return LocalUpdateAndSave(patch, () => _context.Find<TEntity>(keys));
         }
 
