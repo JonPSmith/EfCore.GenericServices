@@ -191,7 +191,7 @@ namespace GenericServices.PublicButHidden
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
 
-            CheckIncludes<T>(entityOrDto, includes?.Select(x => x.ToFullMemberNameString().Split('.').First()).ToList());
+            CheckIncludes(entityOrDto, includes?.Select(x => x.ToFullMemberNameString().Split('.').First()).ToList(), new List<Type>());
 
             if (entityInfo.EntityType == typeof(T))
             {
@@ -213,10 +213,12 @@ namespace GenericServices.PublicButHidden
             }
         }
 
-        internal void CheckIncludes<T>(T entityOrDto, List<string> includesStrings)
+        internal void CheckIncludes<T>(T entityOrDto, List<string> includesStrings, List<Type> alreadyUsedObjects)
         {
             if (entityOrDto == null)
                 return;
+
+            alreadyUsedObjects.Add(typeof(T));
 
             // NTW
             foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
@@ -234,13 +236,14 @@ namespace GenericServices.PublicButHidden
                     entityType = interfaceType.GenericTypeArguments.FirstOrDefault() ?? entityType;
                 }
 
-                if (this.Context.Model.FindEntityType(entityType) != null && (includesStrings == null || !includesStrings.Contains(propertyInfo.Name)))
+                if (this.Context.Model.FindEntityType(entityType) != null && (includesStrings == null || !includesStrings.Contains(propertyInfo.Name)) && !alreadyUsedObjects.Contains(entityType))
                     propertyInfo.SetValue(entityOrDto, null);
-                else if (this.Context.Model.FindEntityType(entityType) != null)
+                else if (this.Context.Model.FindEntityType(entityType) != null && !alreadyUsedObjects.Contains(entityType))
                 {
                     List<object> args = new List<object>();
                     args.Add(propertyInfo.GetValue(entityOrDto));
                     args.Add(includesStrings.Where(x => x.StartsWith(propertyInfo.Name)).Select(x => String.Join(".", x.Split('.').Skip(1))).Where(x => !String.IsNullOrEmpty(x)).ToList());
+                    args.Add(alreadyUsedObjects);
 
                     this.GetType().GetMethod("CheckIncludes", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(propertyInfo.PropertyType).Invoke(this, args.ToArray());
                 }
