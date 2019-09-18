@@ -191,7 +191,7 @@ namespace GenericServices.PublicButHidden
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
 
-            CheckIncludes(entityOrDto, includes?.Select(x => x.ToFullMemberNameString().Split('.').First()).ToList(), new List<Type>());
+            CheckIncludes(entityOrDto, includes?.Select(x => x.ToFullMemberNameString()).ToList(), new List<Type>());
 
             if (entityInfo.EntityType == typeof(T))
             {
