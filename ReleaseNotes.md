@@ -8,7 +8,7 @@
    - Bug fix: GetAllErrors() in CompareEfSql should use Environment.NewLine.
    - Style fix: Separator only has one E in it #35
 - Make it a dual NetStandard2.0/NetStandard2.1 NET package:
-   - Select new NuGet packages (note: change to Microsoft.Data.SqlClient in Test).
+   - Select new 3.0 NuGet packages: including TestSupport (note: change to Microsoft.Data.SqlClient in Test).
    - Use of DbQuery: DbQuery<T> -> DbSet<T> + .HasNoKey() and .IsQuery -> .FindPrimaryKey() == null
    - RazorPageApp: Convert to AspNetCore 3.0
    - BenchMarking: Make multi-target - see https://github.com/dotnet/BenchmarkDotNet/issues/1056
