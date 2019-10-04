@@ -1,6 +1,36 @@
 # Release Notes
 
 
+## Note to self
+
+GenericServices doesn't call access methods in classes which the top class inherits. e.g. in the example code below GenericServices would NOT call the method `InnerMethod`. This is different to properties, which reflection will find.
+
+```c#
+class Outer : Inner
+{
+	public int OuterInt {get; set;}
+	public void OuterMethod (){}
+}
+
+class Inner 
+{
+	public int InnerInt { get; set; }
+	public void InnerMethod() { }
+}
+```
+
+This code could be added to the `DecodedEntityClass` class to correct this, but I'm haven't added this yet. 
+
+```c#
+	methodsToInspect = FindAllMethodsInType(entityType);
+	var inherited = entityType.BaseType;
+	while(inherited != typeof(object))
+	{
+       methodsToInspect.AddRange(FindAllMethodsInType(inherited));
+		inherited = inherited.BaseType;
+	}
+```
+
 ## TODO
 
 - Apply to NetStandard2.0 and NetStandard2.1
