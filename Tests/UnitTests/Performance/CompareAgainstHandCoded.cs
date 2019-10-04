@@ -134,7 +134,7 @@ namespace Tests.UnitTests.Performance
 
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupEntitiesDirect();
+                var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
 
                 using (new TimeThings(_output, "RunHandCoded ReadMany", 1))
