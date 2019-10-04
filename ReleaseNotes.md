@@ -1,6 +1,18 @@
 # Release Notes
 
 
+## TODO
+
+- Apply to NetStandard2.0 and NetStandard2.1
+   - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
+   - Bug fix: GetAllErrors() in CompareEfSql should use Environment.NewLine.
+   - Style fix: Separator only has one E in it #35
+- Make it a dual NetStandard2.0/NetStandard2.1 NET package:
+   - Select new NuGet packages (note: change to Microsoft.Data.SqlClient in Test).
+   - Use of DbQuery: DbQuery<T> -> DbSet<T> + .HasNoKey() and .IsQuery -> .FindPrimaryKey() == null
+   - RazorPageApp: Convert to AspNetCore 3.0
+   - BenchMarking: Make multi-target - see https://github.com/dotnet/BenchmarkDotNet/issues/1056
+
 ## 2.0.3
 
 - Fix bug #31 - Now you can use a specific DbContext, e.g. EFCoreContext, in your DDD methods/ctors.
