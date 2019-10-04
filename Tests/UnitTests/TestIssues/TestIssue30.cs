@@ -23,7 +23,7 @@ namespace Tests.UnitTests.TestIssues
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<ImutableDto>());
 
                 //VERIFY
-                ex.Message.ShouldEqual("A DTO using the ILinkToEntity<T> must contain at least one Property!");
+                ex.Message.ShouldEqual("The ImutableDto class inherits ILinkToEntity<T> but has no properties in it!");
             }
         }
 

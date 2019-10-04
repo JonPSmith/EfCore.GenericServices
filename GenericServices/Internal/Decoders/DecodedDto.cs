@@ -49,7 +49,7 @@ namespace GenericServices.Internal.Decoders
                 .ToImmutableList();
 
             if(!PropertyInfos.Any())
-                throw new InvalidOperationException("A DTO using the ILinkToEntity<T> must contain at least one Property!");
+                throw new InvalidOperationException($"The {DtoType.Name} class inherits ILinkToEntity<T> but has no properties in it!");
 
             if (entityInfo.CanBeUpdatedViaMethods)
                 _matchedSetterMethods = PreloadPossibleMethodCtorMatches(MatchMethodsToProperties(entityInfo), 
