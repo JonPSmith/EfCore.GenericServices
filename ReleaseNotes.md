@@ -13,6 +13,10 @@
    - RazorPageApp: Convert to AspNetCore 3.0
    - BenchMarking: Make multi-target - see https://github.com/dotnet/BenchmarkDotNet/issues/1056
 
+## 2.1.0-preview001
+
+- Special release for @adria3a3 and co to check that AutoMapper 9 now works with this library.
+
 ## 2.0.3
 
 - Fix bug #31 - Now you can use a specific DbContext, e.g. EFCoreContext, in your DDD methods/ctors.
