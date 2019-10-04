@@ -5,7 +5,7 @@
 
 - Apply to NetStandard2.0 and NetStandard2.1
    - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
-   - Bug fix: GetAllErrors() in CompareEfSql should use Environment.NewLine.
+   - Bug fix: GetAllErrors() should use Environment.NewLine.
    - Style fix: Separator only has one E in it #35
 - Make it a dual NetStandard2.0/NetStandard2.1 NET package:
    - Select new 3.0 NuGet packages: including TestSupport (note: change to Microsoft.Data.SqlClient in Test).

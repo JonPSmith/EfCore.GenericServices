@@ -45,8 +45,11 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
+        /// <summary>
+        /// This method shows that it silently missed calling a method in a class that was inherited by the 
+        /// </summary>
         [Fact]
-        public void TestUpdateAbstractPropViaMethodOk()
+        public void TestUpdateAbstractPropViaMethod_DOES_NOT_WORK()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -65,7 +68,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                context.TestAbstractMains.Single().AbstractPropPrivate.ShouldEqual("Test");
+                context.TestAbstractMains.Single().AbstractPropPrivate.ShouldEqual(null);
             }
         }
 

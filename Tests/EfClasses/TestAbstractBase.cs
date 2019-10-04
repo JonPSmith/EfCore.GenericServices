@@ -17,6 +17,7 @@ namespace Tests.EfClasses
 
         public string AbstractPropPublic { get; set; }
 
+        //NOTE: This method cannot (at the moment) be called by GenericServices - if this is an issue it is possible to fix it.
         public void SetAbstractPropPrivate(string abstractPropPrivate)
         {
             AbstractPropPrivate = abstractPropPrivate;
