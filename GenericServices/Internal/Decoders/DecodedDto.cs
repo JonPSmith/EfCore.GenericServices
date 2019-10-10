@@ -39,8 +39,8 @@ namespace GenericServices.Internal.Decoders
             _matcher = new MethodCtorMatcher(publicConfig.NameMatcher);
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
-            if (entityInfo.EntityStyle == EntityStyles.DbQuery)
-                //If DbQuery then exit immediately as properties etc 
+            if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
+                //If HasNoKey then exit immediately as properties etc 
                 return;
 
             PropertyInfos = dtoType.GetProperties()

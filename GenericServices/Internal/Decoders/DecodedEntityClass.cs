@@ -26,8 +26,8 @@ namespace GenericServices.Internal.Decoders
         NotUpdatable,
         [Display(Description = "The entity cannot be created or updated, but it can be read or deleted.")]
         ReadOnly,
-        [Display(Description = "This is a DbQuery which can only be read.")]
-        DbQuery
+        [Display(Description = "This entity has no primary key, so its read-only.")]
+        HasNoKey
     }
 
     internal class DecodedEntityClass
@@ -58,10 +58,10 @@ namespace GenericServices.Internal.Decoders
                                                     " The class must be either be an entity class derived from the GenericServiceDto/Async class.");
             }
 
-            if (efType.IsQueryType)
+            if (efType.FindPrimaryKey() == null)
             {
-                //QueryType is read only, so we don't do any further setup
-                EntityStyle = EntityStyles.DbQuery;
+                //Read only, so we don't do any further setup
+                EntityStyle = EntityStyles.HasNoKey;
                 return;
             }
 
@@ -117,9 +117,13 @@ namespace GenericServices.Internal.Decoders
 
         public IQueryable<T> GetReadableEntity<T>(DbContext content) where T : class
         {
-            return EntityStyle == EntityStyles.DbQuery
+#if NETSTANDARD2_0
+            return EntityStyle == EntityStyles.HasNoKey
                 ? content.Query<T>().AsQueryable()
                 : content.Set<T>().AsQueryable();
+#elif NETSTANDARD2_1
+            return content.Set<T>().AsQueryable();
+#endif
         }
 
         /// <summary>
@@ -128,7 +132,7 @@ namespace GenericServices.Internal.Decoders
         /// <param name="cudType">either create, update or delete</param>
         public void CheckCanDoOperation(CrudTypes cudType)
         {
-            if (EntityStyle == EntityStyles.DbQuery || (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
+            if (EntityStyle == EntityStyles.HasNoKey || (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
                 throw new InvalidOperationException($"The class {EntityType.Name} of style {EntityStyle} cannot be used in {cudType}.");
 
         }

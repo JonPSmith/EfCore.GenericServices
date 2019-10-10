@@ -228,7 +228,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
-                var logs = context.SetupLogging();
 
                 //ATTEMPT
                 var author = new Author {AuthorId = 1, Name = "New Name", Email = unique};

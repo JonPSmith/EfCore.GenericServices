@@ -43,6 +43,13 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
    - RazorPageApp: Convert to AspNetCore 3.0
    - BenchMarking: Make multi-target - see https://github.com/dotnet/BenchmarkDotNet/issues/1056
 
+## 3.0.0
+
+- Support both EF Core 2.? and EF Core 3.? by supporting NetStandard2.0 and NetStandard2.1.
+- Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
+- Bug fix: GetAllErrors() should use Environment.NewLine.
+- Style fix: Separator only has one E in it #35
+
 ## 2.1.0-preview001
 
 - Special release for @adria3a3 and co to check that AutoMapper 9 now works with this library.

@@ -65,7 +65,7 @@ namespace GenericServices.PublicButHidden
         {    
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
-            if (entityInfo.EntityStyle == EntityStyles.DbQuery)
+            if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
                 throw new InvalidOperationException($"The class {entityInfo.EntityType.Name} of style {entityInfo.EntityStyle} cannot be used in a Find.");
             if (entityInfo.EntityType == typeof(T))
             {
