@@ -144,16 +144,20 @@ namespace Tests.UnitTests.GenericServicesSetup
         public async Task TestDeleteNoSqlErrorHandler()
         {
             //SETUP  
+            Book firstBook;
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-                var firstBook = context.Books.First();
+                firstBook = context.Books.First();
                 var status = Order.CreateOrder("J", DateTime.Today,
                     new List<OrderBooksDto> { new OrderBooksDto(firstBook.BookId, firstBook, 1) });
                 context.Add(status.Result);
-
+                context.SaveChanges();
+            }
+            using (var context = new EfCoreContext(options))
+            {
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -169,16 +173,20 @@ namespace Tests.UnitTests.GenericServicesSetup
         public async Task TestDeleteCatchSqlErrorTurnedOn()
         {
             //SETUP  
+            Book firstBook;
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-                var firstBook = context.Books.First();
+                firstBook = context.Books.First();
                 var status = Order.CreateOrder("J", DateTime.Today,
-                    new List<OrderBooksDto> { new OrderBooksDto(firstBook.BookId, firstBook, 1) });
+                    new List<OrderBooksDto> {new OrderBooksDto(firstBook.BookId, firstBook, 1)});
                 context.Add(status.Result);
-
+                context.SaveChanges();
+            }
+            using (var context = new EfCoreContext(options))
+            {
                 var config = new GenericServicesConfig()
                 {
                     SaveChangesExceptionHandler = CatchUniqueError19
