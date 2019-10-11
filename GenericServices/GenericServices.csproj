@@ -41,6 +41,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
+      - Support both EF Core >=2.1 and EF Core >=3.0 by supporting NetStandard2.0 and NetStandard2.1.
       - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
       - Bug fix: GetAllErrors() should use Environment.NewLine.
       - Style fix: Separator only has one E in it #35

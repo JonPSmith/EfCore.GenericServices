@@ -1,7 +1,6 @@
 # Release Notes
 
-
-## Note to self
+## TODO
 
 GenericServices doesn't call access methods in classes which the top class inherits. e.g. in the example code below GenericServices would NOT call the method `InnerMethod`. This is different to properties, which reflection will find.
 
@@ -31,21 +30,9 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
 	}
 ```
 
-## TODO
-
-- Apply to NetStandard2.0 and NetStandard2.1
-   - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
-   - Bug fix: GetAllErrors() should use Environment.NewLine.
-   - Style fix: Separator only has one E in it #35
-- Make it a dual NetStandard2.0/NetStandard2.1 NET package:
-   - Select new 3.0 NuGet packages: including TestSupport (note: change to Microsoft.Data.SqlClient in Test).
-   - Use of DbQuery: DbQuery<T> -> DbSet<T> + .HasNoKey() and .IsQuery -> .FindPrimaryKey() == null
-   - RazorPageApp: Convert to AspNetCore 3.0
-   - BenchMarking: Make multi-target - see https://github.com/dotnet/BenchmarkDotNet/issues/1056
-
 ## 3.0.0
 
-- Support both EF Core 2.? and EF Core 3.? by supporting NetStandard2.0 and NetStandard2.1.
+- Support both EF Core >=2.1 and EF Core >=3.0 by supporting NetStandard2.0 and NetStandard2.1.
 - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
 - Bug fix: GetAllErrors() should use Environment.NewLine.
 - Style fix: Separator only has one E in it #35
