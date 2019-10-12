@@ -8,7 +8,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="EfCore.TestSupport" Version="3.0.0-preview002" />
+    <PackageReference Include="EfCore.TestSupport" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.0.19269.1" />
@@ -20,7 +20,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="EfCore.TestSupport" Version="3.0.0-preview002" />
+    <PackageReference Include="EfCore.TestSupport" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />

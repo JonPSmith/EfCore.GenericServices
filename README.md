@@ -2,7 +2,7 @@
 ![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)
 ](https://www.buymeacoffee.com/l709oYtzp)
 
-**Now supports JSON Patch updates.**
+**Now supports EF Core >=3.0 (as well as EF Core >=2.1)**
 
 # EfCore.GenericServices
 
