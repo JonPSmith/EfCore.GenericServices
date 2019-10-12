@@ -46,6 +46,7 @@
       - Bug fix: GetAllErrors() should use Environment.NewLine.
       - Style fix: Separator only has one E in it #35
     </PackageReleaseNotes>
+    <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
   </PropertyGroup>
 
