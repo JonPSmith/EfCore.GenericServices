@@ -6,6 +6,7 @@ using System.Linq;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Tests.Dtos;
+using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -48,8 +49,45 @@ namespace Tests.UnitTests.GenericServicesPublic
 			}
 		}
 
+		//This works great - awesome
 		[Fact]
 		public void TestInDtosNestedOk2()
+		{
+			//SETUP
+			var options = SqliteInMemory.CreateOptions<TestDbContext>();
+			using (var context = new TestDbContext(options))
+			{
+				context.Database.EnsureCreated();
+
+				var utData = context.SetupSingleDtoAndEntities<InContactAddressDto>();
+				utData.AddSingleDto<InAddressDto>();
+				var service = new CrudServices(context, utData.ConfigAndMapper);
+
+				//ATTEMPT
+				var dto = new ContactAddress
+				{
+					Name = "test",
+					Address = new AddressNotOwned
+					{
+						Address1 = "some street"
+					}
+				};
+				service.CreateAndSave(dto);
+
+				//VERIFY
+				service.IsValid.ShouldBeTrue(service.GetAllErrors());
+				var contact = context.ContactAddresses.SingleOrDefault();
+				contact.Name.ShouldEqual("test");
+
+				List<ContactAddress> resp = service.ReadManyNoTracked<ContactAddress>().Where(x => x.Address.Address1 == "some street").ToList();
+
+				resp.ForEach(x => x.Address.Address1.ShouldEqual("some street"));
+			}
+		}
+
+		//This doesn't work as expected
+		[Fact]
+		public void TestInDtosNestedOk3()
 		{
 			//SETUP
 			var options = SqliteInMemory.CreateOptions<TestDbContext>();
