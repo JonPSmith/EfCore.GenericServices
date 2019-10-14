@@ -13,39 +13,39 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesPublic
 {
-    public class TestNestedInDtosIssue13
-    {
+	public class TestNestedInDtosIssue13
+	{
 
-        [Fact]
-        public void TestInDtosNestedOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<TestDbContext>();
-            using (var context = new TestDbContext(options))
-            {
-                context.Database.EnsureCreated();
+		[Fact]
+		public void TestInDtosNestedOk()
+		{
+			//SETUP
+			var options = SqliteInMemory.CreateOptions<TestDbContext>();
+			using (var context = new TestDbContext(options))
+			{
+				context.Database.EnsureCreated();
 
-                var utData = context.SetupSingleDtoAndEntities<InContactAddressDto>();
-                utData.AddSingleDto<InAddressDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+				var utData = context.SetupSingleDtoAndEntities<InContactAddressDto>();
+				utData.AddSingleDto<InAddressDto>();
+				var service = new CrudServices(context, utData.ConfigAndMapper);
 
-                //ATTEMPT
-                var dto = new InContactAddressDto
-                {
-                    Name = "test",
-                    Addess = new InAddressDto
-                    {
-                        Address1 = "some street"
-                    }
-                };
-                service.CreateAndSave(dto);
+				//ATTEMPT
+				var dto = new InContactAddressDto
+				{
+					Name = "test",
+					Addess = new InAddressDto
+					{
+						Address1 = "some street"
+					}
+				};
+				service.CreateAndSave(dto);
 
-                //VERIFY
-                service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                var contact = context.ContactAddresses.SingleOrDefault();
-                contact.Name.ShouldEqual("test");
-                contact.Address.Address1.ShouldEqual("some street");
-            }
+				//VERIFY
+				service.IsValid.ShouldBeTrue(service.GetAllErrors());
+				var contact = context.ContactAddresses.SingleOrDefault();
+				contact.Name.ShouldEqual("test");
+				contact.Address.Address1.ShouldEqual("some street");
+			}
 		}
 
 		[Fact]
@@ -77,9 +77,9 @@ namespace Tests.UnitTests.GenericServicesPublic
 				var contact = context.ContactAddresses.SingleOrDefault();
 				contact.Name.ShouldEqual("test");
 
-				IList<InContactAddressDto> resp = service.ReadManyNoTracked<InContactAddressDto>().Where(x => x.Addess.Address1 == "some street").ToList();
+				List<InContactAddressDto> resp = service.ReadManyNoTracked<InContactAddressDto>().Where(x => x.Addess.Address1 == "some street").ToList();
 
-				contact.Address.Address1.ShouldEqual("some street");
+				resp.ForEach(x => x.Addess.Address1.ShouldEqual("some street"));
 			}
 		}
 	}
