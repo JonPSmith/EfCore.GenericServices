@@ -40,10 +40,10 @@ namespace GenericServices.Internal.MappingCode
         /// <param name="dto"></param>
         /// <param name="dtoInfo"></param>
         /// <returns></returns>
-        public static object[] GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, DecodedDto dtoInfo)
+        public static Dictionary<string, object> GetKeysFromDtoInCorrectOrder<TDto>(this DbContext context, TDto dto, DecodedDto dtoInfo)
             where TDto : class
         {
-            var keys = new List<object>();
+            var keys = new Dictionary<string, object>();
 
             foreach (var entityKey in context.Model.FindEntityType(dtoInfo.LinkedEntityInfo.EntityType).FindPrimaryKey().Properties)
             {
@@ -51,10 +51,10 @@ namespace GenericServices.Internal.MappingCode
                 if (dtoKeyProperty == null)
                     throw new InvalidOperationException($"The DTO/VM class {typeof(TDto).Name} does not contain the primary key {entityKey.Name}."+
                                                         " You have to include every part of a primary key in the DTO for this service to work.");
-                keys.Add(dtoKeyProperty.PropertyInfo.GetValue(dto));
+                keys.Add(dtoKeyProperty.PropertyInfo.Name, dtoKeyProperty.PropertyInfo.GetValue(dto));
             }
 
-            return keys.ToArray();
+            return keys;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = await service.ProjectFromEntityToDto<Book,BookTitle>(x => x.Where(y => y.BookId == 1)).SingleAsync();
@@ -66,7 +66,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<SoftDelEntityDto>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 context.SoftDelEntities.Count().ShouldEqual(0);
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);

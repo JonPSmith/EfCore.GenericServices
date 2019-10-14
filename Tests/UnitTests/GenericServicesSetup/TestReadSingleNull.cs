@@ -35,7 +35,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(bookId);
@@ -60,7 +60,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(_configNoError);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(bookId);
@@ -84,7 +84,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(x => x.BookId == bookId);
@@ -109,7 +109,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(_configNoError);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = service.ReadSingle<Book>(x => x.BookId == bookId);
@@ -137,7 +137,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(bookId);
@@ -162,7 +162,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(_configNoError);
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(bookId);
@@ -186,7 +186,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == bookId);
@@ -211,7 +211,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>(_configNoError);
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var book = await service.ReadSingleAsync<Book>(x => x.BookId == bookId);

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -28,7 +29,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 service.CreateAndSave(new NormalEntity {MyString = "bad word"});
@@ -56,7 +57,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     BeforeSaveChanges = FailOnBadWord
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 service.CreateAndSave(new NormalEntity { MyString = "good word" });
@@ -84,7 +85,7 @@ namespace Tests.UnitTests.GenericServicesSetup
                     BeforeSaveChanges = FailOnBadWord
                 };
                 var utData = context.SetupSingleDtoAndEntities<UniqueWithConfigDto>(config);
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 service.CreateAndSave(new NormalEntity { MyString = "bad word" });

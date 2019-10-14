@@ -11,6 +11,7 @@ using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -45,7 +46,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 using (new TimeThings(_output, "CreateAndSave"))
@@ -76,7 +77,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new AuthorDto {Name = "New Name", Email = unique};
@@ -99,7 +100,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 var utData = context.SetupSingleDtoAndEntities<AuthorDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var author = new AuthorDto { Name = "New Name", Email = unique };
@@ -129,7 +130,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             {              
                 var utData = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = new AuthorNameDto { Name = "New Name" };
@@ -157,7 +158,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<NormalEntityKeyPrivateSetDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new NormalEntityKeyPrivateSetDto();
@@ -193,7 +194,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 using (new TimeThings(_output, "CreateAndSave"))
@@ -226,7 +227,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
@@ -256,7 +257,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DddCompositeIntStringCreateDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DddCompositeIntStringCreateDto { MyString = "Hello", MyInt = 1 };
@@ -280,7 +281,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DtoCtorCreate { MyInt = 123, MyString = "Hello" };
@@ -310,7 +311,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreateBad>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DtoCtorCreateBad { };
@@ -343,7 +344,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = "Hello"};
@@ -373,7 +374,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var dto = new DtoStaticCreate { MyInt = 1, MyString = null };

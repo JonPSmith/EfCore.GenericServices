@@ -8,6 +8,8 @@ using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using GenericServices.Setup;
 
 namespace GenericServices.Internal.MappingCode
 {
@@ -18,21 +20,24 @@ namespace GenericServices.Internal.MappingCode
         private readonly DecodedEntityClass _entityInfo;
         private readonly IWrappedConfigAndMapper _configAndMapper;
         private readonly DbContext _context;
+        private readonly IDbContextService _createNewDBContext;
 
-        public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context)
+        public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context, IDbContextService createNewDBContext)
         {
             _dtoInfo = dtoInfo ?? throw new ArgumentNullException(nameof(dtoInfo));
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
             _configAndMapper = configAndMapper ?? throw new ArgumentNullException(nameof(configAndMapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _createNewDBContext = createNewDBContext ?? null;
         }
 
-        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName)
+        public IStatusGeneric ReadEntityAndUpdateViaDto(TDto dto, string methodName, params Expression<Func<TDto, object>>[] includes)
         {
             //first we need to load it 
             var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
             var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
-            var entity = mapper.Accessor.ReturnExistingEntity(keys);
+
+            var entity = mapper.Accessor.ReturnExistingEntity(keys, includes);
             if (entity == null)
                 return new StatusGenericHandler()
                     .AddError(
@@ -53,7 +58,7 @@ namespace GenericServices.Internal.MappingCode
 
                 //This runs the method via LINQ
                 return BuildCall.RunMethodViaLinq(methodToUse.Method, 
-                    dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _context);
+                    dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _context, _createNewDBContext);
             }
 
             if (_entityInfo.CanBeUpdatedViaProperties)

@@ -2,14 +2,18 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Configuration.Internal;
+using GenericServices.ExtensionMethods;
 using GenericServices.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
 using GenericServices.Internal.MappingCode;
+using GenericServices.Setup;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +30,8 @@ namespace GenericServices.PublicButHidden
         /// </summary>
         /// <param name="context"></param>
         /// <param name="configAndMapper"></param>
-        public CrudServices(DbContext context, IWrappedConfigAndMapper configAndMapper) : base(context, configAndMapper)
+		/// <param name="createNewDBContext"></param>
+		public CrudServices(DbContext context, IWrappedConfigAndMapper configAndMapper, IDbContextService createNewDBContext) : base(context, configAndMapper, createNewDBContext)
         {
             if (context == null)
                 throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
@@ -45,6 +50,7 @@ namespace GenericServices.PublicButHidden
     {
         private readonly TContext _context;
         private readonly IWrappedConfigAndMapper _configAndMapper;
+		private readonly IDbContextService _createNewDBContext;
 
         /// <inheritdoc />
         public DbContext Context => _context;
@@ -54,10 +60,12 @@ namespace GenericServices.PublicButHidden
         /// </summary>
         /// <param name="context"></param>
         /// <param name="configAndMapper"></param>
-        public CrudServices(TContext context, IWrappedConfigAndMapper configAndMapper)
+		/// <param name="createNewDBContext"></param>
+		public CrudServices(TContext context, IWrappedConfigAndMapper configAndMapper, IDbContextService createNewDBContext)
         {
             _context = context;
             _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
+			_createNewDBContext = createNewDBContext;
         }
 
         /// <inheritdoc />
@@ -151,6 +159,8 @@ namespace GenericServices.PublicButHidden
             }
             else
             {
+				using (DbContext context = _createNewDBContext.CreateNew())
+				{
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
@@ -163,15 +173,25 @@ namespace GenericServices.PublicButHidden
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
+			}
             return IsValid ? entityOrDto : null;
         }
 
         /// <inheritdoc />
-        public void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class
+		public void UpdateAndSave<T>(T entityOrDto, params Expression<Func<T, object>>[] includes) where T : class
         {
+			UpdateAndSave(entityOrDto, methodName: null, includes: includes);
+		}
+
+		/// <inheritdoc />
+		public void UpdateAndSave<T>(T entityOrDto, string methodName, params Expression<Func<T, object>>[] includes) where T : class
+		{
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+
+			CheckIncludes(entityOrDto, includes?.Select(x => x.ToFullMemberNameString()).ToList(), new List<Type>());
+
             if (entityInfo.EntityType == typeof(T))
             {
                 if (!_context.Entry(entityOrDto).IsKeySet)
@@ -184,15 +204,89 @@ namespace GenericServices.PublicButHidden
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
-                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
-                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
+				var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context, _createNewDBContext);
+				CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName, includes));
                 if (IsValid)
                     CombineStatuses(_context.SaveChangesWithOptionalValidation(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
             }
         }
 
+		internal void CheckIncludes<T>(T entityOrDto, List<string> includesStrings, List<Type> alreadyUsedObjects)
+		{
+			if (entityOrDto == null)
+				return;
+
+			alreadyUsedObjects.Add(typeof(T));
+
+			// NTW
+			foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+			{
+				Type entityType = propertyInfo.PropertyType;
+
+				if (entityType.Name.Equals(typeof(ICollection<>).Name) && entityType.IsGenericType)
+				{
+					entityType = entityType.GetGenericArguments().First();
+				}
+
+				Type interfaceType = entityType.GetInterface(typeof(ILinkToEntity<>).Name);
+				if (interfaceType != null)
+				{
+					entityType = interfaceType.GenericTypeArguments.FirstOrDefault() ?? entityType;
+				}
+
+				if (this.Context.Model.FindEntityType(entityType) != null && (includesStrings == null || !includesStrings.Contains(propertyInfo.Name)) && !alreadyUsedObjects.Contains(entityType))
+					propertyInfo.SetValue(entityOrDto, null);
+				else if (this.Context.Model.FindEntityType(entityType) != null && !alreadyUsedObjects.Contains(entityType))
+				{
+					List<object> args = new List<object>();
+					args.Add(propertyInfo.GetValue(entityOrDto));
+					args.Add(includesStrings.Where(x => x.StartsWith(propertyInfo.Name)).Select(x => String.Join(".", x.Split('.').Skip(1))).Where(x => !String.IsNullOrEmpty(x)).ToList());
+					args.Add(alreadyUsedObjects);
+
+					this.GetType().GetMethod("CheckIncludes", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(propertyInfo.PropertyType).Invoke(this, args.ToArray());
+				}
+			}
+		}
+
         /// <inheritdoc />
+		public void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, params Expression<Func<TDto, object>>[] includes) where TDto : class where TEntity : class
+		{
+			var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TDto));
+
+			object[] idPropertyValues = new object[entityInfo.PrimaryKeyProperties.Count];
+
+			int idx = -1;
+
+			entityInfo.PrimaryKeyProperties.ForEach(kP => idPropertyValues[++idx] = entityOrDto.GetType().GetProperty(kP.Name).GetValue(entityOrDto));
+
+			var entity = _context.Set<TEntity>().Find(idPropertyValues);
+
+			CombineStatuses(runBeforeUpdate(_context, entity));
+			if (!IsValid) return;
+
+			Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+			if (entityInfo.EntityType == typeof(TDto))
+			{
+				if (!_context.Entry(entityOrDto).IsKeySet)
+					throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(TDto).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
+				if (_context.Entry(entityOrDto).State == EntityState.Detached)
+					_context.Update(entityOrDto);
+				CombineStatuses(_context.SaveChangesWithOptionalValidation(
+					_configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
+			}
+			else
+			{
+				var dtoInfo = typeof(TDto).GetDtoInfoThrowExceptionIfNotThere();
+				var updater = new EntityUpdateHandler<TDto>(dtoInfo, entityInfo, _configAndMapper, _context, _createNewDBContext);
+				CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName, includes));
+				if (IsValid)
+					CombineStatuses(_context.SaveChangesWithOptionalValidation(
+						dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
+			}
+		}
+
+		/// <inheritdoc />
         public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
         {         
             return LocalUpdateAndSave(patch, () => _context.Find<TEntity>(keys));
@@ -283,6 +377,5 @@ namespace GenericServices.PublicButHidden
             CombineStatuses(_context.SaveChangesWithOptionalValidation(
                 _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
         }
-
     }
 }

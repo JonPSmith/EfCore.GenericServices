@@ -40,7 +40,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.SeedDatabaseFourBooks();
 
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var dto = service.ProjectFromEntityToDto<Book,BookTitle>(x => x.Where(y => y.BookId == 1)).Single();
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<SoftDelEntityDto>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
+                var service = new CrudServices(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 context.SoftDelEntities.Count().ShouldEqual(0);
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);

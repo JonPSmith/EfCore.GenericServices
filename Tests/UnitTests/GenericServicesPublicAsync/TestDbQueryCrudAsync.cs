@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using TestSupport.Helpers;
 using Xunit;
@@ -47,7 +48,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var entities = await service.ReadManyNoTracked<ChildReadOnly>().ToListAsync();
@@ -77,7 +78,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var entities = await service.ReadManyNoTracked<ChildDbQueryDto>().ToListAsync();
@@ -107,7 +108,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var entity = await service.ReadSingleAsync<ChildReadOnly>(x => x.ChildId == 1);
@@ -137,7 +138,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var entity = await service.ReadSingleAsync<ChildDbQueryDto>(x => x.ChildId == 1);
@@ -159,7 +160,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<ChildReadOnly>(1));
@@ -177,7 +178,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>  service.CreateAndSaveAsync(new ChildReadOnly()));
@@ -195,7 +196,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateAndSaveAsync(new ChildReadOnly()));
@@ -213,7 +214,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteAndSaveAsync<ChildReadOnly>(1));
@@ -231,7 +232,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new TestDbContext(options)));
 
                 //ATTEMPT
                 var ex = await Assert.ThrowsAsync<InvalidOperationException > (() => service.DeleteWithActionAndSaveAsync<ChildReadOnly>((c, e) => null, 1));

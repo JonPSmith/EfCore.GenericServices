@@ -7,6 +7,7 @@ using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
 using Xunit.Extensions.AssertExtensions;
+using System.Linq;
 
 namespace Tests.UnitTests.GenericServicesInternal
 {
@@ -26,9 +27,9 @@ namespace Tests.UnitTests.GenericServicesInternal
                 //ATTEMPT
                 var dto = new NormalEntityDto {Id = 123};
                 var keys = context.GetKeysFromDtoInCorrectOrder(dto, decodeDto);
-
+              
                 //VERIFY
-                ((int)keys[0]).ShouldEqual(123);
+                ((int)keys.Values.First()).ShouldEqual(123);
             }
         }
 

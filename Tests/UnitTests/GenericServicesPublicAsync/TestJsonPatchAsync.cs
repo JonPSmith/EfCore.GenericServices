@@ -33,7 +33,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var patch = new JsonPatchDocument<Author>();
@@ -61,7 +61,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var patch = new JsonPatchDocument<Author>();
@@ -92,7 +92,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var patch = new JsonPatchDocument<Book>();
@@ -120,7 +120,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 var utData = context.SetupEntitiesDirect();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var patch = new JsonPatchDocument<Book>();

@@ -83,7 +83,26 @@ namespace GenericServices
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
-        void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;
+        /// <param name="includes"></param>
+        void UpdateAndSave<T>(T entityOrDto, string methodName, params Expression<Func<T, object>>[] includes) where T : class;
+
+        /// <summary>
+        /// This will update the entity referred to by the keys in the given class instance.
+        /// For a entity class instance it will check the state of the instance. If its detached it will call Update, otherwise it assumes its tracked and calls SaveChanges
+        /// For a CrudServices DTO it will: 
+        /// a) load the existing entity class using the primary key(s) in the DTO
+        /// b) This it will look for a public method that match the DTO's properties to do the update, or if no method is found it will try to use AutoMapper to copy the data over to the e
+        /// c) finally it will call SaveChanges
+        /// </summary>
+        /// <typeparam name="T">This type is found from the input instance</typeparam>
+        /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
+        /// <param name="includes"></param>
+        void UpdateAndSave<T>(T entityOrDto, params Expression<Func<T, object>>[] includes) where T : class;
+
+        /// <summary>
+        /// Combination of UpdateAndSave and DeleteWithActionAndSave.
+        /// </summary>
+        void UpdateWithActionAndSave<TDto, TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeUpdate, TDto entityOrDto, string methodName = null, params Expression<Func<TDto, object>>[] includes) where TDto : class where TEntity : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>

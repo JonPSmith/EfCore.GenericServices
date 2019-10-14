@@ -9,6 +9,7 @@ using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -45,7 +46,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = "Name", Email = unique };
@@ -67,7 +68,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDto>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var author = new LocalAuthorDto { Name = null, Email = unique };
@@ -89,7 +90,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
 
                 var utData = context.SetupSingleDtoAndEntities<LocalAuthorDtoWithConfig>();
-                var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
+                var service = new CrudServicesAsync(context, utData.ConfigAndMapper, new CreateNewDBContextHelper(() => new EfCoreContext(options)));
 
                 //ATTEMPT
                 var author = new LocalAuthorDtoWithConfig { Name = null, Email = unique };

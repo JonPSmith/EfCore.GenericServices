@@ -76,7 +76,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop}, new CreateNewDBContextHelper(() => new TestDbContext(null)));
             action.Invoke(dto, target);
 
             //VERIFY
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = new Target1();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop}, new CreateNewDBContextHelper(() => new TestDbContext(null)));
             action.Invoke(dto, target);
 
             //VERIFY
@@ -111,7 +111,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = DddEfTestData.CreateDummyBooks(1).Single();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>{prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>{prop}, new CreateNewDBContextHelper(() => new TestDbContext(null)));
             action.Invoke(dto, target);
 
             //VERIFY
@@ -126,7 +126,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = DddEfTestData.CreateFourBooks().Last();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>());
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>(), new CreateNewDBContextHelper(() => new TestDbContext(null)));
             action.Invoke(target);
 
             //VERIFY
@@ -149,7 +149,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 var target = new Target1();
 
                 //ATTEMPT
-                var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch> { prop1, prop2});
+                var action = BuildCall.CallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch> { prop1, prop2}, new CreateNewDBContextHelper(() => new TestDbContext(null)));
                 action.Invoke(dto, target, context);
                 context.SaveChanges();
 

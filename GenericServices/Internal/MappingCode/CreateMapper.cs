@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper.QueryableExtensions;
+using GenericServices.ExtensionMethods;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
 using GenericServices.PublicButHidden;
@@ -70,9 +72,37 @@ namespace GenericServices.Internal.MappingCode
                 _wrappedMapper.MapperSaveConfig.CreateMapper().Map(dto, entity);
             }
 
-            public TEntity ReturnExistingEntity(object[] keys)
+            public TEntity ReturnExistingEntity(Dictionary<string, object> keys, Expression<Func<TDto, object>>[] includes)
             {
-                return _context.Set<TEntity>().Find(keys);
+                var result = (IQueryable<TEntity>)_context.Set<TEntity>();
+
+
+                if (includes != null)
+                {
+                    foreach(var include in includes)
+                    {                   
+                        result = result.Include(include.ToFullMemberNameString());
+                    }
+                }
+
+                var parameter = Expression.Parameter(typeof(TEntity), "x");
+                BinaryExpression mainBody = null;
+                foreach (var key in keys)
+                {
+                    var member = Expression.Property(parameter, key.Key);
+                    var constant = Expression.Constant(key.Value);
+                    var body = Expression.Equal(member, constant);
+                    if (mainBody == null)
+                    {
+                        mainBody = body;
+                    }
+                    else
+                    {
+                        mainBody = Expression.AndAlso(mainBody, body);
+                    }
+                }
+                var finalExpression = Expression.Lambda<Func<TEntity, bool>>(mainBody, parameter);
+                return result.Where(finalExpression).FirstOrDefault();
             }
 
             public IQueryable<TDto> GetViaKeysWithProject(params object[] keys)
@@ -89,7 +119,7 @@ namespace GenericServices.Internal.MappingCode
             public IQueryable<TDto> GetManyProjectedNoTracking()
             {
                 return _entityInfo.GetReadableEntity<TEntity>(_context).AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
-            }
-        }
-    }
+			}
+		}
+	}
 }
