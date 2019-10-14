@@ -38,7 +38,7 @@ namespace Tests.UnitTests.Libraries
         public void TestProjectionMappingBookTitle()
         {
             //SETUP
-            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<Book, BookTitle>();
+            var wrappedMapper = AutoMapperHelpers.CreateWrapperMapper<BookTitle,Book>();
 
             //ATTEMPT
             var input = DddEfTestData.CreateFourBooks().AsQueryable();

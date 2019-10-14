@@ -36,8 +36,8 @@ namespace GenericServices
         /// This is a simple method to output all the errors as a single string - null if no errors
         /// Useful for feeding back all the errors in a single exception (also nice in unit testing)
         /// </summary>
-        /// <param name="seperator"></param>
-        /// <returns>a single string with all errors seperated by the 'seperator' string</returns>
-        string GetAllErrors(string seperator = "\n");
+        /// <param name="separator">if null then each errors is separated by Environment.NewLine, otherwise uses the separator you provide</param>
+        /// <returns>a single string with all errors separated by the 'separator' string</returns>
+        string GetAllErrors(string separator = null);
     }
 }

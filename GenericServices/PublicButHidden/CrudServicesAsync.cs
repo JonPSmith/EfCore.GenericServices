@@ -66,7 +66,7 @@ namespace GenericServices.PublicButHidden
         {
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
-            if (entityInfo.EntityStyle == EntityStyles.DbQuery)
+            if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
                 throw new InvalidOperationException($"The class {entityInfo.EntityType.Name} of style {entityInfo.EntityStyle} cannot be used in a Find.");
             if (entityInfo.EntityType == typeof(T))
             {
@@ -198,7 +198,7 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
         {
-            return await LocalUpdateAndSaveAsync(patch, () => _context.FindAsync<TEntity>(keys)).ConfigureAwait(false);
+            return await LocalUpdateAndSaveAsync(patch, async () => await _context.FindAsync<TEntity>(keys).ConfigureAwait(false));
         }
 
         /// <inheritdoc />

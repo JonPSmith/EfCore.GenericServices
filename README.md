@@ -2,12 +2,22 @@
 ![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)
 ](https://www.buymeacoffee.com/l709oYtzp)
 
-**Now supports JSON Patch updates.**
+**Now supports EF Core >=3.0 (as well as EF Core >=2.1)**
 
 # EfCore.GenericServices
 
-This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. 
-It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
+This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
+
+## Useful articles
+
+This readme provides a good overview, but here are some articles that give you a detailed description of what the libraray does.
+
+* [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
+* [GenericServices Design Philosophy + tips and techniques](https://www.thereformedprogrammer.net/genericservices-design-philosophy-tips-and-techniques/).
+* [GenericServices documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
+
+
+## What the library does
 
 This library takes advantage of the fact that each of the four CRUD database accesses differ in what they do, but they have a common set of data part they all use, which are: 
 

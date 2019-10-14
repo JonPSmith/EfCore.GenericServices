@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using Xunit;
@@ -105,6 +106,29 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.PublicStaticCreatorMethods.Length.ShouldEqual(1);
                 decoded.PublicSetterMethods.Length.ShouldEqual(1);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(0);
+            }
+        }
+
+        [Fact]
+        public void TestAbstractMainDecodedEntityClass()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                //ATTEMPT
+                var decoded = new DecodedEntityClass(typeof(TestAbstractMain), context);
+
+                //VERIFY
+                decoded.EntityStyle.ShouldEqual(EntityStyles.Hybrid);
+                decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(TestAbstractBase.Id));
+                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
+                decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
+                decoded.PublicCtors.Length.ShouldEqual(1);
+                decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(0);
+                decoded.PropertiesWithPublicSetter.Length.ShouldEqual(2);
             }
         }
 

@@ -74,7 +74,8 @@ namespace Tests.UnitTests.GenericServicesSetup
             setupDtos.Errors.Count.ShouldEqual(4);
         }
 
-        [Fact]
+        // This relies on only the EfCoreContext and TestDbContext entities being registered
+        [RunnableInDebugOnly]
         public void TestSetupSingleDtoAndEntitiesTestAssemblyEfCoreContextAndTestDbContextOk()
         {
             //SETUP
@@ -95,7 +96,7 @@ namespace Tests.UnitTests.GenericServicesSetup
 
             //VERIFY
             setupDtos.IsValid.ShouldBeFalse();
-            setupDtos.Errors.Count.ShouldEqual(3);    
+            setupDtos.Errors.Count.ShouldEqual(5);    
         }
 
 

@@ -231,7 +231,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
-                var logs = context.SetupLogging();
 
                 //ATTEMPT
                 var author = new Author {AuthorId = 1, Name = "New Name", Email = unique};
@@ -262,7 +261,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
-                var logs = context.SetupLogging();
 
                 //ATTEMPT
                 var author = new Author {Name = "New Name", Email = unique };

@@ -120,12 +120,28 @@ namespace DataLayer.EfClasses
             }
         }
 
-        public void RemoveReview(Review review)                          
+        public void RemoveReview(Review review, DbContext context = null)                          
         {
-            if (_reviews == null)
-                throw new NullReferenceException("You must use .Include(p => p.Reviews) before calling this method.");
-
-            _reviews.Remove(review); 
+            if (_reviews != null)
+            {
+                //This is there to handle the add/remove of reviews when first created (or someone uses an .Include(p => p.Reviews)
+                _reviews.Remove(review); 
+            }
+            else if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context),
+                    "You must provide a context if the Reviews collection isn't valid.");
+            }
+            else if (review.BookId != BookId || review.ReviewId <= 0)
+            {
+                // This ensures that the review is a) linked to the book you defined, and b) the review has a valid primary key
+                throw new InvalidOperationException("The review either hasn't got a valid primary key or was not linked to the Book.");
+            }
+            else
+            {
+                //NOTE: EF Core can delete a entity even if it isn't loaded - it just has to have a valid primary key.
+                context.Remove(review);
+            }
         }
 
         public IStatusGeneric AddPromotion(decimal actualPrice, string promotionalText)                  

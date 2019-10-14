@@ -39,14 +39,17 @@ namespace GenericServices.Internal.Decoders
             _matcher = new MethodCtorMatcher(publicConfig.NameMatcher);
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
-            if (entityInfo.EntityStyle == EntityStyles.DbQuery)
-                //If DbQuery then exit immediately as properties etc 
+            if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
+                //If HasNoKey then exit immediately as properties etc 
                 return;
 
             PropertyInfos = dtoType.GetProperties()
                 .Select(x => new DecodedDtoProperty(x, 
                         BestPropertyMatch.FindMatch(x, entityInfo.PrimaryKeyProperties ).Score >= PropertyMatch.PerfectMatchValue))
                 .ToImmutableList();
+
+            if(!PropertyInfos.Any())
+                throw new InvalidOperationException($"The {DtoType.Name} class inherits ILinkToEntity<T> but has no properties in it!");
 
             if (entityInfo.CanBeUpdatedViaMethods)
                 _matchedSetterMethods = PreloadPossibleMethodCtorMatches(MatchMethodsToProperties(entityInfo), 
@@ -93,7 +96,7 @@ namespace GenericServices.Internal.Decoders
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
             {
-                var result = GetDefaultCtorOrMethod(_matchedSetterMethods, "method");
+                var result = GetDefaultCtorOrMethod(_matchedSetterMethods, false);
                 if (result != null)
                     return result;
 
@@ -109,7 +112,7 @@ namespace GenericServices.Internal.Decoders
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
             {
-                var result = GetDefaultCtorOrMethod(_matchedCtorsAndStaticMethods, "ctor/static method");
+                var result = GetDefaultCtorOrMethod(_matchedCtorsAndStaticMethods, true);
                 if (result != null)
                     return result;
 
@@ -148,14 +151,22 @@ namespace GenericServices.Internal.Decoders
             return result.SingleOrDefault();
         }
 
-        private MethodCtorMatch GetDefaultCtorOrMethod(List<MethodCtorMatch> listToScan, string errorString)
+        private MethodCtorMatch GetDefaultCtorOrMethod(List<MethodCtorMatch> listToScan, bool lookForCtors)
         {
+            string errorString = lookForCtors ? "ctor/static method" : "method";
             //we group by the number of parameters and take the one with the longest parameter match
-            var groupedByParams = from ctorMethod in listToScan.Where(x => !x.IsParameterlessMethod)
+            var groupedByParams = (from ctorMethod in listToScan.Where(x => !x.IsParameterlessMethod)
                 let numParams = ctorMethod.Method == null
                     ? ctorMethod.Constructor.GetParameters().Length
                     : ctorMethod.Method.GetParameters().Length
-                group ctorMethod by numParams;
+                group ctorMethod by numParams).ToList();
+            if (!groupedByParams.Any())
+            {
+                var possibleOptions = lookForCtors ? _allPossibleCtorsAndStaticMatches : _allPossibleSetterMatches;
+                throw new InvalidOperationException($"Could not find a {errorString} that matches the DTO. The {errorString} that fit the properties in the DTO/VM are:\n" +
+                                                    string.Join("\n", possibleOptions.Select(x => x.ToString())));
+            }
+
             var methodsWithParams = groupedByParams.OrderByDescending(x => x.Key).First().ToList();
             //var methodsWithParams = listToScan.Where(x => !x.IsParameterlessMethod)
             //    .GroupBy(x => x.Method.GetParameters().Length).OrderByDescending(x => x.Key).First().ToList();
@@ -165,7 +176,7 @@ namespace GenericServices.Internal.Decoders
             if (methodsWithParams.Any())
                 throw new InvalidOperationException($"There are multiple {errorString}, so you need to define which one you want used via the {errorString} parameter. " +
                                                     "The possible options are:\n" +
-                                                    string.Join("\n", listToScan.Select(x => x.ToStringShort())));
+                                                    string.Join("\n", listToScan.Select(x => x.ToString())));
             return null;
         }
 

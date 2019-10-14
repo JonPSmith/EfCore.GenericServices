@@ -129,7 +129,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
 
                 //VERIFY
+#if NETCOREAPP2_1
                 ex.Message.ShouldEqual("Source sequence contains more than one element.");
+#elif NETCOREAPP3_0
+                ex.Message.ShouldEqual("Enumerator failed to MoveNextAsync.");
+#endif
             }
         }
 
@@ -228,7 +232,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
-                var logs = context.SetupLogging();
 
                 //ATTEMPT
                 var author = new Author {AuthorId = 1, Name = "New Name", Email = unique};

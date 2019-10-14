@@ -17,12 +17,14 @@ namespace Tests.UnitTests.GenericServicesInternal
     public class TestCreateMapGenerator
     {
         private readonly DecodedEntityClass _bookInfo;
+        private readonly DecodedEntityClass _authorInfo;
         public TestCreateMapGenerator()
         {
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 _bookInfo = new DecodedEntityClass(typeof(Book), context);
+                _authorInfo = new DecodedEntityClass(typeof(Author), context);
             }
         }
 
@@ -33,11 +35,11 @@ namespace Tests.UnitTests.GenericServicesInternal
             var maps = new MapperConfigurationExpression();
 
             //ATTEMPT
-            var mapCreator = new CreateConfigGenerator(typeof(AuthorNameDto), _bookInfo, null);
+            var mapCreator = new CreateConfigGenerator(typeof(AuthorNameDto), _authorInfo, null);
             mapCreator.Accessor.AddReadMappingToProfile(maps);
+            var config = new MapperConfiguration(maps);
 
             //VERIFY
-            var config = new MapperConfiguration(maps);
             var entity = new Author {AuthorId = 1, Name = "Author", Email = "me@nospam.com"};
             var dto = config.CreateMapper().Map<AuthorNameDto>(entity);
             dto.Name.ShouldEqual("Author");

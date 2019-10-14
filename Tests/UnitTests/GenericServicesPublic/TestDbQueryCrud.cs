@@ -10,6 +10,7 @@ using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
+using TestSupport.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -33,6 +34,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
+#if NETCOREAPP3_0
+                context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
+#endif
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -60,6 +64,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
+#if NETCOREAPP3_0
+                context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
+#endif
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -87,6 +94,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
+#if NETCOREAPP3_0
+                context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
+#endif
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -114,6 +124,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
+#if NETCOREAPP3_0
+                context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
+#endif
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -150,7 +163,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => service.ReadSingle<ChildReadOnly>(1));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class ChildReadOnly of style DbQuery cannot be used in a Find.");
+                ex.Message.ShouldEqual("The class ChildReadOnly of style HasNoKey cannot be used in a Find.");
             }
         }
 
@@ -168,7 +181,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() =>  service.CreateAndSave(new ChildReadOnly()));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class ChildReadOnly of style DbQuery cannot be used in Create.");
+                ex.Message.ShouldEqual("The class ChildReadOnly of style HasNoKey cannot be used in Create.");
             }
         }
 
@@ -186,7 +199,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(new ChildReadOnly()));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class ChildReadOnly of style DbQuery cannot be used in Update.");
+                ex.Message.ShouldEqual("The class ChildReadOnly of style HasNoKey cannot be used in Update.");
             }
         }
 
@@ -203,7 +216,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => service.DeleteAndSave<ChildReadOnly>(1));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class ChildReadOnly of style DbQuery cannot be used in Delete.");
+                ex.Message.ShouldEqual("The class ChildReadOnly of style HasNoKey cannot be used in Delete.");
             }
         }
 
@@ -221,7 +234,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var ex = Assert.Throws<InvalidOperationException>(() => service.DeleteWithActionAndSave<ChildReadOnly>((c, e) => null, 1));
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class ChildReadOnly of style DbQuery cannot be used in Delete.");
+                ex.Message.ShouldEqual("The class ChildReadOnly of style HasNoKey cannot be used in Delete.");
             }
         }
     }

@@ -292,6 +292,39 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
+        public class DtoCtorCreateBad : ILinkToEntity<DddCtorEntity>
+        {
+            public int YourInt { get; set; }
+            public bool MyString { get; set; }
+        }
+
+        [Fact]
+        public void TestCreateEntityViaDtoCtorNoMatchOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<TestDbContext>();
+            using (var context = new TestDbContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+            using (var context = new TestDbContext(options))
+            {
+                var utData = context.SetupSingleDtoAndEntities<DtoCtorCreateBad>();
+                var service = new CrudServices(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var dto = new DtoCtorCreateBad { };
+                var ex = Assert.Throws<InvalidOperationException>(() => service.CreateAndSave(dto));
+
+                //VERIFY
+                ex.Message.ShouldEqual(
+                    "Could not find a ctor/static method that matches the DTO. The ctor/static method that fit the properties in the DTO/VM are:\n" +
+                    "Matched 2 params out of 2. Score 50% Ctor(Name not match, but type is Match, wrong name)\n" +
+                    "Matched 1 params out of 1. Score 30% Ctor(Name not match, but type is Match)");
+
+            }
+        }
+
         public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
         {
             public int MyInt { get; set; }

@@ -1,8 +1,54 @@
 # Release Notes
 
-## planned changes
+## TODO
 
-- Nothing currently on backlog.
+GenericServices doesn't call access methods in classes which the top class inherits. e.g. in the example code below GenericServices would NOT call the method `InnerMethod`. This is different to properties, which reflection will find.
+
+```c#
+class Outer : Inner
+{
+	public int OuterInt {get; set;}
+	public void OuterMethod (){}
+}
+
+class Inner 
+{
+	public int InnerInt { get; set; }
+	public void InnerMethod() { }
+}
+```
+
+This code could be added to the `DecodedEntityClass` class to correct this, but I'm haven't added this yet. 
+
+```c#
+	methodsToInspect = FindAllMethodsInType(entityType);
+	var inherited = entityType.BaseType;
+	while(inherited != typeof(object))
+	{
+       methodsToInspect.AddRange(FindAllMethodsInType(inherited));
+		inherited = inherited.BaseType;
+	}
+```
+
+## 3.0.0
+
+- Support both EF Core >=2.1 and EF Core >=3.0 by supporting NetStandard2.0 and NetStandard2.1.
+- Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
+- Bug fix: GetAllErrors() should use Environment.NewLine.
+- Style fix: Separator only has one E in it #35
+
+## 2.1.0-preview001
+
+- Special release for @adria3a3 and co to check that AutoMapper 9 now works with this library.
+
+## 2.0.3
+
+- Fix bug #31 - Now you can use a specific DbContext, e.g. EFCoreContext, in your DDD methods/ctors.
+- Fix bug #30 - If DTO has no properties then it will give sensible error message.
+
+## 2.0.2
+
+- Fix bug #18 - When no default matching ctor/method is found it outputs a list of possible options.
 
 ## 2.0.1
 
