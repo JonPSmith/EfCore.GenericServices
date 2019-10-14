@@ -58,7 +58,7 @@ namespace GenericServices.Internal.Decoders
                                                     " The class must be either be an entity class derived from the GenericServiceDto/Async class.");
             }
 
-            if (efType.IsQueryType)
+            if (efType.FindPrimaryKey() == null)
             {
                 //QueryType is read only, so we don't do any further setup
                 EntityStyle = EntityStyles.DbQuery;

@@ -20,9 +20,9 @@ namespace GenericServices.Internal.MappingCode
         private readonly DecodedEntityClass _entityInfo;
         private readonly IWrappedConfigAndMapper _configAndMapper;
         private readonly DbContext _context;
-        private readonly ICreateNewDBContext _createNewDBContext;
+        private readonly IDbContextService _createNewDBContext;
 
-        public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context, ICreateNewDBContext createNewDBContext)
+        public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context, IDbContextService createNewDBContext)
         {
             _dtoInfo = dtoInfo ?? throw new ArgumentNullException(nameof(dtoInfo));
             _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));

@@ -24,7 +24,7 @@ namespace GenericServices.Internal.LinqBuilders
         //Also the dto and entity properties cannit be object, but dynamic works
 
         public static IStatusGeneric RunMethodViaLinq(MethodInfo methodInfo, dynamic dto, dynamic entity,
-            List<PropertyMatch> propertyMatches, DbContext context, ICreateNewDBContext createNewDBContext)
+            List<PropertyMatch> propertyMatches, DbContext context, IDbContextService createNewDBContext)
         {
             if (methodInfo.ReturnType == typeof(IStatusGeneric))
             {
@@ -81,13 +81,13 @@ namespace GenericServices.Internal.LinqBuilders
 
         private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
 
-        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, ICreateNewDBContext createNewDBContext)
+        public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, IDbContextService createNewDBContext)
         {
             return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(tDto), 
                 type => PrivateCallMethodReturnVoid(methodInfo, tDto, tEntity, propertyMatches, createNewDBContext));
         }
 
-        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, ICreateNewDBContext createNewDBContext)
+        private static dynamic PrivateCallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches, IDbContextService createNewDBContext)
         {         
             var pIn = Expression.Parameter(tDto, "dto");
             var pCall = Expression.Parameter(tEntity, "method");

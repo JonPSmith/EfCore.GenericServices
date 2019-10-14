@@ -29,7 +29,7 @@ namespace GenericServices.PublicButHidden
         /// <param name="context"></param>
         /// <param name="configAndMapper"></param>
         /// <param name="createNewDBContext"></param>
-        public CrudServicesAsync(DbContext context, IWrappedConfigAndMapper configAndMapper, ICreateNewDBContext createNewDBContext) : base(context, configAndMapper, createNewDBContext)
+        public CrudServicesAsync(DbContext context, IWrappedConfigAndMapper configAndMapper, IDbContextService createNewDBContext) : base(context, configAndMapper, createNewDBContext)
         {
             if (context == null)
                 throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
@@ -48,7 +48,7 @@ namespace GenericServices.PublicButHidden
     {
         private readonly TContext _context;
         private readonly IWrappedConfigAndMapper _configAndMapper;
-        private readonly ICreateNewDBContext _createNewDBContext;
+        private readonly IDbContextService _createNewDBContext;
 
         /// <inheritdoc />
         public DbContext Context => _context;
@@ -58,7 +58,7 @@ namespace GenericServices.PublicButHidden
         /// That is useful if you need to set up some properties in the DTO that cannot be found in the Entity
         /// For instance, setting up a dropdownlist based on some other database data
         /// </summary>
-        public CrudServicesAsync(TContext context, IWrappedConfigAndMapper configAndMapper, ICreateNewDBContext createNewDBContext)
+        public CrudServicesAsync(TContext context, IWrappedConfigAndMapper configAndMapper, IDbContextService createNewDBContext)
         {
             _context = context;
             _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
@@ -205,7 +205,7 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
         {
-            return await LocalUpdateAndSaveAsync(patch, () => _context.FindAsync<TEntity>(keys)).ConfigureAwait(false);
+            return await LocalUpdateAndSaveAsync(patch, () => _context.FindAsync<TEntity>(keys).AsTask()).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

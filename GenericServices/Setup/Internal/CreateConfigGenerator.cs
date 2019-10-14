@@ -43,10 +43,10 @@ namespace GenericServices.Setup.Internal
             public void AddSaveMappingToProfile(Profile writeProfile)
             {
                 if (_config?.AlterSaveMapping == null)
-                    writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+                    writeProfile.CreateMap<TDto, TEntity>(); //.IgnoreAllPropertiesWithAnInaccessibleSetter();
                 else
                 {
-                    _config.AlterSaveMapping(writeProfile.CreateMap<TDto, TEntity>().IgnoreAllPropertiesWithAnInaccessibleSetter());
+                    _config.AlterSaveMapping(writeProfile.CreateMap<TDto, TEntity>()); //.IgnoreAllPropertiesWithAnInaccessibleSetter()); 
                 }
             }
         }

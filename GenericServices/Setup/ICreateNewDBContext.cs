@@ -8,7 +8,7 @@ namespace GenericServices.Setup
     /// <summary>
     /// ICreateNewDBContext
     /// </summary>
-    public interface ICreateNewDBContext
+    public interface IDbContextService
     {
         /// <summary>
         /// CreateNew
