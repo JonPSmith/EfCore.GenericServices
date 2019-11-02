@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "jquery": "3.4.0",
-    "bootstrap": "3.4.0",
+    "bootstrap": "3.4.1",
     "select2": "4.0.5"
   }
 }
