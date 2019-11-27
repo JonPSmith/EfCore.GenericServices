@@ -13,6 +13,7 @@ using GenericServices.Internal.LinqBuilders;
 using GenericServices.Internal.MappingCode;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices.PublicButHidden
 {

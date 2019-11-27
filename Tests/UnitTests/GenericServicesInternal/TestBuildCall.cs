@@ -5,6 +5,7 @@ using DataLayer.EfClasses;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.LinqBuilders;
+using StatusGeneric;
 using Tests.EfClasses;
 using Tests.EfCode;
 using Tests.Helpers;

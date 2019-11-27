@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 [assembly: InternalsVisibleTo("Tests")]
 

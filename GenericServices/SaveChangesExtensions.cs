@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GenericServices.Configuration;
 using GenericServices.Internal;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices
 {

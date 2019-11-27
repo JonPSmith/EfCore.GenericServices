@@ -13,6 +13,7 @@ using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;

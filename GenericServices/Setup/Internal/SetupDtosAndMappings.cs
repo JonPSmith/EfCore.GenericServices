@@ -8,6 +8,7 @@ using AutoMapper;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
+using StatusGeneric;
 
 namespace GenericServices.Setup.Internal
 {

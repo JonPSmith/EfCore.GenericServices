@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices.Configuration
 {

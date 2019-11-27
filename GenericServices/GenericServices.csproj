@@ -6,14 +6,16 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="GenericServices.StatusGeneric" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="GenericServices.StatusGeneric" Version="1.0.0" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -26,10 +28,10 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>3.0.0</PackageVersion>
-    <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <PackageVersion>3.1.0</PackageVersion>
+    <Version>3.1.0</Version>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -41,10 +43,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Support both EF Core &gt;=2.1 and EF Core &gt;=3.0 by supporting NetStandard2.0 and NetStandard2.1.
-      - Bug fix: AutoMapper upgrade to version 9.0.0 results in error: MissingMethodException IgnoreAllPropertiesWithAnInaccessibleSetter(). See issue #33
-      - Bug fix: GetAllErrors() should use Environment.NewLine.
-      - Style fix: Separator only has one E in it #35
+      - Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries
     </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>

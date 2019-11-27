@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices.Configuration
 {

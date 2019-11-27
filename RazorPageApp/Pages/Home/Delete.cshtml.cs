@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.HomeController.Dtos;
+using StatusGeneric;
 
 namespace RazorPageApp.Pages.Home
 {

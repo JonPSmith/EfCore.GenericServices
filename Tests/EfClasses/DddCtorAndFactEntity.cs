@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using GenericServices;
+using StatusGeneric;
 
 namespace Tests.EfClasses
 {

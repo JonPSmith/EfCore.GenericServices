@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 [assembly: InternalsVisibleTo("Test")]
 

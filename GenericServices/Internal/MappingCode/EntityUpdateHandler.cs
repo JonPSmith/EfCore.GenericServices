@@ -8,6 +8,7 @@ using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices.Internal.MappingCode
 {

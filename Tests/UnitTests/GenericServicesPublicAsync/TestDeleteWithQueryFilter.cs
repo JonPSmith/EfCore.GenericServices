@@ -7,6 +7,7 @@ using GenericServices;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;

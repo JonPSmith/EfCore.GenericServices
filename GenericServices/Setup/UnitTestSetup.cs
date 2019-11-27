@@ -5,6 +5,7 @@ using System;
 using GenericServices.Configuration;
 using GenericServices.Setup.Internal;
 using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 
 namespace GenericServices.Setup
 {
