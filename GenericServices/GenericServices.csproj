@@ -54,7 +54,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
-    <DocumentationFile>bbin\Release\netcoreapp2.1\GenericServices.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.1\GenericServices.xml</DocumentationFile>
   </PropertyGroup>
 
 

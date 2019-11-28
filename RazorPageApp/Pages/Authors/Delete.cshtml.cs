@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using DataLayer.EfClasses;
 using GenericServices;
-using GenericServices.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using RazorPageApp.Helpers;
 using StatusGeneric;
 
 namespace RazorPageApp.Pages.Authors
