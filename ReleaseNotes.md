@@ -30,6 +30,10 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
 	}
 ```
 
+## 3.1.0
+
+ - Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries.
+
 ## 3.0.0
 
 - Support both EF Core >=2.1 and EF Core >=3.0 by supporting NetStandard2.0 and NetStandard2.1.
