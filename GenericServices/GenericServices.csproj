@@ -28,7 +28,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>3.1.0-preview001</PackageVersion>
+    <PackageVersion>3.1.0-preview002</PackageVersion>
     <Version>3.1.0</Version>
     <AssemblyVersion>3.1.0.0</AssemblyVersion>
     <FileVersion>3.1.0.0</FileVersion>
@@ -43,7 +43,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries
+      - New Feature: GenericServices' UpdateAndSave method will look for IncludeThen Attribute on a DTO and add the specified Include/ThenIncludes before doing the update.
+      - Update: Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries.
     </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>

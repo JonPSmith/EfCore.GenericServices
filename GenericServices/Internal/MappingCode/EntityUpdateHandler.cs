@@ -33,7 +33,7 @@ namespace GenericServices.Internal.MappingCode
             //first we need to load it 
             var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
             var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
-            var entity = mapper.Accessor.ReturnExistingEntity(keys);
+            var entity = mapper.Accessor.ReturnExistingEntityWithPossibleIncludes(keys);
             if (entity == null)
                 return new StatusGenericHandler()
                     .AddError(

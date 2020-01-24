@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -11,12 +11,19 @@ using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestIncludeThenAttribute
     {
+        private ITestOutputHelper _output;
+
+        public TestIncludeThenAttribute(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void TestSingleIncludeThenWithSingleIncludeGetAttributesOk()
@@ -24,11 +31,41 @@ namespace Tests.UnitTests.GenericServicesPublic
             //SETUP
 
             //ATTEMPT
-            var attributes = typeof(AddReviewWithIncludeDto).GetCustomAttributes(false).Cast<IncludeThenAttribute>().ToList();
+            var includeStrings = typeof(AddReviewWithIncludeDto)
+                .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                .Select(x => x.IncludeNames).ToList();
 
             //VERIFY
-            attributes.Count.ShouldEqual(1);
-            attributes.First().IncludeNames.ShouldEqual(nameof(Book.Reviews));
+            includeStrings.Count.ShouldEqual(1);
+            includeStrings.First().ShouldEqual(nameof(Book.Reviews));
+        }
+
+        [Fact]
+        public void TestSingleIncludeThenWithSingleIncludeGetAttributesPerformance()
+        {
+            //SETUP
+
+            //ATTEMPT
+            using(new TimeThings(_output, "read one attribute"))
+            {
+                var includeStrings = typeof(AddReviewWithIncludeDto)
+                    .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                    .Select(x => x.IncludeNames).ToList();
+            }
+
+            const int numTimes = 100;
+            using (new TimeThings(_output, "read one attribute", numTimes))
+            {
+                for (int i = 0; i < numTimes; i++)
+                {
+                    var includeStrings = typeof(AddReviewWithIncludeDto)
+                        .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                        .Select(x => x.IncludeNames).ToList();
+                }
+            }
+
+            //VERIFY
+
         }
 
         [Fact]
@@ -37,11 +74,13 @@ namespace Tests.UnitTests.GenericServicesPublic
             //SETUP
 
             //ATTEMPT
-            var attributes = typeof(UpdateBookWithAuthorUsingIncludeDto).GetCustomAttributes(false).Cast<IncludeThenAttribute>().ToList();
+            var includeStrings = typeof(UpdateBookWithAuthorUsingIncludeDto)
+                .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                .Select(x => x.IncludeNames).ToList();
 
             //VERIFY
-            attributes.Count.ShouldEqual(1);
-            attributes.First().IncludeNames.ShouldEqual($"{nameof(Book.AuthorsLink)}.{nameof(BookAuthor.Author)}");
+            includeStrings.Count.ShouldEqual(1);
+            includeStrings.First().ShouldEqual($"{nameof(Book.AuthorsLink)}.{nameof(BookAuthor.Author)}");
         }
 
         [Fact]
@@ -54,10 +93,12 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var attributes = typeof(AddReviewWithIncludeDto).GetCustomAttributes(false).Cast<IncludeThenAttribute>().ToList();
+                var includeStrings = typeof(AddReviewWithIncludeDto)
+                    .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                    .Select(x => x.IncludeNames).ToList();
 
                 //ATTEMPT
-                var book = context.Books.Include(attributes.First().IncludeNames)
+                var book = context.Books.Include(includeStrings.First())
                     .Single(x => x.Reviews.Any());
 
                 //VERIFY
@@ -75,14 +116,16 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var attributes = typeof(UpdateBookWithAuthorUsingIncludeDto).GetCustomAttributes(false).Cast<IncludeThenAttribute>().ToList();
+                var includeStrings = typeof(UpdateBookWithAuthorUsingIncludeDto)
+                    .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                    .Select(x => x.IncludeNames).ToList();
 
                 //ATTEMPT
-                var books = context.Books.Include(attributes.First().IncludeNames).ToList();
+                var books = context.Books.Include(includeStrings.First()).ToList();
 
                 //VERIFY
                 var names = books.SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name)).ToArray();
-                names.ShouldEqual(new String []{ "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
+                names.ShouldEqual(new String[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
             }
         }
 

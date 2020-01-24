@@ -13,7 +13,7 @@ namespace Tests.Dtos
         [HiddenInput]
         public int BookId { get; set; }
 
-        public Author NewAuthor { get; set; }
+        public Author AddThisAuthor { get; set; }
         public byte Order { get; set; }
     }
 }

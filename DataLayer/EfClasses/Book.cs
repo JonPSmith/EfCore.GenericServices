@@ -121,6 +121,14 @@ namespace DataLayer.EfClasses
             }
         }
 
+        //This works with the GenericServices' IncludeThen Attribute
+        public void AddReviewWithInclude(int numStars, string comment, string voterName)
+        {
+            if (_reviews == null)
+                throw new InvalidOperationException("The Reviews collection must be loaded before calling this method");
+            _reviews.Add(new Review(numStars, comment, voterName));
+        }
+
         public void RemoveReview(Review review, DbContext context = null)                          
         {
             if (_reviews != null)
@@ -166,6 +174,23 @@ namespace DataLayer.EfClasses
         {
             ActualPrice = OrgPrice; 
             PromotionalText = null; 
+        }
+
+        public IStatusGeneric UpdateBookWithExistingAuthor(Author addThisAuthor, byte order)
+        {
+            if (_authorsLink == null)
+                throw new InvalidOperationException("The AuthorsLink collection must be loaded before calling this method.");
+            var currentBookAuthors = AuthorsLink.Select(x => x.Author).ToList();
+            if (currentBookAuthors.Any(x => x == null))
+                throw new InvalidOperationException("The AuthorsLink.Author link must be loaded before calling this method.");
+
+            var status = new StatusGenericHandler();
+            if (currentBookAuthors.Contains(addThisAuthor))
+                return status.AddError(
+                    $"The author {addThisAuthor.Name} is already in the list of authors for the book {Title}");
+
+            _authorsLink.Add(new BookAuthor(this, addThisAuthor, order));
+            return status;
         }
     }
 

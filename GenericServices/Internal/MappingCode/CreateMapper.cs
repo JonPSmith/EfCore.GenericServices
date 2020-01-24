@@ -70,9 +70,16 @@ namespace GenericServices.Internal.MappingCode
                 _wrappedMapper.MapperSaveConfig.CreateMapper().Map(dto, entity);
             }
 
-            public TEntity ReturnExistingEntity(object[] keys)
+            /// <summary>
+            /// This returns the existing entity with any includes applied from the IncludeThenAttribute
+            /// </summary>
+            /// <param name="keys"></param>
+            /// <returns></returns>
+            public TEntity ReturnExistingEntityWithPossibleIncludes(object[] keys)
             {
-                return _context.Set<TEntity>().Find(keys);
+                var query = ApplyAnyIncludeStringsAtDbSetLevel(_context.Set<TEntity>());
+                var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+                return query.SingleOrDefault(predicate);
             }
 
             public IQueryable<TDto> GetViaKeysWithProject(params object[] keys)
@@ -89,6 +96,23 @@ namespace GenericServices.Internal.MappingCode
             public IQueryable<TDto> GetManyProjectedNoTracking()
             {
                 return _entityInfo.GetReadableEntity<TEntity>(_context).AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
+            }
+
+            private IQueryable<TEntity> ApplyAnyIncludeStringsAtDbSetLevel(DbSet<TEntity> dbSet)
+            {
+                var attributes = typeof(TDto).GetCustomAttributes(typeof(IncludeThenAttribute), true)
+                    .Cast<IncludeThenAttribute>().ToList();
+
+                if (!attributes.Any())
+                    return dbSet;
+
+                var query = dbSet.Include(attributes[0].IncludeNames);
+                for (int i = 1; i < attributes.Count; i++)
+                {
+                    query = query.Include(attributes[i].IncludeNames);
+                }
+
+                return query;
             }
         }
     }
