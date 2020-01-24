@@ -32,6 +32,7 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
 
 ## 3.1.0
 
+ - New Feature: IncludeThen attribute on your DTO allows you to add Include/ThenIncludes to an action. Useful for update that needs relationships loaded.
  - Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries.
 
 ## 3.0.0
