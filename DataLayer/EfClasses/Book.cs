@@ -99,8 +99,7 @@ namespace DataLayer.EfClasses
             PublishedOn = publishedOn;
         }
 
-        public void AddReview(int numStars, string comment, string voterName, 
-            DbContext context = null) 
+        public void AddReview(int numStars, string comment, string voterName, DbContext context = null) 
         {
             if (_reviews != null)    
             {

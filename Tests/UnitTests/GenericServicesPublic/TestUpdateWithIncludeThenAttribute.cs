@@ -67,11 +67,11 @@ namespace Tests.UnitTests.GenericServicesPublic
 
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<UpdateBookWithAuthorUsingIncludeDto>();
+                var utData = context.SetupSingleDtoAndEntities<AddNewAuthorToBookUsingIncludesDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new UpdateBookWithAuthorUsingIncludeDto
+                var dto = new AddNewAuthorToBookUsingIncludesDto
                 {
                     BookId = bookId,
                     AddThisAuthor = context.Authors.SingleOrDefault(x => x.AuthorId == authorId),
@@ -142,11 +142,11 @@ namespace Tests.UnitTests.GenericServicesPublic
 
             using (var context = new EfCoreContext(options))
             {
-                var utData = context.SetupSingleDtoAndEntities<UpdateBookWithAuthorUsingIncludeDto>();
+                var utData = context.SetupSingleDtoAndEntities<AddNewAuthorToBookUsingIncludesDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new UpdateBookWithAuthorUsingIncludeDto
+                var dto = new AddNewAuthorToBookUsingIncludesDto
                 {
                     BookId = bookId,
                     AddThisAuthor = context.Authors.SingleOrDefault(x => x.AuthorId == authorId),

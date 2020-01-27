@@ -74,7 +74,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             //SETUP
 
             //ATTEMPT
-            var includeStrings = typeof(UpdateBookWithAuthorUsingIncludeDto)
+            var includeStrings = typeof(AddNewAuthorToBookUsingIncludesDto)
                 .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
                 .Select(x => x.IncludeNames).ToList();
 
@@ -116,7 +116,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var includeStrings = typeof(UpdateBookWithAuthorUsingIncludeDto)
+                var includeStrings = typeof(AddNewAuthorToBookUsingIncludesDto)
                     .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
                     .Select(x => x.IncludeNames).ToList();
 
