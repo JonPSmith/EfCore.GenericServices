@@ -18,7 +18,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestIncludeThenAttribute
     {
-        private ITestOutputHelper _output;
+        private readonly ITestOutputHelper _output;
 
         public TestIncludeThenAttribute(ITestOutputHelper output)
         {
@@ -127,6 +127,29 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var names = books.SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name)).ToArray();
                 names.ShouldEqual(new String[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
             }
+        }
+
+        [IncludeThen(nameof(Book.Reviews))]
+        [IncludeThen(nameof(Book.AuthorsLink), nameof(BookAuthor.Author))]
+        private class AnotherDto : ILinkToEntity<Book>
+        {
+
+        }
+
+        [Fact]
+        public void TestIncludeThenTwiceGetAttributesOk()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var includeStrings = typeof(AnotherDto)
+                .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
+                .Select(x => x.IncludeNames).ToList();
+
+            //VERIFY
+            includeStrings.Count.ShouldEqual(2);
+            includeStrings.First().ShouldEqual("Reviews");
+            includeStrings.Last().ShouldEqual("AuthorsLink.Author");
         }
 
     }
