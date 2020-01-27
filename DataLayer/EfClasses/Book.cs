@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using GenericServices;
 using Microsoft.EntityFrameworkCore;
 using StatusGeneric;
 
@@ -120,7 +119,7 @@ namespace DataLayer.EfClasses
             }
         }
 
-        //This works with the GenericServices' IncludeThen Attribute
+        //This works with the GenericServices' IncludeThen Attribute to pre-load the Reviews collection
         public void AddReviewWithInclude(int numStars, string comment, string voterName)
         {
             if (_reviews == null)
@@ -150,6 +149,17 @@ namespace DataLayer.EfClasses
                 //NOTE: EF Core can delete a entity even if it isn't loaded - it just has to have a valid primary key.
                 context.Remove(review);
             }
+        }
+
+        //This works with the GenericServices' IncludeThen Attribute to pre-load the Reviews collection
+        public void RemoveReviewWithInclude(int reviewId)
+        {
+            if (_reviews == null)
+                throw new InvalidOperationException("The Reviews collection must be loaded before calling this method");
+            var localReview = _reviews.SingleOrDefault(x => x.ReviewId == reviewId);
+            if (localReview == null)
+                throw new InvalidOperationException("The review with that key was not found in the book's Reviews.");
+            _reviews.Remove(localReview);
         }
 
         public IStatusGeneric AddPromotion(decimal actualPrice, string promotionalText)                  

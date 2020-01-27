@@ -35,6 +35,8 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
  - New Feature: IncludeThen attribute on your DTO allows you to add Include/ThenIncludes to an action. Useful for update that needs relationships loaded.
  - Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries.
 
+**WARNING: this may require you to install NuGet package GenericServices.StatusGeneric in the project that has the entity classes in.**
+
 ## 3.0.0
 
 - Support both EF Core >=2.1 and EF Core >=3.0 by supporting NetStandard2.0 and NetStandard2.1.
