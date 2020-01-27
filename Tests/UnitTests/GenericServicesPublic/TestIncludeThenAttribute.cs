@@ -93,13 +93,9 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var includeStrings = typeof(AddReviewWithIncludeDto)
-                    .GetCustomAttributes(typeof(IncludeThenAttribute), true).Cast<IncludeThenAttribute>()
-                    .Select(x => x.IncludeNames).ToList();
-
                 //ATTEMPT
-                var book = context.Books.Include(includeStrings.First())
-                    .Single(x => x.Reviews.Any());
+                var query = ApplyAnyIncludeStringsAtDbSetLevel<AddReviewWithIncludeDto>(context.Books);
+                var book = query.Single(x => x.Reviews.Any());
 
                 //VERIFY
                 book.Reviews.Any().ShouldBeTrue();
@@ -121,7 +117,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                     .Select(x => x.IncludeNames).ToList();
 
                 //ATTEMPT
-                var books = context.Books.Include(includeStrings.First()).ToList();
+                var query = ApplyAnyIncludeStringsAtDbSetLevel<AddReviewWithIncludeDto>(context.Books);
+                var books = query.ToList();
 
                 //VERIFY
                 var names = books.SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name)).ToArray();
@@ -150,6 +147,45 @@ namespace Tests.UnitTests.GenericServicesPublic
             includeStrings.Count.ShouldEqual(2);
             includeStrings.First().ShouldEqual("Reviews");
             includeStrings.Last().ShouldEqual("AuthorsLink.Author");
+        }
+
+        [Fact]
+        public void TestIncludeThenTwiceGetAttributesManuallyLoad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var query = ApplyAnyIncludeStringsAtDbSetLevel<AnotherDto>(context.Books);
+                var book = query.First();
+
+                //VERIFY
+                book.Reviews.ShouldNotBeNull();
+                book.AuthorsLink.ShouldNotBeNull();
+                book.AuthorsLink.Any(x => x.Author == null).ShouldBeFalse();
+            }
+        }
+
+        //NOTE: This is a copy of the code in the CreateMapper class
+        private IQueryable<Book> ApplyAnyIncludeStringsAtDbSetLevel<TDto>(DbSet<Book> dbSet)
+        {
+            var attributes = typeof(TDto).GetCustomAttributes(typeof(IncludeThenAttribute), true)
+                .Cast<IncludeThenAttribute>().ToList();
+
+            if (!attributes.Any())
+                return dbSet;
+
+            var query = dbSet.Include(attributes[0].IncludeNames);
+            for (int i = 1; i < attributes.Count; i++)
+            {
+                query = query.Include(attributes[i].IncludeNames);
+            }
+
+            return query;
         }
 
     }
