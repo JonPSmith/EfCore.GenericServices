@@ -13,7 +13,7 @@ This library helps you quickly code Create, Read, Update and Delete (CRUD) acces
 This readme provides a good overview, but here are some articles that give you a detailed description of what the libraray does.
 
 * [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
-* 3.1.0 IncludeThen feature --- COMING SOON!
+* [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/).
 * [GenericServices Design Philosophy + tips and techniques](https://www.thereformedprogrammer.net/genericservices-design-philosophy-tips-and-techniques/).
 * [GenericServices documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
 
