@@ -81,7 +81,7 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(1);
                 decoded.PublicStaticCreatorMethods.Length.ShouldEqual(1);
-                decoded.PublicSetterMethods.Length.ShouldEqual(7);
+                decoded.PublicSetterMethods.Length.ShouldEqual(8);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(1);
             }
         }
