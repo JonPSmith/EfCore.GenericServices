@@ -4,6 +4,8 @@
 
 **NEW in version 3.1.0 - IncludeThen feature to make DDD updates easier - see [this article](#).**
 
+**NOTE: If you are using the NuGet package [EfCore.GenericServices.AspNetCore](https://www.nuget.org/packages/EfCore.GenericServices.AspNetCore/) then DO NOT  update to the 3.1.0 version. There are problems with `EfCore.GenericServices.AspNetCore` with ASP.NET Core 3 which I need to look at.**
+
 # EfCore.GenericServices
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
