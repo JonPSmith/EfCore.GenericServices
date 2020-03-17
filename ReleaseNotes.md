@@ -30,10 +30,11 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
 	}
 ```
 
-2. Add check for EntityStyle.HasNoKey and throw an exception when looking for a primary key in the DTO.
-3. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
-4. Have a look at issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
-5. Update the exception handler in `SaveChangesExtensions` to follow the pattern in the EfCore.GenericEventRunner library.
+2. Make async version of load with includes.
+3. Add check for EntityStyle.HasNoKey and throw an exception when looking for a primary key in the DTO.
+4. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
+5. Have a look at issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
+6. Update the exception handler in `SaveChangesExtensions` to follow the pattern in the EfCore.GenericEventRunner library.
 
 ## 3.1.0
 
