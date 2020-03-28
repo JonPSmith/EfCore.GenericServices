@@ -35,6 +35,7 @@ This code could be added to the `DecodedEntityClass` class to correct this, but 
 4. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
 5. Have a look at issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
 6. Update the exception handler in `SaveChangesExtensions` to follow the pattern in the EfCore.GenericEventRunner library.
+7. Issue #45. Can I detect an owned type in ILinkToEntity and give a better error message?
 
 ## 3.1.0
 
