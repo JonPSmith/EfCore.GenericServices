@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.LinqBuilders;
@@ -80,6 +81,18 @@ namespace GenericServices.Internal.MappingCode
                 var query = ApplyAnyIncludeStringsAtDbSetLevel(_context.Set<TEntity>());
                 var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
                 return query.SingleOrDefault(predicate);
+            }
+
+            /// <summary>
+            /// This returns the existing entity with any includes applied from the IncludeThenAttribute (async)
+            /// </summary>
+            /// <param name="keys"></param>
+            /// <returns></returns>
+            public Task<TEntity> ReturnExistingEntityWithPossibleIncludesAsync(object[] keys)
+            {
+                var query = ApplyAnyIncludeStringsAtDbSetLevel(_context.Set<TEntity>());
+                var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
+                return query.SingleOrDefaultAsync(predicate);
             }
 
             public IQueryable<TDto> GetViaKeysWithProject(params object[] keys)

@@ -189,7 +189,7 @@ namespace GenericServices.PublicButHidden
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
-                CombineStatuses(updater.ReadEntityAndUpdateViaDto(entityOrDto, methodName));
+                CombineStatuses(await updater.ReadEntityAndUpdateViaDtoAsync(entityOrDto, methodName).ConfigureAwait(false));
                 if (IsValid)
                     CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));

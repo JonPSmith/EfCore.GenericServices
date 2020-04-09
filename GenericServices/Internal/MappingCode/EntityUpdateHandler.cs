@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
@@ -39,10 +40,34 @@ namespace GenericServices.Internal.MappingCode
                     .AddError(
                         $"Sorry, I could not find the {_entityInfo.EntityType.GetNameForClass()} you were trying to update.");
 
-            //we look for methods to update a new entity in the following order
-            //1. DDD-styled entity: A public access method that fits the DTO
-            //2. Standard styled entity: using AutoMapper to update the entity
+            return RunMethodViaLinq(dto, methodName, entity, mapper);
+        }
 
+        public async Task<IStatusGeneric> ReadEntityAndUpdateViaDtoAsync(TDto dto, string methodName)
+        {
+            //first we need to load it 
+            var keys = _context.GetKeysFromDtoInCorrectOrder(dto, _dtoInfo);
+            var mapper = new CreateMapper(_context, _configAndMapper, typeof(TDto), _entityInfo);
+            var entity = await mapper.Accessor.ReturnExistingEntityWithPossibleIncludesAsync(keys).ConfigureAwait(false);
+            if (entity == null)
+                return new StatusGenericHandler()
+                    .AddError(
+                        $"Sorry, I could not find the {_entityInfo.EntityType.GetNameForClass()} you were trying to update.");
+
+            return RunMethodViaLinq(dto, methodName, entity, mapper);
+        }
+
+        /// <summary>
+        /// This look for methods to update a new entity in the following order
+        /// 1. DDD-styled entity: A public access method that fits the DTO
+        /// 2. Standard styled entity: using AutoMapper to update the entity</summary>
+        /// <param name="dto"></param>
+        /// <param name="methodName"></param>
+        /// <param name="entity"></param>
+        /// <param name="mapper"></param>
+        /// <returns></returns>
+        private IStatusGeneric RunMethodViaLinq(TDto dto, string methodName, dynamic entity, CreateMapper mapper)
+        {
             var decodedName = _dtoInfo.GetSpecifiedName(methodName, CrudTypes.Update);
 
             if (_entityInfo.CanBeUpdatedViaMethods && decodedName.NameType != DecodedNameTypes.AutoMapper)
@@ -53,7 +78,7 @@ namespace GenericServices.Internal.MappingCode
                 var methodToUse = _dtoInfo.GetMethodToRun(decodedName, _entityInfo);
 
                 //This runs the method via LINQ
-                return BuildCall.RunMethodViaLinq(methodToUse.Method, 
+                return BuildCall.RunMethodViaLinq(methodToUse.Method,
                     dto, entity, methodToUse.PropertiesMatch.MatchedPropertiesInOrder.ToList(), _context);
             }
 
