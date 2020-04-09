@@ -2,43 +2,16 @@
 
 ## TODO
 
-1. GenericServices doesn't call access methods in classes which the top class inherits. e.g. in the example code below GenericServices would NOT call the method `InnerMethod`. This is different to properties, which reflection will find.
-
-```c#
-class Outer : Inner
-{
-	public int OuterInt {get; set;}
-	public void OuterMethod (){}
-}
-
-class Inner 
-{
-	public int InnerInt { get; set; }
-	public void InnerMethod() { }
-}
-```
-
-This code could be added to the `DecodedEntityClass` class to correct this, but I'm haven't added this yet. 
-
-```c#
-	methodsToInspect = FindAllMethodsInType(entityType);
-	var inherited = entityType.BaseType;
-	while(inherited != typeof(object))
-	{
-       methodsToInspect.AddRange(FindAllMethodsInType(inherited));
-		inherited = inherited.BaseType;
-	}
-```
-
 3. Add check for EntityStyle.HasNoKey and throw an exception when looking for a primary key in the DTO.
 4. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
 5. Have a look at issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
-6. Update the exception handler in `SaveChangesExtensions` to follow the pattern in the EfCore.GenericEventRunner library.
 7. Can I detect an owned type in ILinkToEntity and give a better error message?
 
 ## 3.2.0
 
-- Async UpdateAndSave now does async load of entity with possible includes
+- Performance: Async UpdateAndSave now does async load of entity with possible includes
+- New feature: Added code to access DDD methods in inherited classes.
+- Improvement: The exception handler now handles SaveChangesExceptionHandler that can fix an exception.
 
 ## 3.1.0
 

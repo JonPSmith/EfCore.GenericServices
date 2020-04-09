@@ -100,13 +100,22 @@ namespace GenericServices
                 context.ChangeTracker.AutoDetectChangesEnabled = false;
             try
             {
-                context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                if (exStatus == null) throw;       //error wasn't handled, so rethrow
-                status.CombineStatuses(exStatus);
+                //This handles SaveChangesExceptionHandlers that can fix the exception, and the SaveChanges i tried again
+                do
+                {
+                    try
+                    {
+                        context.SaveChanges();
+                        break; //This breaks out of the do/while
+                    }
+                    catch (Exception e)
+                    {
+                        var exStatus = config?.SaveChangesExceptionHandler(e, context);
+                        if (exStatus == null)
+                            throw;       //error wasn't handled, so rethrow
+                        status.CombineStatuses(exStatus);
+                    }
+                } while (status.IsValid);
             }
             finally
             {
@@ -127,15 +136,25 @@ namespace GenericServices
 
             if (turnOffChangeTracker)
                 context.ChangeTracker.AutoDetectChangesEnabled = false;
+            
             try
             {
-                await context.SaveChangesAsync().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                if (exStatus == null) throw;       //error wasn't handled, so rethrow
-                status.CombineStatuses(exStatus);
+                //This handles SaveChangesExceptionHandlers that can fix the exception, and the SaveChanges i tried again
+                do
+                {
+                    try
+                    {
+                        await context.SaveChangesAsync().ConfigureAwait(false);
+                        break; //This breaks out of the do/while
+                    }
+                    catch (Exception e)
+                    {
+                        var exStatus = config?.SaveChangesExceptionHandler(e, context);
+                        if (exStatus == null) 
+                            throw;       //error wasn't handled, so rethrow
+                        status.CombineStatuses(exStatus);
+                    }
+                } while (status.IsValid);
             }
             finally
             {
