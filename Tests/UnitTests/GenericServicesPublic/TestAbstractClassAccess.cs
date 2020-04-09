@@ -37,7 +37,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //ATTEMPT
                 var dto = new TestAbstractUpdateViaAutoMapper {Id = 1, AbstractPropPublic = "Test"};
-                service.UpdateAndSave(dto);
+                service.UpdateAndSave(dto, "automapper");
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
@@ -45,11 +45,8 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        /// <summary>
-        /// This method shows that it silently missed calling a method in a class that was inherited by the 
-        /// </summary>
         [Fact]
-        public void TestUpdateAbstractPropViaMethod_DOES_NOT_WORK()
+        public void TestUpdateAbstractPropViaMethod()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -68,7 +65,7 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-                context.TestAbstractMains.Single().AbstractPropPrivate.ShouldEqual(null);
+                context.TestAbstractMains.Single().AbstractPropPrivate.ShouldEqual("Test");
             }
         }
 

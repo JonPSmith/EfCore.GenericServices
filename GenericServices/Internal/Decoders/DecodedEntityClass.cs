@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -33,6 +34,8 @@ namespace GenericServices.Internal.Decoders
 
     internal class DecodedEntityClass
     {
+        private readonly string[] _methodNamesToIgnore;
+
         public Type EntityType { get; }
         public EntityStyles EntityStyle { get; }
 
@@ -76,13 +79,9 @@ namespace GenericServices.Internal.Decoders
 
             PublicCtors = entityType.GetConstructors();
             var allPublicProperties = entityType.GetProperties();
-            var methodNamesToIgnore = allPublicProperties.Where(pp => pp.GetMethod?.IsPublic ?? false).Select(x => x.GetMethod.Name)
+            _methodNamesToIgnore = allPublicProperties.Where(pp => pp.GetMethod?.IsPublic ?? false).Select(x => x.GetMethod.Name)
                 .Union(allPublicProperties.Where(pp => pp.SetMethod?.IsPublic ?? false).Select(x => x.SetMethod.Name)).ToArray();
-            var methodsToInspect = entityType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(pm => !methodNamesToIgnore.Contains(pm.Name)).ToArray();
-            PublicSetterMethods = methodsToInspect
-                .Where(x => x.ReturnType == typeof(void) ||
-                            x.ReturnType == typeof(IStatusGeneric)).ToArray();
+            PublicSetterMethods = GetMethodsThatGenericServicesCanCall(entityType);
             var staticMethods = entityType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
             if (staticMethods.Any())
             {
@@ -114,6 +113,26 @@ namespace GenericServices.Internal.Decoders
                 }
             }
 
+        }
+
+        private MethodInfo[] GetMethodsThatGenericServicesCanCall(Type entityType)
+        {
+            var methodsToInspect = FindAllMethodsInType(entityType);
+            var inherited = entityType.BaseType;
+            while (inherited != typeof(object))
+            {
+                methodsToInspect.AddRange(FindAllMethodsInType(inherited));
+                inherited = inherited?.BaseType;
+            }
+
+            return methodsToInspect.Where(x => x.ReturnType == typeof(void) ||
+                                               x.ReturnType == typeof(IStatusGeneric)).ToArray();
+        }
+
+        private List<MethodInfo> FindAllMethodsInType(Type entityType)
+        {
+            return entityType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(pm => !_methodNamesToIgnore.Contains(pm.Name)).ToList();
         }
 
         public IQueryable<T> GetReadableEntity<T>(DbContext content) where T : class

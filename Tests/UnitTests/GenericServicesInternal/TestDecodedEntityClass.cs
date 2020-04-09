@@ -122,12 +122,12 @@ namespace Tests.UnitTests.GenericServicesInternal
                 //VERIFY
                 decoded.EntityStyle.ShouldEqual(EntityStyles.Hybrid);
                 decoded.PrimaryKeyProperties.Single().Name.ShouldEqual(nameof(TestAbstractBase.Id));
-                decoded.CanBeUpdatedViaMethods.ShouldBeFalse();
+                decoded.CanBeUpdatedViaMethods.ShouldBeTrue();
                 decoded.CanBeUpdatedViaProperties.ShouldBeTrue();
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeTrue();
                 decoded.PublicCtors.Length.ShouldEqual(1);
                 decoded.PublicStaticCreatorMethods.Length.ShouldEqual(0);
-                decoded.PublicSetterMethods.Length.ShouldEqual(0);
+                decoded.PublicSetterMethods.Length.ShouldEqual(1);
                 decoded.PropertiesWithPublicSetter.Length.ShouldEqual(2);
             }
         }
