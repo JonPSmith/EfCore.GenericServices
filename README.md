@@ -2,9 +2,6 @@
 ![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)
 ](https://www.buymeacoffee.com/l709oYtzp)
 
-**NEW in version 3.1.0 - IncludeThen feature to make DDD updates easier - see [this article](#).**
-
-**NOTE: If you are using the NuGet package [EfCore.GenericServices.AspNetCore](https://www.nuget.org/packages/EfCore.GenericServices.AspNetCore/) then DO NOT  update to the 3.1.0 version. There are problems with `EfCore.GenericServices.AspNetCore` with ASP.NET Core 3 which I need to look at.**
 
 # EfCore.GenericServices
 
@@ -17,8 +14,8 @@ This readme provides a good overview, but here are some articles that give you a
 * [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
 * [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/).
 * [GenericServices Design Philosophy + tips and techniques](https://www.thereformedprogrammer.net/genericservices-design-philosophy-tips-and-techniques/).
+* [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/) - version 3.1.0 and above
 * [GenericServices documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
-
 
 
 ## What the library does
