@@ -26,9 +26,9 @@ namespace GenericServices.Internal.Decoders
             PropertyInfo = propertyInfo;
             
             //This matches camel and Pascal names with some degree of match       
-            Score = name.SplitPascalCase().Equals( propertyInfo.Name.SplitPascalCase(), StringComparison.InvariantCultureIgnoreCase) ? 0.7 : 0;
+            Score = name.SplitPascalCase().Equals( propertyInfo?.Name.SplitPascalCase(), StringComparison.InvariantCultureIgnoreCase) ? 0.7 : 0;
             //The name is a higher match, as collection types can differ
-            Score += type == propertyInfo.PropertyType ? 0.3 : 0;
+            Score += type == propertyInfo?.PropertyType ? 0.3 : 0;
         }
 
         public static BestPropertyMatch FindMatch(PropertyInfo propertyToMatch, IEnumerable<PropertyInfo> propertiesToCheck)
@@ -38,6 +38,8 @@ namespace GenericServices.Internal.Decoders
 
         public static BestPropertyMatch FindMatch(string name, Type type, IEnumerable<PropertyInfo> propertiesToCheck)
         {
+            if (propertiesToCheck == null)
+                return null;
             BestPropertyMatch bestMatch = null;
             foreach (var propertyInfo in propertiesToCheck)
             {

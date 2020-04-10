@@ -2,16 +2,15 @@
 
 ## TODO
 
-3. Add check for EntityStyle.HasNoKey and throw an exception when looking for a primary key in the DTO.
 4. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
-5. Have a look at issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
-7. Can I detect an owned type in ILinkToEntity and give a better error message?
+5. Issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
 
 ## 3.2.0
 
 - Performance: Async UpdateAndSave now does async load of entity with possible includes
 - New feature: Added code to access DDD methods in inherited classes.
 - Improvement: The exception handler now handles SaveChangesExceptionHandler that can fix an exception.
+- Issue #43. Detects DTO with ILinkToEntity linked to Owned Type
 
 ## 3.1.0
 

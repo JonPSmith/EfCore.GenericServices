@@ -1,13 +1,13 @@
 ﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using Microsoft.EntityFrameworkCore;
+using GenericServices;
+using Tests.EfClasses;
 
-namespace Tests.EfClasses
+namespace Tests.Dtos
 {
-    [Owned]
-    public class OwnedType
+    public class DtoLinkedToOwnedType : ILinkToEntity<Address>
     {
-        public int OwnedInt { get; set; }
+        public string Address1 { get; set; }
     }
 }

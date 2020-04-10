@@ -29,7 +29,9 @@ namespace GenericServices.Internal.Decoders
         [Display(Description = "The entity cannot be created or updated, but it can be read or deleted.")]
         ReadOnly,
         [Display(Description = "This entity has no primary key, so its read-only.")]
-        HasNoKey
+        HasNoKey,
+        [Display(Description = "You cannot link to a OwnedType.")]
+        OwnedType
     }
 
     internal class DecodedEntityClass
@@ -60,6 +62,13 @@ namespace GenericServices.Internal.Decoders
             {
                 throw new InvalidOperationException($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext."+
                                                     " The class must be either be an entity class derived from the GenericServiceDto/Async class.");
+            }
+
+            if (efType.IsOwned())
+            {
+                //This is an owned type that doesn't have a key in it, so we mark this entity 
+                EntityStyle = EntityStyles.OwnedType;
+                return;
             }
 
             if (efType.FindPrimaryKey() == null)
@@ -152,7 +161,9 @@ namespace GenericServices.Internal.Decoders
         /// <param name="cudType">either create, update or delete</param>
         public void CheckCanDoOperation(CrudTypes cudType)
         {
-            if (EntityStyle == EntityStyles.HasNoKey || (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
+            if (EntityStyle == EntityStyles.HasNoKey || 
+                EntityStyle == EntityStyles.OwnedType || 
+                (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
                 throw new InvalidOperationException($"The class {EntityType.Name} of style {EntityStyle} cannot be used in {cudType}.");
 
         }
