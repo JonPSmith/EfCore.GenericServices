@@ -43,8 +43,10 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - New Feature: GenericServices' UpdateAndSave method will look for IncludeThen Attribute on a DTO and add the specified Include/ThenIncludes before doing the update.
-      - Update: Swapped to using GenericServices.StatusGeneric for status. This provides common status handling across my Generic libraries. WARNING: this may require you to install NuGet package GenericServices.StatusGeneric in the project that has the entity classes in.
+      - Performance: Async UpdateAndSave now does async load of entity with possible includes
+      - New feature: Added code to access DDD methods in inherited classes.
+      - Improvement: The exception handler now handles SaveChangesExceptionHandler that can fix an exception.
+      - Issue #43. Detects DTO with ILinkToEntity linked to Owned Type and gives better error message.
     </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>

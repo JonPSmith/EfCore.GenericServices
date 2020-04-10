@@ -2,15 +2,13 @@
 
 ## TODO
 
-4. Add a check for `QueryTrackingBehavior.NoTracking` on update and throw an exception - see issue #44.
-5. Issue #41. Seems that if all the DTO properties are marked as readonly then it fails.
 
 ## 3.2.0
 
 - Performance: Async UpdateAndSave now does async load of entity with possible includes
 - New feature: Added code to access DDD methods in inherited classes.
 - Improvement: The exception handler now handles SaveChangesExceptionHandler that can fix an exception.
-- Issue #43. Detects DTO with ILinkToEntity linked to Owned Type
+- Issue #43. Detects DTO with ILinkToEntity linked to Owned Type and gives better error message.
 
 ## 3.1.0
 
