@@ -21,16 +21,12 @@ namespace Tests.UnitTests.TestIssues
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
             using (var context = new TestDbContext(options))
             {
-                context.Database.EnsureCreated();
-                var utData = context.SetupSingleDtoAndEntities<DtoLinkedToOwnedType>();
-                var service = new CrudServices(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new DtoLinkedToOwnedType();
-                var ex = Assert.Throws<InvalidOperationException>(() => service.UpdateAndSave(dto));
+                var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<DtoLinkedToOwnedType>());
 
                 //VERIFY
-                ex.Message.ShouldEqual("The class Address of style OwnedType cannot be used in Update.");
+                ex.Message.ShouldEqual("DtoLinkedToOwnedType: You cannot use ILinkToEntity<T> with an EF Core Owned Type.");
             }
         }
     }

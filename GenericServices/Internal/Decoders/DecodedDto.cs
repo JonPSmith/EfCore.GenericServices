@@ -39,7 +39,9 @@ namespace GenericServices.Internal.Decoders
             _matcher = new MethodCtorMatcher(publicConfig.NameMatcher);
             _perDtoConfig = perDtoConfig; //can be null
             LinkedEntityInfo = entityInfo;
-            if (entityInfo.EntityStyle == EntityStyles.HasNoKey || entityInfo.EntityStyle == EntityStyles.OwnedType)
+            if (entityInfo.EntityStyle == EntityStyles.OwnedType)
+                throw new InvalidOperationException($"{DtoType.Name}: You cannot use ILinkToEntity<T> with an EF Core Owned Type.");
+            if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
                 //If HasNoKey or is OwnedType then exit immediately as properties etc 
                 return;
 

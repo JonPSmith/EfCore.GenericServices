@@ -2,6 +2,9 @@
 
 ## TODO
 
+## 3.2.1
+
+- Bug fix. Added extra check on DTO with ILinkToEntity linked to Owned Type - issue #43
 
 ## 3.2.0
 
