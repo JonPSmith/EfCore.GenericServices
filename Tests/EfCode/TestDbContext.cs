@@ -28,8 +28,9 @@ namespace Tests.EfCode
 #if NETCOREAPP2_1
         public DbQuery<ChildReadOnly> Children { get; set; }
 #elif NETCOREAPP3_0
-       public DbSet<ChildReadOnly> Children { get; set; }
+        public DbSet<ChildReadOnly> Children { get; set; }
 #endif
+        public DbSet<ParentOneToOne> ParentOneToOnes { get; set; }
 
 
         public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
