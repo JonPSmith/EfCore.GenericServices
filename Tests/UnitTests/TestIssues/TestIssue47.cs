@@ -43,7 +43,7 @@ namespace Tests.UnitTests.TestIssues
 
         public class Issue47Dto : ILinkToEntity<ParentOneToOne>
         {
-            public int OneToOneChildId { get; set; }
+            //public int OneToOneChildId { get; set; }
             public string OneToOneMyString { get; set; }
         }
 

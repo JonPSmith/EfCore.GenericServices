@@ -25,7 +25,7 @@ namespace GenericServices.Internal.Decoders
         public ImmutableList<PropertyMatch> MatchedPropertiesInOrder { get; }
 
         public double Score => MatchedPropertiesInOrder.Any()
-            ? MatchedPropertiesInOrder.Average(x => x.Score)
+            ? MatchedPropertiesInOrder.Average(x => x?.Score ?? 0)
             : 1;  //if there are no parameters then it is a perfect fit!
 
         public ParametersMatch(IEnumerable<ParameterInfo> parameters, List<PropertyInfo> propertiesToMatch, MatchNameAndType propMatcher)

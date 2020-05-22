@@ -2,6 +2,10 @@
 
 ## TODO
 
+## 3.2.2
+
+- Stops exception if matched parameter is null. This is an attempt to fix issue #47
+
 ## 3.2.1
 
 - Bug fix. Added extra check on DTO with ILinkToEntity linked to Owned Type - issue #43
