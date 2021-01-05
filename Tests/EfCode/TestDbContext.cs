@@ -35,7 +35,7 @@ namespace Tests.EfCode
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DddCompositeIntString>().HasKey(p => new {p.MyInt, p.MyString});
-            modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasName("UniqueError_UniqueEntity_UniqueString");
+            modelBuilder.Entity<UniqueEntity>().HasIndex(p => p.UniqueString).IsUnique().HasDatabaseName("UniqueError_UniqueEntity_UniqueString");
 
             modelBuilder.Entity<SoftDelEntity>().HasQueryFilter(x => !x.SoftDeleted);
 

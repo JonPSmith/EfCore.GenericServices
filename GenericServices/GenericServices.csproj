@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="5.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
     <PackageReference Include="GenericServices.StatusGeneric" Version="1.1.0" />
   </ItemGroup>
 
@@ -30,15 +30,15 @@
     <PackageReleaseNotes>
       - Stops exception if matched parameter is null. This is an attempt to fix issue #47
     </PackageReleaseNotes>
-    <PackageLicenseUrl>https://github.com/JonPSmith/EfCore.GenericServices/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/JonPSmith/EfCore.GenericServices/master/Images/GenericServicesNuGetIcon128.png</PackageIconUrl>
+    <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.0\GenericServices.xml</DocumentationFile>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="GenericServicesNuGetIcon128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netcoreapp2.1\GenericServices.xml</DocumentationFile>
   </PropertyGroup>
 

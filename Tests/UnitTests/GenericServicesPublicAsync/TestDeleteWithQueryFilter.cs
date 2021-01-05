@@ -19,6 +19,14 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
     public class TestDeleteWithQueryFilter
     {
 
+        private  Task<IStatusGeneric> DelHandlerAsync(DbContext context, SoftDelEntity entity)
+        {
+            var status = new StatusGenericHandler();
+            if (!entity.SoftDeleted)
+                status.AddError("Can't delete if not already soft deleted.");
+            return Task.FromResult((IStatusGeneric)status);
+        }
+
         [Fact]
         public async Task TestDeleteAsyncWithQueryFilterFailsOk()
         {
@@ -55,14 +63,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         [Fact]
         public async Task TestDeleteWithActionAsyncWithQueryFilterOk()
         {
-            async Task<IStatusGeneric> DelHandlerAsync(DbContext context, SoftDelEntity entity)
-            {
-                var status = new StatusGenericHandler();
-                if (!entity.SoftDeleted)
-                    status.AddError("Can't delete if not already soft deleted.");
-                return status;
-            }
-
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
             using (var context = new TestDbContext(options))
@@ -96,14 +96,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
         [Fact]
         public async  Task TestDeleteWithActionAsyncWithQueryFilterError()
         {
-            async Task<IStatusGeneric> DelHandlerAsync(DbContext context, SoftDelEntity entity)
-            {
-                var status = new StatusGenericHandler();
-                if (!entity.SoftDeleted)
-                    status.AddError("Can't delete if not already soft deleted.");
-                return status;
-            }
-
             //SETUP
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
             using (var context = new TestDbContext(options))

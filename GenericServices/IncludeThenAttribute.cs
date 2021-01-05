@@ -16,6 +16,9 @@ namespace GenericServices
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class IncludeThenAttribute : Attribute
     {
+        /// <summary>
+        /// This holds the combined includeName and thenIncludeNames from the constructor
+        /// </summary>
         public string IncludeNames { get; private set; }
 
         /// <summary>
