@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -14,13 +14,13 @@ namespace DataLayer.EfClasses
     {
         public const int PromotionalTextLength = 200;
         private HashSet<BookAuthor> _authorsLink;
-        private HashSet<Tag> _tags;
 
         //-----------------------------------------------
         //relationships
 
         //Use uninitialised backing fields - this means we can detect if the collection was loaded
         private HashSet<Review> _reviews;
+        private HashSet<Tag> _tags;
 
         //-----------------------------------------------
         //ctors
@@ -52,6 +52,26 @@ namespace DataLayer.EfClasses
             byte order = 0;
             _authorsLink = new HashSet<BookAuthor>(authors.Select(a => new BookAuthor(this, a, order++)));
         }
+
+        public int BookId { get; private set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string Title { get; private set; }
+
+        public string Description { get; private set; }
+        public DateTime PublishedOn { get; set; }
+        public string Publisher { get; private set; }
+        public decimal OrgPrice { get; private set; }
+        public decimal ActualPrice { get; private set; }
+
+        [MaxLength(PromotionalTextLength)]
+        public string PromotionalText { get; private set; }
+
+        public string ImageUrl { get; private set; }
+
+        public IEnumerable<Review> Reviews => _reviews?.ToList();
+        public IEnumerable<Tag> Tags => _tags?.ToList();
+        public IEnumerable<BookAuthor> AuthorsLink => _authorsLink?.ToList();
 
         public static IStatusGeneric<Book> CreateBook(string title, string description, DateTime publishedOn,
             string publisher, decimal price, string imageUrl, ICollection<Author> authors,
@@ -86,24 +106,6 @@ namespace DataLayer.EfClasses
 
             return status.SetResult(book);
         }
-
-        public int BookId { get; private set; }
-        [Required(AllowEmptyStrings = false)]
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public DateTime PublishedOn { get; set; }
-        public string Publisher { get; private set; }
-        public decimal OrgPrice { get; private set; }
-        public decimal ActualPrice { get; private set; }
-
-        [MaxLength(PromotionalTextLength)]
-        public string PromotionalText { get; private set; }
-
-        public string ImageUrl { get; private set; }
-
-        public IEnumerable<Review> Reviews => _reviews?.ToList();
-        public IEnumerable<Tag> Tags => _tags?.ToList();
-        public IEnumerable<BookAuthor> AuthorsLink => _authorsLink?.ToList();
 
         public void UpdatePublishedOn(DateTime publishedOn)
         {

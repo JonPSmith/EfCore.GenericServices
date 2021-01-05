@@ -1,6 +1,7 @@
-using System;
+// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System.Linq;
-using AutoMapper;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using DataLayer.EfClasses;
@@ -11,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
-using TestSupport.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -19,8 +19,8 @@ namespace Benchmarking
 {
     public class PerfCallMethodToUpdate1
     {
-        private SpecificUseData _utData;
         private DbContextOptions<EfCoreContext> _options;
+        private SpecificUseData _utData;
 
         [Fact]
         public void AddReviewToBook()
@@ -50,7 +50,7 @@ namespace Benchmarking
                 var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.AddReviewDto { BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
+                var dto = new AddReviewDto { BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
                 service.UpdateAndSave(dto, nameof(Book.AddReview));
 
                 //VERIFY
@@ -76,7 +76,5 @@ namespace Benchmarking
                 context.Set<Review>().Count().ShouldEqual(numReviews + 1);
             }
         }
-
-
     }
 }

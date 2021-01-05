@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Reflection;
@@ -21,15 +21,6 @@ namespace GenericServices.Configuration
     public class PropertyMatch
     {
         /// <summary>
-        /// Use "score >= PerfectMatchValue" to check if there is a perfect match
-        /// </summary>
-        public const double PerfectMatchValue = 0.99999;
-        /// <summary>
-        /// Use "score lessThanOrEqual NoMatchAtAll" to check if there is a perfect match
-        /// </summary>
-        public const double NoMatchAtAll = 0.00001;
-
-        /// <summary>
         /// These are the type match values. It is very imporant that they go from zero to 3, as the match maths relise on this
         /// </summary>
         public enum TypeMatchLevels
@@ -38,6 +29,37 @@ namespace GenericServices.Configuration
             NoMatch = 0,
             Match = 3
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        }
+
+        /// <summary>
+        /// Use "score >= PerfectMatchValue" to check if there is a perfect match
+        /// </summary>
+        public const double PerfectMatchValue = 0.99999;
+
+        /// <summary>
+        /// Use "score lessThanOrEqual NoMatchAtAll" to check if there is a perfect match
+        /// </summary>
+        public const double NoMatchAtAll = 0.00001;
+
+        /// <summary>
+        /// This is the ctor to create a PropertyMatch
+        /// </summary>
+        /// <param name="nameMatched"></param>
+        /// <param name="typeMatch"></param>
+        /// <param name="propertyInfo"></param>
+        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) 
+            : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property, null) { }
+
+        internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, 
+            MatchSources matchSource, Type nonPropertyMatchType)
+        {
+            NameMatched = nameMatched;
+            TypeMatch = typeMatch;
+            if ((int)TypeMatch > 3)
+                throw new InvalidOperationException("The TypeMatchLevels must run from 0 to 3, 3 being a perfect match.");
+            PropertyInfo = propertyInfo;
+            MatchSource = matchSource;
+            NonPropertyMatchType = nonPropertyMatchType;
         }
 
         /// <summary>
@@ -71,34 +93,13 @@ namespace GenericServices.Configuration
         public double Score => (NameMatched ? 0.7 : 0.0) + ((int) TypeMatch / 10.0);
 
         /// <summary>
-        /// This is the ctor to create a PropertyMatch
-        /// </summary>
-        /// <param name="nameMatched"></param>
-        /// <param name="typeMatch"></param>
-        /// <param name="propertyInfo"></param>
-        public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) 
-            : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property, null) { }
-
-        internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, 
-            MatchSources matchSource, Type nonPropertyMatchType)
-        {
-            NameMatched = nameMatched;
-            TypeMatch = typeMatch;
-            if ((int)TypeMatch > 3)
-                throw new InvalidOperationException("The TypeMatchLevels must run from 0 to 3, 3 being a perfect match.");
-            PropertyInfo = propertyInfo;
-            MatchSource = matchSource;
-            NonPropertyMatchType = nonPropertyMatchType;
-        }
-
-        /// <summary>
         /// This returns useful information on a match
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             string matchInfo = "wrong name";
-            if (Score >= PropertyMatch.PerfectMatchValue)
+            if (Score >= PerfectMatchValue)
                 matchInfo = $"{PropertyInfo.PropertyType.Name} {PropertyInfo.Name}";
             else if (Score <= NoMatchAtAll)
                 matchInfo = "nothing matches";

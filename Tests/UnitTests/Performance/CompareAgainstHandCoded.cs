@@ -1,23 +1,18 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericServices;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
-using GenericServices.Internal.Decoders;
-using Microsoft.EntityFrameworkCore;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
-using TestSupport.Helpers;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Extensions.AssertExtensions;
 using AddReviewDto = ServiceLayer.HomeController.Dtos.AddReviewDto;
 
 namespace Tests.UnitTests.Performance
@@ -29,16 +24,6 @@ namespace Tests.UnitTests.Performance
         public CompareAgainstHandCoded(ITestOutputHelper output)
         {
             _output = output;
-        }
-
-        private class Test<T> where T : class
-        {
-            public Test(T value)
-            {
-                Value = value;
-            }
-
-            public T Value { get; set; }
         }
 
         [Fact]
@@ -288,6 +273,16 @@ namespace Tests.UnitTests.Performance
             var book = context.Find<Book>(1);
             book.AddReview(5, "comment", "user", context);
             context.SaveChanges();
+        }
+
+        private class Test<T> where T : class
+        {
+            public Test(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; set; }
         }
     }
 }

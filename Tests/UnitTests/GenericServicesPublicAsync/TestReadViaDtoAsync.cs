@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -133,7 +133,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
         }
 
- 
 
         //-------------------------------------------------------
         //Read Single - including collection
@@ -210,7 +209,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 list.Select(x => x.ReviewsCount).ShouldEqual(new []{0,0,0,2});
             }
         }
-
 
 
         //[Fact]

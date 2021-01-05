@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using DataLayer.EfClasses;
@@ -16,23 +16,6 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestSaveChangesWithValidation
     {
-        public class LocalAuthorDto : ILinkToEntity<Author>
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-        }
-
-        public class LocalAuthorDtoWithConfig : ILinkToEntity<Author>
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-        }
-
-        public class CongfigWithValidation : PerDtoConfig<LocalAuthorDtoWithConfig, Author>
-        {
-            public override bool? UseSaveChangesWithValidation => true;
-        }
-
         [Fact]
         public void TestCreateAuthorNameGoodNoValidationOk()
         {
@@ -100,6 +83,21 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
+        public class LocalAuthorDto : ILinkToEntity<Author>
+        {
+            public string Name { get; set; }
+            public string Email { get; set; }
+        }
 
+        public class LocalAuthorDtoWithConfig : ILinkToEntity<Author>
+        {
+            public string Name { get; set; }
+            public string Email { get; set; }
+        }
+
+        public class CongfigWithValidation : PerDtoConfig<LocalAuthorDtoWithConfig, Author>
+        {
+            public override bool? UseSaveChangesWithValidation => true;
+        }
     }
 }

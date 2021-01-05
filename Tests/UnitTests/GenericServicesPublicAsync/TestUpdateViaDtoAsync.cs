@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.ComponentModel;
@@ -20,14 +20,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 {
     public class TestUpdateViaDtoAsync
     {
-        public class AuthorDto : ILinkToEntity<Author>
-        {
-            public int AuthorId { get; set; }
-            [ReadOnly(true)]
-            public string Name { get; set; }
-            public string Email { get; set; }
-        }
-
         [Fact]
         public async Task TestUpdateViaAutoMapperOk()
         {
@@ -65,11 +57,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var utData = context.SetupSingleDtoAndEntities<Dtos.ChangePubDateDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000,1,1) };
+                var dto = new Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000,1,1) };
                 await service.UpdateAndSaveAsync(dto);
 
                 //VERIFY
@@ -90,11 +82,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var utData = context.SetupSingleDtoAndEntities<Dtos.ChangePubDateDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                var dto = new Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
                 await service.UpdateAndSaveAsync(dto, CrudValues.UseAutoMapper);
 
                 //VERIFY
@@ -115,11 +107,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var utData = context.SetupSingleDtoAndEntities<Dtos.ChangePubDateDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                var dto = new Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
                 await service.UpdateAndSaveAsync(dto, nameof(Book.RemovePromotion));
 
                 //VERIFY
@@ -141,11 +133,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.AddReviewDto>();
+                var utData = context.SetupSingleDtoAndEntities<Dtos.AddReviewDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
+                var dto = new Dtos.AddReviewDto {BookId = 1, Comment = "comment", NumStars = 3, VoterName = "user" };
                 await service.UpdateAndSaveAsync(dto, nameof(Book.AddReview));
 
                 //VERIFY
@@ -153,17 +145,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 service.Message.ShouldEqual("Successfully updated the Book");
                 context.Set<Review>().Count().ShouldEqual(3);
             }
-        }
-
-        public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
-        {
-            public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
-        }
-
-        public class DtoWithConfig : ILinkToEntity<Book>
-        {
-            public int BookId { get; set; }
-            public string Title { get; set; }
         }
 
         [Fact]
@@ -201,11 +182,11 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
 
-                var utData = context.SetupSingleDtoAndEntities<Tests.Dtos.ChangePubDateDto>();
+                var utData = context.SetupSingleDtoAndEntities<Dtos.ChangePubDateDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
                 //ATTEMPT
-                var dto = new Tests.Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
+                var dto = new Dtos.ChangePubDateDto { BookId = 4, PublishedOn = new DateTime(2000, 1, 1) };
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateAndSaveAsync(dto, nameof(Book.AddReview)));
 
                 //VERIFY
@@ -213,5 +194,25 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
         }
 
+        public class AuthorDto : ILinkToEntity<Author>
+        {
+            public int AuthorId { get; set; }
+
+            [ReadOnly(true)]
+            public string Name { get; set; }
+
+            public string Email { get; set; }
+        }
+
+        public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
+        {
+            public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
+        }
+
+        public class DtoWithConfig : ILinkToEntity<Book>
+        {
+            public int BookId { get; set; }
+            public string Title { get; set; }
+        }
     }
 }

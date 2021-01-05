@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
 using Tests.EfClasses;
@@ -8,6 +8,7 @@ namespace Tests.EfCode
 {
     public class TestDbContext : DbContext
     {
+        public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
         public DbSet<NormalEntity> NormalEntities { get; set; }
         public DbSet<DddCtorEntity> DddCtorEntities { get; set; }
         public DbSet<DddStaticCreateEntity> DddStaticFactEntities { get; set; }
@@ -28,9 +29,6 @@ namespace Tests.EfCode
         public DbSet<ChildReadOnly> Children { get; set; }
 
         public DbSet<ParentOneToOne> ParentOneToOnes { get; set; }
-
-
-        public TestDbContext(DbContextOptions<TestDbContext> options): base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

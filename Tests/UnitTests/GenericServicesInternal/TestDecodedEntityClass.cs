@@ -1,21 +1,20 @@
-﻿using System;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System.Linq;
-using System.Reflection;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using Xunit;
 using GenericServices.Internal.Decoders;
 using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestDecodedEntityClass
     {
-
-
         [Fact]
         public void AuthorDecodedEntityClass()
         {
@@ -266,6 +265,5 @@ namespace Tests.UnitTests.GenericServicesInternal
                 decoded.CanBeCreatedByCtorOrStaticMethod.ShouldBeFalse();
             }
         }
-
     }
 }

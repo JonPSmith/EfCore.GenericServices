@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -13,15 +13,19 @@ namespace Tests.Dtos
     {
         public string Title { get; set; }
         public string Description { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime PublishedOn { get; set; }
+
         public string Publisher { get; set; }
+
         [Range(0, 1000)]
         public decimal Price { get; set; }
+
         public string ImageUrl { get; set; }
 
-        public ICollection<Author> Authors { get; set; }    
-        
+        public ICollection<Author> Authors { get; set; }
+
         public ICollection<Tag> Tags { get; set; }
     }
 }

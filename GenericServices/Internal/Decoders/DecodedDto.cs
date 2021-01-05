@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -12,26 +12,16 @@ namespace GenericServices.Internal.Decoders
 {
     internal class DecodedDto
     {
-        private readonly List<MethodCtorMatch> _matchedSetterMethods;
+        private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
         private readonly List<MethodCtorMatch> _matchedCtorsAndStaticMethods;
-
-        private List<MethodCtorMatch> _allPossibleSetterMatches;
-        private List<MethodCtorMatch> _allPossibleCtorsAndStaticMatches;
+        private readonly List<MethodCtorMatch> _matchedSetterMethods;
 
         private readonly MethodCtorMatcher _matcher;
         private readonly PerDtoConfig _perDtoConfig; //can be null
+        private List<MethodCtorMatch> _allPossibleCtorsAndStaticMatches;
 
-        public Type DtoType { get; }
-        public DecodedEntityClass LinkedEntityInfo { get; }
-        public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
+        private List<MethodCtorMatch> _allPossibleSetterMatches;
 
-
-        /// <summary>
-        /// This contains the different way the entity can be created
-        /// </summary>
-        public ImmutableList<MethodCtorMatch> MatchedCtorsAndStaticMethods =>
-            _matchedCtorsAndStaticMethods.ToImmutableList();
-        
         public DecodedDto(Type dtoType, DecodedEntityClass entityInfo,
             IGenericServicesConfig publicConfig, PerDtoConfig perDtoConfig)
         {
@@ -60,6 +50,17 @@ namespace GenericServices.Internal.Decoders
                 _matchedCtorsAndStaticMethods = PreloadPossibleMethodCtorMatches(MatchCtorsAndStaticMethodsToProperties(entityInfo),
                     new DecodeName(_perDtoConfig?.UpdateMethod), null);
         }
+
+        public Type DtoType { get; }
+        public DecodedEntityClass LinkedEntityInfo { get; }
+        public ImmutableList<DecodedDtoProperty> PropertyInfos { get; }
+
+
+        /// <summary>
+        /// This contains the different way the entity can be created
+        /// </summary>
+        public ImmutableList<MethodCtorMatch> MatchedCtorsAndStaticMethods =>
+            _matchedCtorsAndStaticMethods.ToImmutableList();
 
         /// <summary>
         /// This returns true if the SaveChanges should be validated
@@ -94,6 +95,7 @@ namespace GenericServices.Internal.Decoders
                     throw new ArgumentException("You should only use Create or Update here", nameof(createOrUpdate));
             }
         }
+
         public MethodCtorMatch GetMethodToRun(DecodeName nameInfo, DecodedEntityClass entityInfo)
         {
             if (nameInfo.NameType == DecodedNameTypes.NoNameGiven)
@@ -222,8 +224,6 @@ namespace GenericServices.Internal.Decoders
                 nonReadOnlyPropertyInfo, HowTheyWereAskedFor.DefaultMatchToProperties).ToList();
             return _allPossibleCtorsAndStaticMatches.Where(x => x.PropertiesMatch.Score >= PropertyMatch.PerfectMatchValue).ToList();
         }
-
-        private readonly string[] _endingsToRemove = new[] { "Dto", "VM", "ViewModel" };
 
         private string ExtractPossibleMethodNameFromDtoTypeName()
         {

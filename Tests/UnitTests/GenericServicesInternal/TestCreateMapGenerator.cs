@@ -1,23 +1,27 @@
-﻿using System.Linq;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
+using System.Linq;
 using AutoMapper;
 using AutoMapper.Configuration;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using Xunit;
 using GenericServices.Internal.Decoders;
 using GenericServices.Setup.Internal;
 using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestCreateMapGenerator
     {
-        private readonly DecodedEntityClass _bookInfo;
         private readonly DecodedEntityClass _authorInfo;
+        private readonly DecodedEntityClass _bookInfo;
+
         public TestCreateMapGenerator()
         {
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -62,8 +66,5 @@ namespace Tests.UnitTests.GenericServicesInternal
             dto.Title.ShouldEqual("Quantum Networking");
             dto.ReviewsCount.ShouldEqual(2);
         }
-
-
-
     }
 }

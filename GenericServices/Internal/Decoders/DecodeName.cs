@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GenericServices.Internal.Decoders
 {
@@ -11,10 +9,6 @@ namespace GenericServices.Internal.Decoders
 
     internal class DecodeName
     {
-        public string Name { get; }
-        public DecodedNameTypes NameType { get; }
-        public int NumParams { get;  } = -1;  //This means number of parameters was not defined
-
         public DecodeName(string nameToDecode)
         {
             if (string.IsNullOrEmpty(nameToDecode))
@@ -49,6 +43,10 @@ namespace GenericServices.Internal.Decoders
             else if (Name.Equals(CrudValues.UseAutoMapper, StringComparison.InvariantCultureIgnoreCase))
                 NameType = DecodedNameTypes.AutoMapper;
         }
+
+        public string Name { get; }
+        public DecodedNameTypes NameType { get; }
+        public int NumParams { get;  } = -1;  //This means number of parameters was not defined
 
         public override string ToString()
         {

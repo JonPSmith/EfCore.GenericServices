@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,11 @@ namespace ServiceLayer.HomeController.Dtos
 {
     public class CreateBookDto : ILinkToEntity<Book>
     {
+        public CreateBookDto()
+        {
+            PublishedOn = DateTime.Today;
+        }
+
         //This will be populated with the primary key of the created book
         public int BookId { get; set; }
 
@@ -21,20 +26,34 @@ namespace ServiceLayer.HomeController.Dtos
         //[Required(AllowEmptyStrings = false)]
         public string Title { get; set; }
         public string Description { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime PublishedOn { get; set; }
+
         public string Publisher { get; set; }
+
         [Range(0,1000)]
         public decimal Price { get; set; }
+
         public string ImageUrl { get; set; }
 
         public ICollection<Author> Authors { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
 
-        public CreateBookDto()
+        public List<KeyName> AllPossibleAuthors { get; private set; }
+
+        public List<int> BookAuthorIds { get; set; } = new List<int>();
+
+        public void BeforeDisplay(DbContext context)
         {
-            PublishedOn = DateTime.Today;
+            AllPossibleAuthors = context.Set<Author>().Select(x => new KeyName(x.AuthorId, x.Name))
+                .OrderBy(x => x.Name).ToList();
+        }
+
+        public void BeforeSave(DbContext context)
+        {
+            Authors = BookAuthorIds.Select(x => context.Find<Author>(x)).Where(x => x != null).ToList();
         }
 
         //---------------------------------------------------------
@@ -50,21 +69,6 @@ namespace ServiceLayer.HomeController.Dtos
 
             public int AuthorId { get; }
             public string Name { get; }
-        }
-
-        public List<KeyName> AllPossibleAuthors { get; private set; }
-
-        public void BeforeDisplay(DbContext context)
-        {
-            AllPossibleAuthors = context.Set<Author>().Select(x => new KeyName(x.AuthorId, x.Name))
-                .OrderBy(x => x.Name).ToList();
-        }
-
-        public List<int> BookAuthorIds { get; set; } = new List<int>();
-
-        public void BeforeSave(DbContext context)
-        {
-            Authors = BookAuthorIds.Select(x => context.Find<Author>(x)).Where(x => x != null).ToList();
         }
     }
 }

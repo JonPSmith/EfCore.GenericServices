@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -20,6 +19,13 @@ namespace GenericServices.Internal.LinqBuilders
 {
     internal static class BuildCall
     {
+        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
+
+        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnStatusCache = new ConcurrentDictionary<string, dynamic>();
+
+        private static readonly ConcurrentDictionary<string, dynamic> CallStaticCreatorCache = new ConcurrentDictionary<string, dynamic>();
+
+        private static readonly ConcurrentDictionary<string, dynamic> CallConstructorCache = new ConcurrentDictionary<string, dynamic>();
         //BE WARNED: extension methods don't work with dynamics - got some strange error messages
         //Also the dto, entity and DbContext parameters cannot be object, but dynamic works
 
@@ -79,8 +85,6 @@ namespace GenericServices.Internal.LinqBuilders
                 : staticFunc(dto);
         }
 
-        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnVoidCache = new ConcurrentDictionary<string, dynamic>();
-
         public static dynamic CallMethodReturnVoid(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
             return CallMethodReturnVoidCache.GetOrAdd(methodInfo.GenerateKey(tDto), 
@@ -113,8 +117,6 @@ namespace GenericServices.Internal.LinqBuilders
                     : Expression.Lambda(call, false, pCall, pContext);
             return built.Compile();
         }
-
-        private static readonly ConcurrentDictionary<string, dynamic> CallMethodReturnStatusCache = new ConcurrentDictionary<string, dynamic>();
 
         public static dynamic CallMethodReturnStatus(MethodInfo methodInfo, Type tDto, Type tEntity, List<PropertyMatch> propertyMatches)
         {
@@ -149,8 +151,6 @@ namespace GenericServices.Internal.LinqBuilders
             return built.Compile();
         }
 
-        private static readonly ConcurrentDictionary<string, dynamic> CallStaticCreatorCache = new ConcurrentDictionary<string, dynamic>();
-
         public static dynamic CallStaticCreator(MethodInfo methodInfo, Type tDto, List<PropertyMatch> propertyMatches)
         {
             return CallStaticCreatorCache.GetOrAdd(methodInfo.GenerateKey(tDto),
@@ -181,8 +181,6 @@ namespace GenericServices.Internal.LinqBuilders
                 : Expression.Lambda(call, false, pIn, pContext);
             return built.Compile();
         }
-
-        private static readonly ConcurrentDictionary<string, dynamic> CallConstructorCache = new ConcurrentDictionary<string, dynamic>();
 
         public static dynamic CallConstructor(ConstructorInfo ctor, Type tDto, List<PropertyMatch> propertyMatches)
         {

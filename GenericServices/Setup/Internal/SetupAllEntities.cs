@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using GenericServices.Configuration;
@@ -10,9 +10,6 @@ namespace GenericServices.Setup.Internal
 {
     internal class SetupAllEntities : IGenericServicesSetupPart1
     {
-        public IGenericServicesConfig PublicConfig { get; }
-        public IServiceCollection Services { get; }
-
         public SetupAllEntities(IServiceCollection services, IGenericServicesConfig publicConfig, Type[] contextTypes)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
@@ -36,6 +33,7 @@ namespace GenericServices.Setup.Internal
             }
         }
 
-
+        public IGenericServicesConfig PublicConfig { get; }
+        public IServiceCollection Services { get; }
     }
 }

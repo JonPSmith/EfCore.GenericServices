@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using AutoMapper;
@@ -10,14 +10,14 @@ namespace GenericServices.Setup.Internal
 {
     internal class CreateConfigGenerator
     {
-        public dynamic Accessor { get; }
-
         public CreateConfigGenerator(Type dtoType, DecodedEntityClass entityInfo, object configInfo)
         {
             var myGeneric = typeof(ConfigGenerator<,>);
             var copierType = myGeneric.MakeGenericType(dtoType, entityInfo.EntityType);
             Accessor = Activator.CreateInstance(copierType, new object[]{ configInfo});
         }
+
+        public dynamic Accessor { get; }
 
         public class ConfigGenerator<TDto, TEntity>
             where TDto : class

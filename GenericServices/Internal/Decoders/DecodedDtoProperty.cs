@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.ComponentModel;
@@ -18,9 +18,6 @@ namespace GenericServices.Internal.Decoders
     }
     internal class DecodedDtoProperty
     {
-        public PropertyInfo PropertyInfo { get; private set; }
-        public DtoPropertyTypes PropertyType { get; private set; }
-
         public DecodedDtoProperty(PropertyInfo propertyInfo, bool isKeyProperty)
         {
             PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
@@ -31,5 +28,7 @@ namespace GenericServices.Internal.Decoders
                 PropertyType |= DtoPropertyTypes.ReadOnly;
         }
 
+        public PropertyInfo PropertyInfo { get; private set; }
+        public DtoPropertyTypes PropertyType { get; private set; }
     }
 }

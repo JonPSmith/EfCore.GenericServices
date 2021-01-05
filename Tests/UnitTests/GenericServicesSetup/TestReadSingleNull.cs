@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
 using DataLayer.EfClasses;
@@ -8,10 +8,10 @@ using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Tests.Dtos;
+using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
-using Tests.Helpers;
 
 namespace Tests.UnitTests.GenericServicesSetup
 {

@@ -1,6 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
-
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -59,7 +58,7 @@ namespace GenericServices
         /// <returns></returns>
         IQueryable<TDto> ProjectFromEntityToDto<TEntity, TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query)
             where TEntity : class;
-        
+
         /// <summary>
         /// This will create a new entity in the database. If you provide class which is an entity class (i.e. in your EF Core database) then
         /// the method will add, and then call SaveChanges. If the class you provide is a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface

@@ -1,24 +1,16 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
-using GenericServices.Setup.Internal;
 using StatusGeneric;
 
 namespace GenericServices.Setup.Internal
 {
     internal class RegisterOneDtoType : StatusGenericHandler
     {
-        public DecodedEntityClass EntityInfo { get; }
-        public DecodedDto DtoInfo { get; }
-
-        public PerDtoConfig PerDtoConfig { get; }
-
-        public CreateConfigGenerator ConfigGenerator { get; }
-
         public RegisterOneDtoType(Type dtoType, Type[] typesInAssembly, IGenericServicesConfig configuration)
         {
 
@@ -50,6 +42,13 @@ namespace GenericServices.Setup.Internal
             CombineStatuses(decodeStatus);
             DtoInfo = decodeStatus.Result;
         }
+
+        public DecodedEntityClass EntityInfo { get; }
+        public DecodedDto DtoInfo { get; }
+
+        public PerDtoConfig PerDtoConfig { get; }
+
+        public CreateConfigGenerator ConfigGenerator { get; }
 
         private object FindConfigInfoIfPresent(Type dtoType, Type entityType, Type[] typesToScan)
         {

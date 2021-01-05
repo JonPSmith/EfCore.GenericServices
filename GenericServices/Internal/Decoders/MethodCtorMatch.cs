@@ -1,13 +1,11 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using GenericServices.Configuration;
-using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -21,16 +19,6 @@ namespace GenericServices.Internal.Decoders
     /// </summary>
     internal class MethodCtorMatch
     {
-        public string Name { get; set; }
-        public MethodInfo Method { get;}
-        public ConstructorInfo Constructor { get; }
-
-        public ParametersMatch PropertiesMatch { get;  }
-
-        public HowTheyWereAskedFor HowDefined { get; }
-
-        public bool IsParameterlessMethod => !PropertiesMatch.MatchedPropertiesInOrder.Any();
-
         public MethodCtorMatch(dynamic methodOrCtor, ParametersMatch propertiesMatch, HowTheyWereAskedFor howDefined)
         {
             Method = methodOrCtor as MethodInfo;
@@ -42,6 +30,16 @@ namespace GenericServices.Internal.Decoders
             PropertiesMatch = propertiesMatch ?? throw new ArgumentNullException(nameof(propertiesMatch));
             HowDefined = howDefined;
         }
+
+        public string Name { get; set; }
+        public MethodInfo Method { get;}
+        public ConstructorInfo Constructor { get; }
+
+        public ParametersMatch PropertiesMatch { get;  }
+
+        public HowTheyWereAskedFor HowDefined { get; }
+
+        public bool IsParameterlessMethod => !PropertiesMatch.MatchedPropertiesInOrder.Any();
 
         public override string ToString()
         {
@@ -57,7 +55,5 @@ namespace GenericServices.Internal.Decoders
         {
             return $"{Name}({PropertiesMatch.MatchedPropertiesInOrder.Count} params)";
         }
-
-
     }
 }

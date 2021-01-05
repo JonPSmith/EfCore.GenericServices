@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Concurrent;
@@ -14,6 +14,13 @@ namespace GenericServices.Internal.Decoders
 {
     internal static class DecodedDataCache
     {
+        //-----------------------------------------------------
+        //private methods/dicts
+
+        private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
+
+        private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();
+
         public static DecodedEntityClass GetEntityInfoThrowExceptionIfNotThere(this DbContext context, Type entityOrDto)
         {
             //If the entity type is found in the LinkToEntity interface it returns that, otherwise the called type because it must be the entity
@@ -54,17 +61,9 @@ namespace GenericServices.Internal.Decoders
             return status;
         }
 
-        //-----------------------------------------------------
-        //private methods/dicts
-
-        private static readonly ConcurrentDictionary<Type, DecodedDto> DecodedDtoCache = new ConcurrentDictionary<Type, DecodedDto>();
-
-        private static readonly ConcurrentDictionary<Type, DecodedEntityClass> EntityInfoCache = new ConcurrentDictionary<Type, DecodedEntityClass>();
-
         private static DecodedEntityClass GetEntityClassInfo(this DbContext context, Type classType) 
         {
             return EntityInfoCache.GetOrAdd(classType, type => new DecodedEntityClass(classType, context));
         }
-
     }
 }

@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -19,15 +18,6 @@ namespace GenericServices.Internal.Decoders
     /// </summary>
     internal class ParametersMatch
     {
-        /// <summary>
-        /// This holds the matching properties to the method/ctor in order. If there is no match the entry will be null
-        /// </summary>
-        public ImmutableList<PropertyMatch> MatchedPropertiesInOrder { get; }
-
-        public double Score => MatchedPropertiesInOrder.Any()
-            ? MatchedPropertiesInOrder.Average(x => x?.Score ?? 0)
-            : 1;  //if there are no parameters then it is a perfect fit!
-
         public ParametersMatch(IEnumerable<ParameterInfo> parameters, List<PropertyInfo> propertiesToMatch, MatchNameAndType propMatcher)
         {
             var matchedProps = new List<PropertyMatch>();
@@ -38,6 +28,15 @@ namespace GenericServices.Internal.Decoders
 
             MatchedPropertiesInOrder = matchedProps.ToImmutableList();
         }
+
+        /// <summary>
+        /// This holds the matching properties to the method/ctor in order. If there is no match the entry will be null
+        /// </summary>
+        public ImmutableList<PropertyMatch> MatchedPropertiesInOrder { get; }
+
+        public double Score => MatchedPropertiesInOrder.Any()
+            ? MatchedPropertiesInOrder.Average(x => x?.Score ?? 0)
+            : 1;  //if there are no parameters then it is a perfect fit!
 
         private static PropertyMatch FindMatch(ParameterInfo parameter, IEnumerable<PropertyInfo> propertiesToCheck, MatchNameAndType propMatcher)
         {
@@ -50,6 +49,5 @@ namespace GenericServices.Internal.Decoders
             }
             return bestMatch;
         }
-
     }
 }

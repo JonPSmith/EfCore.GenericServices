@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -15,6 +14,14 @@ namespace GenericServices.Internal.Decoders
 {
     internal class BestMethodCtorMatch
     {
+        private BestMethodCtorMatch(object methodOrCtor, List<BestPropertyMatch> propertyMatches)
+        {
+            Method = methodOrCtor as MethodInfo;
+            Constructor = methodOrCtor as ConstructorInfo;
+            DtoPropertiesInOrder = propertyMatches.ToImmutableList();
+            Score = propertyMatches.Average(x => x.Score);
+        }
+
         public MethodInfo Method { get;  set; }
         public ConstructorInfo Constructor { get; }
 
@@ -24,14 +31,6 @@ namespace GenericServices.Internal.Decoders
         /// A Score of 1 means a perfect match. 
         /// </summary>
         public double Score { get; set; }
-
-        private BestMethodCtorMatch(object methodOrCtor, List<BestPropertyMatch> propertyMatches)
-        {
-            Method = methodOrCtor as MethodInfo;
-            Constructor = methodOrCtor as ConstructorInfo;
-            DtoPropertiesInOrder = propertyMatches.ToImmutableList();
-            Score = propertyMatches.Average(x => x.Score);
-        }
 
         public static BestMethodCtorMatch FindMatch(ImmutableList<PropertyInfo> propertyInfos, dynamic[] whattoConsider)
         {

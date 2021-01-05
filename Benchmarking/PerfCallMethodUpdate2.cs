@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
@@ -17,9 +20,9 @@ namespace Benchmarking
 {
     public class PerfCallMethodUpdate2
     {
-        private SpecificUseData _utData;
-        private DbContextOptions<EfCoreContext> _options;
         private int _incdDay = 0;
+        private DbContextOptions<EfCoreContext> _options;
+        private SpecificUseData _utData;
 
         [Fact]
         public void ChangePublicationDate()
@@ -116,9 +119,5 @@ namespace Benchmarking
                 entity.PublishedOn.ShouldEqual(newDate);
             }
         }
-
-
-
-
     }
 }

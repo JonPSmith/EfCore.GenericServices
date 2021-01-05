@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Concurrent;
@@ -17,7 +17,7 @@ namespace GenericServices.Internal.MappingCode
 {
     internal class CreateMapper
     {
-        public dynamic Accessor { get;  }
+        private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
 
         public CreateMapper(DbContext context, IWrappedConfigAndMapper configAndMapper, Type tDto, DecodedEntityClass entityInfo)
         {
@@ -29,7 +29,7 @@ namespace GenericServices.Internal.MappingCode
             //Accessor = Activator.CreateInstance(genericType, context, configAndMapper, entityInfo);
         }
 
-        private static readonly ConcurrentDictionary<Type, dynamic> NewGenericMapperCache = new ConcurrentDictionary<Type, dynamic>();
+        public dynamic Accessor { get;  }
 
         //This is only public for performance tests
         public static Func<DbContext, IWrappedConfigAndMapper, DecodedEntityClass, dynamic> GetNewGenericMapper(Type genericType, ConstructorInfo ctor)
@@ -54,10 +54,8 @@ namespace GenericServices.Internal.MappingCode
             where TEntity : class
         {
             private readonly DbContext _context;
-            private readonly IWrappedConfigAndMapper _wrappedMapper;
             private readonly DecodedEntityClass _entityInfo;
-
-            public string EntityName => _entityInfo.EntityType.Name;
+            private readonly IWrappedConfigAndMapper _wrappedMapper;
 
             public GenericMapper(DbContext context, IWrappedConfigAndMapper wrappedMapper, DecodedEntityClass entityInfo)
             {
@@ -65,6 +63,8 @@ namespace GenericServices.Internal.MappingCode
                 _wrappedMapper = wrappedMapper ?? throw new ArgumentNullException(nameof(wrappedMapper));
                 _entityInfo = entityInfo ?? throw new ArgumentNullException(nameof(entityInfo));
             }
+
+            public string EntityName => _entityInfo.EntityType.Name;
 
             public void MapDtoToEntity(TDto dto, object entity)
             {

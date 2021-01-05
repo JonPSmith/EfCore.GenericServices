@@ -1,12 +1,11 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DataLayer.EfCode;
 using GenericServices.Configuration;
-using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -15,18 +14,6 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestParametersMatch
     {
-#pragma warning disable xUnit1013 // Public method should be marked as test
-        public void ParemeterlessMethod() { }
-        public void SetMyInt(int myInt) { }
-
-        public void SetMyString(string myString) { }
-
-        public void NotMatch(string myString, int notMyInt) { }
-
-        public int MyInt { get; set; }
-        public string MyString { get; set; }
-#pragma warning restore xUnit1013 // Public method should be marked as test
-
         private static MethodInfo _paremeterlessMethod = typeof(TestParametersMatch).GetMethod(nameof(ParemeterlessMethod));
         private static MethodInfo _setMyInt = typeof(TestParametersMatch).GetMethod(nameof(SetMyInt));
         private static MethodInfo _setMyString = typeof(TestParametersMatch).GetMethod(nameof(SetMyString));
@@ -86,5 +73,16 @@ namespace Tests.UnitTests.GenericServicesInternal
             match.PropertiesMatch.MatchedPropertiesInOrder.First().MatchSource.ShouldEqual(MatchSources.Property);
             match.PropertiesMatch.MatchedPropertiesInOrder.Last().MatchSource.ShouldEqual(MatchSources.DbContext);
         }
+#pragma warning disable xUnit1013 // Public method should be marked as test
+        public void ParemeterlessMethod() { }
+        public void SetMyInt(int myInt) { }
+
+        public void SetMyString(string myString) { }
+
+        public void NotMatch(string myString, int notMyInt) { }
+
+        public int MyInt { get; set; }
+        public string MyString { get; set; }
+#pragma warning restore xUnit1013 // Public method should be marked as test
     }
 }

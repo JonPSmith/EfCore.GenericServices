@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Threading.Tasks;
@@ -8,7 +8,6 @@ using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -18,7 +17,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 {
     public class TestJsonPatchAsync
     {
-
         [Fact]
         public async Task TestUpdateJsonPatchKeysOk()
         {
@@ -132,6 +130,5 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 service.GetAllErrors().ShouldStartWith("The property at path 'Title' could not be updated.");
             }
         }
-
     }
 }

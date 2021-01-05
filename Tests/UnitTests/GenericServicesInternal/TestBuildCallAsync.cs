@@ -1,15 +1,10 @@
-﻿using System;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DataLayer.EfClasses;
-using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.LinqBuilders;
-using Tests.EfClasses;
-using Tests.EfCode;
-using Tests.Helpers;
-using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -17,6 +12,22 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestBuildCallAsync
     {
+        [Fact]
+        public async Task TestBuildCallTaskMethodNoReturn()
+        {
+            //SETUP 
+            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
+            var method = typeof(Target1).GetMethod(nameof(Target1.MyTask));
+            var dto = new Dto {MyInt = 123};
+            var target = new Target1();
+
+            //ATTEMPT
+            var action = BuildCallAsync.TaskCallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
+            await action.Invoke(dto, target);
+
+            //VERIFY
+            target.MyInt.ShouldEqual(123);
+        }
 
         private class Dto
         {
@@ -43,26 +54,6 @@ namespace Tests.UnitTests.GenericServicesInternal
                 MyInt = myInt;
                 await Task.Delay(10);
             }
-
         }
-
-        [Fact]
-        public async Task TestBuildCallTaskMethodNoReturn()
-        {
-            //SETUP 
-            var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, typeof(Dto).GetProperty(nameof(Dto.MyInt)));
-            var method = typeof(Target1).GetMethod(nameof(Target1.MyTask));
-            var dto = new Dto {MyInt = 123};
-            var target = new Target1();
-
-            //ATTEMPT
-            var action = BuildCallAsync.TaskCallMethodReturnVoid(method, typeof(Dto), typeof(Target1), new List<PropertyMatch>{prop});
-            await action.Invoke(dto, target);
-
-            //VERIFY
-            target.MyInt.ShouldEqual(123);
-        }
-
-
     }
 }

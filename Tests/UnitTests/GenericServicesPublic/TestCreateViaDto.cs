@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -25,13 +25,6 @@ namespace Tests.UnitTests.GenericServicesPublic
         public TestCreateViaDto(ITestOutputHelper output)
         {
             _output = output;
-        }
-
-        public class AuthorDto : ILinkToEntity<Author>
-        {
-            public int AuthorId { get; set; }
-            public string Name { get; set; }
-            public string Email { get; set; }
         }
 
         [Fact]
@@ -170,17 +163,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-
-
-        //------------------------------------------------------
-        //via ctors/statics
-
-        public class DtoCtorCreate : ILinkToEntity<DddCtorEntity>
-        {
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
-        }
-
         [Fact]
         public void TestCreateEntityViaDtoCtorCreateCtor2Ok()
         {
@@ -292,12 +274,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        public class DtoCtorCreateBad : ILinkToEntity<DddCtorEntity>
-        {
-            public int YourInt { get; set; }
-            public bool MyString { get; set; }
-        }
-
         [Fact]
         public void TestCreateEntityViaDtoCtorNoMatchOk()
         {
@@ -323,12 +299,6 @@ namespace Tests.UnitTests.GenericServicesPublic
                     "Matched 1 params out of 1. Score 30% Ctor(Name not match, but type is Match)");
 
             }
-        }
-
-        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
-        {
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
         }
 
         [Fact]
@@ -384,6 +354,35 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.GetAllErrors().ShouldEqual("The string should not be null.");
                 context.DddStaticFactEntities.Count().ShouldEqual(0);
             }
+        }
+
+        public class AuthorDto : ILinkToEntity<Author>
+        {
+            public int AuthorId { get; set; }
+            public string Name { get; set; }
+            public string Email { get; set; }
+        }
+
+
+        //------------------------------------------------------
+        //via ctors/statics
+
+        public class DtoCtorCreate : ILinkToEntity<DddCtorEntity>
+        {
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
+        }
+
+        public class DtoCtorCreateBad : ILinkToEntity<DddCtorEntity>
+        {
+            public int YourInt { get; set; }
+            public bool MyString { get; set; }
+        }
+
+        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
+        {
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
         }
     }
 }

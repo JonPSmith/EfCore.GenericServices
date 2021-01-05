@@ -1,18 +1,20 @@
-﻿using GenericServices.Configuration;
-using Xunit;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
+using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.Internal.MappingCode;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
 using TestSupport.EfHelpers;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestKeyHandlers
     {
-
         [Fact]
         public void TestNormalKeyExtract()
         {
@@ -109,7 +111,5 @@ namespace Tests.UnitTests.GenericServicesInternal
                 dto.MyInt.ShouldEqual(999);
             }
         }
-
-        
     }
 }

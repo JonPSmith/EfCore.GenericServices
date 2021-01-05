@@ -1,16 +1,14 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericServices;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using StatusGeneric;
-using Tests.Dtos;
 using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
@@ -20,8 +18,6 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestDirectAccess
     {
-
-
         [Fact]
         public void TestGetSingleOnEntityOk()
         {

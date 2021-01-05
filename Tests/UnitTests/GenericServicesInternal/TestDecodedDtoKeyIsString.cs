@@ -1,19 +1,14 @@
-﻿using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System.Linq;
-using DataLayer.EfClasses;
-using DataLayer.EfCode;
-using GenericServices;
 using GenericServices.Configuration;
-using Xunit;
 using GenericServices.Internal.Decoders;
-using Microsoft.AspNetCore.Mvc;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
-using Tests.UnitTests.GenericServicesPublic;
 using TestSupport.EfHelpers;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
@@ -21,6 +16,7 @@ namespace Tests.UnitTests.GenericServicesInternal
     public class TestDecodedDtoKeyIsString
     {
         private DecodedEntityClass _EntityInfo;
+
         public TestDecodedDtoKeyIsString()
         {
             var options = SqliteInMemory.CreateOptions<TestDbContext>();
@@ -62,10 +58,5 @@ namespace Tests.UnitTests.GenericServicesInternal
             //VERIFY
             methodOrCtor.Name.ShouldEqual("Ctor");
         }
-
-        
-
-
-
     }
 }

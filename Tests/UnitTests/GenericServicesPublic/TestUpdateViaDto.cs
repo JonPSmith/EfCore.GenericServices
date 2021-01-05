@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.ComponentModel;
@@ -20,14 +20,6 @@ namespace Tests.UnitTests.GenericServicesPublic
 {
     public class TestUpdateViaDto
     {
-        public class AuthorDto : ILinkToEntity<Author>
-        {
-            public int AuthorId { get; set; }
-            [ReadOnly(true)]
-            public string Name { get; set; }
-            public string Email { get; set; }
-        }
-
         [Fact]
         public void TestUpdateViaAutoMapperOk()
         {
@@ -179,17 +171,6 @@ namespace Tests.UnitTests.GenericServicesPublic
             }
         }
 
-        public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
-        {
-            public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
-        }
-
-        public class DtoWithConfig : ILinkToEntity<Book>
-        {
-            public int BookId { get; set; }
-            public string Title { get; set; }
-        }
-
         [Fact]
         public void TestUpdateViaStatedMethodInPerDtoConfigOk()
         {
@@ -235,6 +216,27 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 ex.Message.ShouldStartWith("Could not find a method of name AddReview. The method that fit the properties in the DTO/VM are:");
             }
+        }
+
+        public class AuthorDto : ILinkToEntity<Author>
+        {
+            public int AuthorId { get; set; }
+
+            [ReadOnly(true)]
+            public string Name { get; set; }
+
+            public string Email { get; set; }
+        }
+
+        public class ConfigSettingMethod : PerDtoConfig<DtoWithConfig, Book>
+        {
+            public override string UpdateMethod { get; } = nameof(Book.RemovePromotion);
+        }
+
+        public class DtoWithConfig : ILinkToEntity<Book>
+        {
+            public int BookId { get; set; }
+            public string Title { get; set; }
         }
     }
 }

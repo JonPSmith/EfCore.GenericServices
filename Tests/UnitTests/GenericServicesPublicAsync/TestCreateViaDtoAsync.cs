@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -12,7 +12,6 @@ using GenericServices.Setup;
 using Tests.Dtos;
 using Tests.EfClasses;
 using Tests.EfCode;
-using Tests.Helpers;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -21,12 +20,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
 {
     public class TestCreateViaDtoAsync
     {
-        public class AuthorDto : ILinkToEntity<Author>
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-        }
-
         [Fact]
         public async Task TestCreateAuthorViaAutoMapperOk()
         {
@@ -166,21 +159,6 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             }
         }
 
-        //------------------------------------------------------
-        //via ctors/statics
-
-        public class DtoCtorCreate : ILinkToEntity<DddCtorEntity>
-        {
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
-        }
-
-        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
-        {
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
-        }
-
         [Fact]
         public async Task TestCreateEntityUsingStaticCreateOk()
         {
@@ -234,6 +212,27 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 service.GetAllErrors().ShouldEqual("The string should not be null.");
                 context.DddStaticFactEntities.Count().ShouldEqual(0);
             }
+        }
+
+        public class AuthorDto : ILinkToEntity<Author>
+        {
+            public string Name { get; set; }
+            public string Email { get; set; }
+        }
+
+        //------------------------------------------------------
+        //via ctors/statics
+
+        public class DtoCtorCreate : ILinkToEntity<DddCtorEntity>
+        {
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
+        }
+
+        public class DtoStaticCreate : ILinkToEntity<DddStaticCreateEntity>
+        {
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
         }
     }
 }

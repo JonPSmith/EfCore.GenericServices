@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,10 +9,10 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
-using Xunit;
 using GenericServices.Internal.Decoders;
 using Microsoft.AspNetCore.Mvc;
 using TestSupport.EfHelpers;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
@@ -17,6 +20,7 @@ namespace Tests.UnitTests.GenericServicesInternal
     public class TestDecodedDto
     {
         private DecodedEntityClass _bookEntityInfo;
+
         public TestDecodedDto()
         {
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -24,16 +28,6 @@ namespace Tests.UnitTests.GenericServicesInternal
             {
                 _bookEntityInfo = new DecodedEntityClass(typeof(Book), context);
             }
-        }
-
-        public class Dto1 : ILinkToEntity<Book>
-        {
-            public int BookId { get; set; }
-
-            [ReadOnly(true)]
-            public string Title { get; set; }
-
-            public string ImageUrl { get; set; }
         }
 
         [Fact]
@@ -59,7 +53,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethod()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn"), _bookEntityInfo);
@@ -72,7 +66,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodWithGivenNumParams()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn(1)"), _bookEntityInfo);
@@ -85,7 +79,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodBadName()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var ex = Assert.Throws<InvalidOperationException>(() => decoded.GetMethodToRun(new DecodeName("badname"), _bookEntityInfo));
@@ -98,7 +92,7 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestFindSetterMethodNumParamsBad()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var ex = Assert.Throws<InvalidOperationException>(() => decoded.GetMethodToRun(new DecodeName("UpdatePublishedOn(2)"), _bookEntityInfo));
@@ -111,26 +105,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         public void TestGetDefaultSetterMethod()
         {
             //SETUP
-            var decoded = new DecodedDto(typeof(Tests.Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
+            var decoded = new DecodedDto(typeof(Dtos.ChangePubDateDto), _bookEntityInfo, new GenericServicesConfig(), null);
 
             //ATTEMPT
             var method = decoded.GetMethodToRun(new DecodeName(null), _bookEntityInfo);
 
             //VERIFY
             method.Method.Name.ShouldEqual("UpdatePublishedOn");
-        }
-
-        public class ExtraParamsDto : ILinkToEntity<Book>
-        {
-            [HiddenInput]
-            public int BookId { get; set; }
-
-            public string Title { get; set; }
-
-            [DataType(DataType.Date)]
-            public DateTime PublishedOn { get; set; }
-
-            public DateTime SomeOtherParam { get; set; }
         }
 
         [Fact]
@@ -146,6 +127,27 @@ namespace Tests.UnitTests.GenericServicesInternal
             method.Method.Name.ShouldEqual("UpdatePublishedOn");
         }
 
+        public class Dto1 : ILinkToEntity<Book>
+        {
+            public int BookId { get; set; }
 
+            [ReadOnly(true)]
+            public string Title { get; set; }
+
+            public string ImageUrl { get; set; }
+        }
+
+        public class ExtraParamsDto : ILinkToEntity<Book>
+        {
+            [HiddenInput]
+            public int BookId { get; set; }
+
+            public string Title { get; set; }
+
+            [DataType(DataType.Date)]
+            public DateTime PublishedOn { get; set; }
+
+            public DateTime SomeOtherParam { get; set; }
+        }
     }
 }

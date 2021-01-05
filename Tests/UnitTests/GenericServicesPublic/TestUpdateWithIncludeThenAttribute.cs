@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
@@ -86,7 +85,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                     .Where(x => x.BookId == bookId)
                     .SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name))
                     .ToArray();
-                bookAuthorsName.ShouldEqual(new String[] {"Martin Fowler", "Future Person"});
+                bookAuthorsName.ShouldEqual(new string[] {"Martin Fowler", "Future Person"});
             }
         }
 
@@ -161,7 +160,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                     .Where(x => x.BookId == bookId)
                     .SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name))
                     .ToArray();
-                bookAuthorsName.ShouldEqual(new String[] {"Martin Fowler", "Future Person"});
+                bookAuthorsName.ShouldEqual(new string[] {"Martin Fowler", "Future Person"});
             }
         }
     }

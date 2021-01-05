@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -15,10 +15,10 @@ namespace GenericServices.Internal.MappingCode
     internal class EntityCreateHandler<TDto> : StatusGenericHandler
         where TDto : class
     {
-        private readonly DecodedDto _dtoInfo;
-        private readonly DecodedEntityClass _entityInfo;
         private readonly IWrappedConfigAndMapper _configAndMapper;
         private readonly DbContext _context;
+        private readonly DecodedDto _dtoInfo;
+        private readonly DecodedEntityClass _entityInfo;
 
         public EntityCreateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context)
         {
@@ -61,7 +61,5 @@ namespace GenericServices.Internal.MappingCode
                 $"There was no way to create the entity class {_entityInfo.EntityType.Name} using {decodedName.ToString() ?? "any approach"}.");
 
         }
-
-
     }
 }

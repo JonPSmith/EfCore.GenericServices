@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
@@ -122,15 +121,8 @@ namespace Tests.UnitTests.GenericServicesPublic
 
                 //VERIFY
                 var names = books.SelectMany(x => x.AuthorsLink.Select(y => y.Author.Name)).ToArray();
-                names.ShouldEqual(new String[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
+                names.ShouldEqual(new string[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
             }
-        }
-
-        [IncludeThen(nameof(Book.Reviews))]
-        [IncludeThen(nameof(Book.AuthorsLink), nameof(BookAuthor.Author))]
-        private class AnotherDto : ILinkToEntity<Book>
-        {
-
         }
 
         [Fact]
@@ -188,5 +180,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             return query;
         }
 
+        [IncludeThen(nameof(Book.Reviews))]
+        [IncludeThen(nameof(Book.AuthorsLink), nameof(BookAuthor.Author))]
+        private class AnotherDto : ILinkToEntity<Book>
+        {}
     }
 }

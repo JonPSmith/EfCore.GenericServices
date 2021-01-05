@@ -1,12 +1,7 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
-using System.IO;
-using System.Linq;
-using ServiceLayer.DatabaseCode.Services;
-using TestSupport.Helpers;
 using Xunit;
-using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.DataLayer
 {
@@ -28,9 +23,6 @@ namespace Tests.UnitTests.DataLayer
             //books.Count.ShouldEqual(53);
             //books.All(x => x.ActualPrice != 0).ShouldBeTrue();
         }
-
-
-
     }
 
 }

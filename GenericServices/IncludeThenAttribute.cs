@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2020 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT license. See License file in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -17,11 +17,6 @@ namespace GenericServices
     public class IncludeThenAttribute : Attribute
     {
         /// <summary>
-        /// This holds the combined includeName and thenIncludeNames from the constructor
-        /// </summary>
-        public string IncludeNames { get; private set; }
-
-        /// <summary>
         /// This will cause a Include to be added to the database query in an UpdateAndSave call
         /// Useful when updating something in the main entity class where you need a relationships, e.g. adding a new Review.
         /// NOTE: This only works on the DTO that is used in the GenericServices methods calls. IncludeThen attributes on Nested DTOs are ignored. 
@@ -35,5 +30,10 @@ namespace GenericServices
             if (thenIncludeNames.Any())
                 IncludeNames += "." + string.Join(".", thenIncludeNames);
         }
+
+        /// <summary>
+        /// This holds the combined includeName and thenIncludeNames from the constructor
+        /// </summary>
+        public string IncludeNames { get; private set; }
     }
 }

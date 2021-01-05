@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,6 @@ using System.Linq;
 using System.Reflection;
 using GenericServices.Configuration.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StatusGeneric;
 
 namespace GenericServices.Internal.Decoders
@@ -40,22 +38,6 @@ namespace GenericServices.Internal.Decoders
     internal class DecodedEntityClass
     {
         private readonly string[] _methodNamesToIgnore;
-
-        public Type EntityType { get; }
-        public EntityStyles EntityStyle { get; }
-
-        public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
-
-        public ConstructorInfo[] PublicCtors { get; }
-        public MethodInfo[] PublicStaticCreatorMethods { get; } = new MethodInfo[0];
-        public MethodInfo[] PublicSetterMethods { get; }
-        public PropertyInfo[] PropertiesWithPublicSetter { get; }
-
-        public bool CanBeCreatedViaAutoMapper => HasPublicParameterlessCtor && CanBeUpdatedViaProperties;
-        public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
-        public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
-        public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
-        public bool CanBeCreatedByCtorOrStaticMethod => PublicCtors.Any(x => x.GetParameters().Length > 0) || PublicStaticCreatorMethods.Any();
 
         public DecodedEntityClass(Type entityType, DbContext context)
         {
@@ -132,6 +114,22 @@ namespace GenericServices.Internal.Decoders
             }
 
         }
+
+        public Type EntityType { get; }
+        public EntityStyles EntityStyle { get; }
+
+        public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
+
+        public ConstructorInfo[] PublicCtors { get; }
+        public MethodInfo[] PublicStaticCreatorMethods { get; } = new MethodInfo[0];
+        public MethodInfo[] PublicSetterMethods { get; }
+        public PropertyInfo[] PropertiesWithPublicSetter { get; }
+
+        public bool CanBeCreatedViaAutoMapper => HasPublicParameterlessCtor && CanBeUpdatedViaProperties;
+        public bool CanBeUpdatedViaProperties => PropertiesWithPublicSetter.Any();
+        public bool HasPublicParameterlessCtor => PublicCtors.Any(x => !x.GetParameters().Any());
+        public bool CanBeUpdatedViaMethods => PublicSetterMethods.Any();
+        public bool CanBeCreatedByCtorOrStaticMethod => PublicCtors.Any(x => x.GetParameters().Length > 0) || PublicStaticCreatorMethods.Any();
 
         private MethodInfo[] GetMethodsThatGenericServicesCanCall(Type entityType)
         {

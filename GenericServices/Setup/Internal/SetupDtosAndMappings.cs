@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -17,12 +17,12 @@ namespace GenericServices.Setup.Internal
         readonly MappingProfile _readProfile = new MappingProfile(false);
         readonly MappingProfile _saveProfile = new MappingProfile(true);
 
-        public IGenericServicesConfig PublicConfig { get; }
-
         public SetupDtosAndMappings(IGenericServicesConfig publicConfig)
         {
             PublicConfig = publicConfig ?? throw new ArgumentNullException(nameof(publicConfig));
         }
+
+        public IGenericServicesConfig PublicConfig { get; }
 
         public IWrappedConfigAndMapper ScanAllAssemblies(Assembly[] assembliesToScan, IGenericServicesConfig config)
         {
@@ -86,7 +86,5 @@ namespace GenericServices.Setup.Internal
                 SetupMappingForDto(dtoRegister, _readProfile, _saveProfile);
             }
         }
-
-
     }
 }

@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
-using GenericServices;
 using StatusGeneric;
 
 namespace Tests.EfClasses
@@ -17,6 +16,10 @@ namespace Tests.EfClasses
             MyString = myString;
         }
 
+        public int Id { get; private set; }
+        public int MyInt { get; private set; }
+        public string MyString { get; private set; }
+
         public static IStatusGeneric<DddCtorAndFactEntity> Create(int id, int myInt, string myString)
         {
             var status = new StatusGenericHandler<DddCtorAndFactEntity>();
@@ -31,10 +34,6 @@ namespace Tests.EfClasses
 
             return status.SetResult(result); //This will return null if there are errors
         }
-
-        public int Id { get; private set; }
-        public int MyInt { get; private set; }
-        public string MyString { get; private set; }
 
 
         public void SetInt(int myInt)
@@ -59,7 +58,5 @@ namespace Tests.EfClasses
             MyInt = myInt;
             return SetString(myString);
         }
-
-
     }
 }

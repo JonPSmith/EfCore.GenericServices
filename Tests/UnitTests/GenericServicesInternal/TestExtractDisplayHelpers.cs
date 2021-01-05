@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
 using System.ComponentModel.DataAnnotations;
-using Xunit;
 using GenericServices.Internal;
+using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.GenericServicesInternal
@@ -9,22 +11,6 @@ namespace Tests.UnitTests.GenericServicesInternal
     public class TestExtractDisplayHelpers
     {
         private Test _test = new Test();
-
-        [Display(Name="ClassName")]
-        private class Test
-        {
-            [Display(Name = "Display Name")]
-            public int I { get; set; }
-            [Display(Name = "OneName")]
-            public int J { get; set; }
-            public int PascalName { get; set; }
-            public int Longwordnotcamel { get; set; }
-        }
-
-        private class TestWithoutDisplayName
-        {
-
-        }
 
 
         [Fact]
@@ -50,6 +36,22 @@ namespace Tests.UnitTests.GenericServicesInternal
             ExtractDisplayHelpers.GetNameForClass<Test>().ShouldEqual("ClassName");
             ExtractDisplayHelpers.GetNameForClass<TestWithoutDisplayName>().ShouldEqual("Test Without Display Name");
         }
+
+        [Display(Name="ClassName")]
+        private class Test
+        {
+            [Display(Name = "Display Name")]
+            public int I { get; set; }
+
+            [Display(Name = "OneName")]
+            public int J { get; set; }
+
+            public int PascalName { get; set; }
+            public int Longwordnotcamel { get; set; }
+        }
+
+        private class TestWithoutDisplayName
+        {}
 
         //[Fact]
         //public void TestGetShortName()

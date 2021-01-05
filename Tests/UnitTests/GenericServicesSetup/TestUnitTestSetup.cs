@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using DataLayer.EfClasses;
@@ -16,16 +16,6 @@ namespace Tests.UnitTests.GenericServicesSetup
 {
     public class TestUnitTestSetup
     {
-        public class DtoWithTwoIlinks : ILinkToEntity<Book>, ILinkToEntity<Author> {}
-
-        public class DtoWithTwoConfigs : ILinkToEntity<Book> { }
-        public class Congfig1 : PerDtoConfig<DtoWithTwoConfigs, Book> { }
-        public class Congfig2 : PerDtoConfig<DtoWithTwoConfigs, Book> { }
-
-        public class DtoWithoutILink { }
-
-        private class PrivateDto : ILinkToEntity<Book> { }
-
         [Fact]
         public void TestSetupSingleDtoAndEntitiesOk()
         {
@@ -116,5 +106,17 @@ namespace Tests.UnitTests.GenericServicesSetup
                 ex.Message.ShouldEndWith("PrivateDto: Sorry, but the DTO/ViewModel class 'PrivateDto' must be public for GenericServices to work.");
             }
         }
+
+        public class DtoWithTwoIlinks : ILinkToEntity<Book>, ILinkToEntity<Author> {}
+
+        public class DtoWithTwoConfigs : ILinkToEntity<Book> {}
+
+        public class Congfig1 : PerDtoConfig<DtoWithTwoConfigs, Book> {}
+
+        public class Congfig2 : PerDtoConfig<DtoWithTwoConfigs, Book> {}
+
+        public class DtoWithoutILink {}
+
+        private class PrivateDto : ILinkToEntity<Book> {}
     }
 }

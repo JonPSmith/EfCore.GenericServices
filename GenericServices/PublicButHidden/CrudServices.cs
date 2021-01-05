@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
@@ -44,11 +44,8 @@ namespace GenericServices.PublicButHidden
         StatusGenericHandler, 
         ICrudServices<TContext> where TContext : DbContext
     {
-        private readonly TContext _context;
         private readonly IWrappedConfigAndMapper _configAndMapper;
-
-        /// <inheritdoc />
-        public DbContext Context => _context;
+        private readonly TContext _context;
 
         /// <summary>
         /// CrudServices needs the correct DbContext and the AutoMapper config
@@ -60,6 +57,9 @@ namespace GenericServices.PublicButHidden
             _context = context;
             _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
         }
+
+        /// <inheritdoc />
+        public DbContext Context => _context;
 
         /// <inheritdoc />
         public T ReadSingle<T>(params object[] keys) where T : class
@@ -205,36 +205,6 @@ namespace GenericServices.PublicButHidden
             return LocalUpdateAndSave(patch, () => _context.Set<TEntity>().SingleOrDefault(whereExpression));
         }
 
-        /// <summary>
-        /// Local version of UpdateAndSave with JsonPatch - contains the common code
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="patch"></param>
-        /// <param name="getEntity"></param>
-        /// <returns></returns>
-        private TEntity LocalUpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Func<TEntity> getEntity)
-            where TEntity : class
-        {
-            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
-            entityInfo.CheckCanDoOperation(CrudTypes.Update);
-            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
-            if (entityInfo.EntityType != typeof(TEntity))
-                throw new NotImplementedException(
-                    $"I could not find the entity class {typeof(TEntity).Name}. JsonPatch only works on entity classes.");
-
-            var entity = getEntity();
-            if (entity != null)
-                patch.ApplyTo(entity, error => AddError(error.ErrorMessage));
-            else
-                AddError(
-                    $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
-            if (IsValid)
-                CombineStatuses(_context.SaveChangesWithOptionalValidation(
-                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
-
-            return entity;
-        }
-
         /// <inheritdoc />
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
         {
@@ -285,5 +255,34 @@ namespace GenericServices.PublicButHidden
                 _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
         }
 
+        /// <summary>
+        /// Local version of UpdateAndSave with JsonPatch - contains the common code
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="patch"></param>
+        /// <param name="getEntity"></param>
+        /// <returns></returns>
+        private TEntity LocalUpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Func<TEntity> getEntity)
+            where TEntity : class
+        {
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            entityInfo.CheckCanDoOperation(CrudTypes.Update);
+            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            if (entityInfo.EntityType != typeof(TEntity))
+                throw new NotImplementedException(
+                    $"I could not find the entity class {typeof(TEntity).Name}. JsonPatch only works on entity classes.");
+
+            var entity = getEntity();
+            if (entity != null)
+                patch.ApplyTo(entity, error => AddError(error.ErrorMessage));
+            else
+                AddError(
+                    $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
+            if (IsValid)
+                CombineStatuses(_context.SaveChangesWithOptionalValidation(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config));
+
+            return entity;
+        }
     }
 }

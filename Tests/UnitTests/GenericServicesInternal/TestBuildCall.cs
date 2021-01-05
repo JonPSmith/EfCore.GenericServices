@@ -1,8 +1,10 @@
-﻿using System;
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataLayer.EfClasses;
-using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.LinqBuilders;
 using StatusGeneric;
@@ -17,56 +19,6 @@ namespace Tests.UnitTests.GenericServicesInternal
 {
     public class TestBuildCall
     {
-
-        private class Dto
-        {
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
-            public IEnumerable<int> MyList { get; set; }
-        }
-
-        private class Target1
-        {
-            public Target1() { }
-
-            public Target1(int myInt, string myString)
-            {
-                MyInt = myInt;
-                MyString = myString;
-            }
-
-            public int MyInt { get; set; }
-            public string MyString { get; set; }
-
-            public void SetMyInt(int myInt)
-            {
-                MyInt = myInt;
-            }
-
-            public void SetMyIntAndAddEntityToDb(int myInt, TestDbContext context)
-            {
-                MyInt = myInt;
-                context.Add(new NormalEntity {MyInt = myInt});
-            }
-
-            public IStatusGeneric SetMyString(string myString)
-            {
-                MyString = myString;
-                return new StatusGenericHandler {Message = "OK"};
-            }
-
-            public static IStatusGeneric<Target1> Create(int myInt, string myString)
-            {
-                var status =
-                    new StatusGenericHandler<Target1>
-                    {
-                        Message = "Static"
-                    };
-                return status.SetResult(new Target1(myInt, myString));
-            }
-
-        }
-
         [Fact]
         public void TestBuildCallMethodNoReturn()
         {
@@ -106,13 +58,13 @@ namespace Tests.UnitTests.GenericServicesInternal
         {
             //SETUP 
             var prop = new PropertyMatch(true, PropertyMatch.TypeMatchLevels.Match, 
-                typeof(Tests.Dtos.ChangePubDateDto).GetProperty(nameof(Tests.Dtos.ChangePubDateDto.PublishedOn)));
+                typeof(Dtos.ChangePubDateDto).GetProperty(nameof(Dtos.ChangePubDateDto.PublishedOn)));
             var method = typeof(Book).GetMethod(nameof(Book.UpdatePublishedOn));
-            var dto = new Tests.Dtos.ChangePubDateDto { PublishedOn = new DateTime(2000,1,1)};
+            var dto = new Dtos.ChangePubDateDto { PublishedOn = new DateTime(2000,1,1)};
             var target = DddEfTestData.CreateDummyBooks(1).Single();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>{prop});
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>{prop});
             action.Invoke(dto, target);
 
             //VERIFY
@@ -127,7 +79,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             var target = DddEfTestData.CreateFourBooks().Last();
 
             //ATTEMPT
-            var action = BuildCall.CallMethodReturnVoid(method, typeof(Tests.Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>());
+            var action = BuildCall.CallMethodReturnVoid(method, typeof(Dtos.ChangePubDateDto), typeof(Book), new List<PropertyMatch>());
             action.Invoke(target);
 
             //VERIFY
@@ -216,5 +168,52 @@ namespace Tests.UnitTests.GenericServicesInternal
             ((string)newInstance.MyString).ShouldEqual("Hello");
         }
 
+        private class Dto
+        {
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
+            public IEnumerable<int> MyList { get; set; }
+        }
+
+        private class Target1
+        {
+            public Target1() { }
+
+            public Target1(int myInt, string myString)
+            {
+                MyInt = myInt;
+                MyString = myString;
+            }
+
+            public int MyInt { get; set; }
+            public string MyString { get; set; }
+
+            public void SetMyInt(int myInt)
+            {
+                MyInt = myInt;
+            }
+
+            public void SetMyIntAndAddEntityToDb(int myInt, TestDbContext context)
+            {
+                MyInt = myInt;
+                context.Add(new NormalEntity {MyInt = myInt});
+            }
+
+            public IStatusGeneric SetMyString(string myString)
+            {
+                MyString = myString;
+                return new StatusGenericHandler {Message = "OK"};
+            }
+
+            public static IStatusGeneric<Target1> Create(int myInt, string myString)
+            {
+                var status =
+                    new StatusGenericHandler<Target1>
+                    {
+                        Message = "Static"
+                    };
+                return status.SetResult(new Target1(myInt, myString));
+            }
+        }
     }
 }

@@ -1,13 +1,13 @@
-﻿// Copyright (c) 2018 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
-// Licensed under MIT licence. See License.txt in the project root for license information.
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal.Decoders;
-using GenericServices.PublicButHidden;
 using GenericServices.Internal.LinqBuilders;
+using GenericServices.PublicButHidden;
 using Microsoft.EntityFrameworkCore;
 using StatusGeneric;
 
@@ -16,10 +16,10 @@ namespace GenericServices.Internal.MappingCode
     internal class EntityUpdateHandler<TDto> : StatusGenericHandler
         where TDto : class
     {
-        private readonly DecodedDto _dtoInfo;
-        private readonly DecodedEntityClass _entityInfo;
         private readonly IWrappedConfigAndMapper _configAndMapper;
         private readonly DbContext _context;
+        private readonly DecodedDto _dtoInfo;
+        private readonly DecodedEntityClass _entityInfo;
 
         public EntityUpdateHandler(DecodedDto dtoInfo, DecodedEntityClass entityInfo, IWrappedConfigAndMapper configAndMapper, DbContext context)
         {

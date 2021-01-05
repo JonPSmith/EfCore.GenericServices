@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
@@ -15,7 +15,6 @@ namespace Tests.UnitTests.TestIssues
 {
     public class TestIssue31
     {
-
         [Fact]
         public async Task Root_method_call_fails()
         {
@@ -41,12 +40,14 @@ namespace Tests.UnitTests.TestIssues
         {
             [ReadOnly(true)]
             public int Id { get; set; }
+
             public string Item { get; set; }
         }
 
         public class Root
         {
             public int Id { get; set; }
+
             public void SetItem(string item, RootContext context = null)
             {
                 if (item is null)
@@ -58,6 +59,7 @@ namespace Tests.UnitTests.TestIssues
         public class RootContext : DbContext
         {
             public RootContext(DbContextOptions<RootContext> options) : base(options) { }
+
             protected override void OnModelCreating(ModelBuilder builder)
             {
                 builder.Entity<Root>().Property(e => e.Id).ValueGeneratedNever();
