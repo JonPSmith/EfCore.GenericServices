@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
@@ -136,7 +135,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         //Read Single - including collection
 
         [Fact]
-        public void TestReadSingleCollection()
+        public void TestReadSingleCollectionAuthors()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -155,6 +154,29 @@ namespace Tests.UnitTests.GenericServicesPublic
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 dto.BookId.ShouldEqual(1);
                 dto.Authors.Count.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestReadSingleCollectionTags()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
+                var utData = context.SetupSingleDtoAndEntities<BookWithTags>();
+                var service = new CrudServices(context, utData.ConfigAndMapper);
+
+                //ATTEMPT
+                var dto = service.ReadSingle<BookWithTags>(1);
+
+                //VERIFY
+                service.IsValid.ShouldBeTrue(service.GetAllErrors());
+                dto.BookId.ShouldEqual(1);
+                dto.TagIds.ShouldEqual(new []{ "Editor's Choice", "Refactoring" });
             }
         }
 
