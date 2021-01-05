@@ -130,7 +130,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => service.ReadSingleAsync<Book>(x => true));
 
                 //VERIFY
-                ex.Message.ShouldEqual("Enumerator failed to MoveNextAsync.");
+                ex.Message.ShouldEqual("Sequence contains more than one element.");
             }
         }
 

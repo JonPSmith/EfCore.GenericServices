@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using DataLayer.EfClasses;
 using GenericServices;
-using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Dtos
 {
@@ -23,5 +21,7 @@ namespace Tests.Dtos
         public string ImageUrl { get; set; }
 
         public ICollection<Author> Authors { get; set; }    
+        
+        public ICollection<Tag> Tags { get; set; }
     }
 }

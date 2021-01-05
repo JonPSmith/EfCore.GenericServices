@@ -42,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 dto.AuthorsLink.Count.ShouldEqual(2);
                 dto.AuthorsLink.First().AuthorName.ShouldStartWith("Author");
                 dto.AuthorsLink.First().Order.ShouldEqual((byte)0);
-                dto.AuthorsLink.Last().AuthorName.ShouldEqual("CommonAuthor");
+                dto.AuthorsLink.Last().AuthorName.ShouldEqual("Common Author");
                 dto.AuthorsLink.Last().Order.ShouldEqual((byte)1);
             }
         }
@@ -69,7 +69,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 dto.AuthorsLink.Count.ShouldEqual(2);
                 dto.AuthorsLink.First().AStringToHoldAuthorName.ShouldStartWith("Author");
                 dto.AuthorsLink.First().Order.ShouldEqual((byte)0);
-                dto.AuthorsLink.Last().AStringToHoldAuthorName.ShouldEqual("CommonAuthor");
+                dto.AuthorsLink.Last().AStringToHoldAuthorName.ShouldEqual("Common Author");
                 dto.AuthorsLink.Last().Order.ShouldEqual((byte)1);
             }
         }

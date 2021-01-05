@@ -31,7 +31,10 @@ namespace GenericServices.Internal.Decoders
         [Display(Description = "This entity has no primary key, so its read-only.")]
         HasNoKey,
         [Display(Description = "You cannot link to a OwnedType.")]
-        OwnedType
+        OwnedType,
+        [Display(Description = "You cannot link to a Property Bag. Please create a entity class to replace the property bag")]
+        PropertyBag
+
     }
 
     internal class DecodedEntityClass
@@ -57,6 +60,12 @@ namespace GenericServices.Internal.Decoders
         public DecodedEntityClass(Type entityType, DbContext context)
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
+            if (entityType == typeof(Dictionary<string, object>))
+            {
+                EntityStyle = EntityStyles.PropertyBag;
+                return;
+            }
+                
             var efType = context.Model.FindEntityType(entityType);
             if (efType == null)
             {
@@ -151,7 +160,8 @@ namespace GenericServices.Internal.Decoders
         public void CheckCanDoOperation(CrudTypes cudType)
         {
             if (EntityStyle == EntityStyles.HasNoKey || 
-                EntityStyle == EntityStyles.OwnedType || 
+                EntityStyle == EntityStyles.OwnedType ||
+                EntityStyle == EntityStyles.PropertyBag ||
                 (EntityStyle == EntityStyles.ReadOnly && cudType != CrudTypes.Delete))
                 throw new InvalidOperationException($"The class {EntityType.Name} of style {EntityStyle} cannot be used in {cudType}.");
 

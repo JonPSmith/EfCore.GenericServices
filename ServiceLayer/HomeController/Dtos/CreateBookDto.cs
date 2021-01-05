@@ -30,6 +30,8 @@ namespace ServiceLayer.HomeController.Dtos
 
         public ICollection<Author> Authors { get; set; }
 
+        public ICollection<Tag> Tags { get; set; }
+
         public CreateBookDto()
         {
             PublishedOn = DateTime.Today;

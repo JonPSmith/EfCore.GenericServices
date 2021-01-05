@@ -28,7 +28,8 @@ namespace DataLayer.EfClasses
         private Book() { }
 
         public Book(string title, string description, DateTime publishedOn, 
-            string publisher, decimal price, string imageUrl, ICollection<Author> authors)
+            string publisher, decimal price, string imageUrl, ICollection<Author> authors,
+            ICollection<Tag> tags = null)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException(nameof(title)); 
@@ -40,6 +41,10 @@ namespace DataLayer.EfClasses
             ActualPrice = price;
             OrgPrice = price;
             ImageUrl = imageUrl;
+            _tags = tags != null
+                ? new HashSet<Tag>(tags)
+                : new HashSet<Tag>();
+            
             _reviews = new HashSet<Review>();       //We add an empty list on create. I allows reviews to be added when building test data
 
             if (authors == null || !authors.Any())
