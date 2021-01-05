@@ -1,12 +1,7 @@
-using System;
 using System.Linq;
-using AutoMapper;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using GenericServices;
-using GenericServices.Configuration;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;

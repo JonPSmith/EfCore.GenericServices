@@ -68,7 +68,7 @@ namespace Benchmarking
                 var numReviews = context.Set<Review>().Count();
 
                 //ATTEMPT
-                var book = context.Find<Book>(1);
+                var book = context.Books.Single(x => x.BookId == 1);
                 book.AddReview(5, "comment", "user", context);
                 context.SaveChanges();
 

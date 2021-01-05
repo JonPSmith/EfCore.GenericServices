@@ -49,7 +49,7 @@ namespace Benchmarking
             {
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
-                var book = context.Books.Find(4);
+                var book = context.Books.Single(x => x.BookId == 4);
                 book.PublishedOn = newDate;
                 context.SaveChanges();
 
@@ -87,7 +87,7 @@ namespace Benchmarking
             {
                 //ATTEMPT
                 var newDate = new DateTime(2000, 1, 1).AddDays(_incdDay++);
-                var book = context.Books.Find(4);
+                var book = context.Books.Single(x => x.BookId == 4);
                 book.UpdatePublishedOn(newDate);
                 context.SaveChanges();
 
