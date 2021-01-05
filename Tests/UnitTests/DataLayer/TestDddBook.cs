@@ -29,11 +29,14 @@ namespace Tests.UnitTests.DataLayer
                 "Book Publisher",
                 123,
                 null,
-                new[] {new Author {Name = "Test Author"}}
+                new[] { new Author { Name = "Test Author" } },
+                new[] { new Tag("Tag1"), new Tag("Tag2") }
                 );
 
             //VERIFY
             status.IsValid.ShouldBeTrue(status.GetAllErrors());   
+            status.Result.AuthorsLink.Single().Author.Name.ShouldEqual("Test Author");
+            status.Result.Tags.Select(x => x.TagId).ToArray().ShouldEqual(new []{ "Tag1" , "Tag2" });
         }
 
         [Fact]
@@ -49,7 +52,8 @@ namespace Tests.UnitTests.DataLayer
                 "Book Publisher",
                 123,
                 null,
-                new[] { new Author { Name = "Test Author" } }
+                new[] { new Author { Name = "Test Author" } },
+                new[] {new Tag("Tag1"), new Tag("Tag2") }
             );
 
             //VERIFY

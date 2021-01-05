@@ -13,10 +13,10 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>3.2.2</PackageVersion>
-    <Version>3.2.2</Version>
-    <AssemblyVersion>3.2.2.0</AssemblyVersion>
-    <FileVersion>3.2.2.0</FileVersion>
+    <PackageVersion>5.0.0-preview001</PackageVersion>
+    <Version>5.0.0</Version>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -28,7 +28,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Stops exception if matched parameter is null. This is an attempt to fix issue #47
+      - Updated to EF Core 5
     </PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
