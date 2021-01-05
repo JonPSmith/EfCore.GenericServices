@@ -28,7 +28,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Updated to EF Core 5
+      - Updated to work with EF Core 5
     </PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

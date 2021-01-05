@@ -2,6 +2,18 @@
 
 ## TODO
 
+## 5.0.0
+
+- Updated to work with EF Core 5
+
+*NOTE:It is no longer possible to detect the EF Core version via the netstandard so now it is done via the first number in the library's version. For instance EfCore.GenericServices, version 5.?.? works with EF Core 5.?.?.*
+
+---
+
+# Older versions of EfCore.GenericServices
+
+These support EF Core 2.1, 3.0, and 3.1.
+
 ## 3.2.2
 
 - Stops exception if matched parameter is null. This is an attempt to fix issue #47
