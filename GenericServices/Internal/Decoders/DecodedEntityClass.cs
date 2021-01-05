@@ -144,17 +144,6 @@ namespace GenericServices.Internal.Decoders
                 .Where(pm => !_methodNamesToIgnore.Contains(pm.Name)).ToList();
         }
 
-        public IQueryable<T> GetReadableEntity<T>(DbContext content) where T : class
-        {
-#if NETSTANDARD2_0
-            return EntityStyle == EntityStyles.HasNoKey
-                ? content.Query<T>().AsQueryable()
-                : content.Set<T>().AsQueryable();
-#elif NETSTANDARD2_1
-            return content.Set<T>().AsQueryable();
-#endif
-        }
-
         /// <summary>
         /// This will throw an exception if the cud type doesn't fit the entity style
         /// </summary>

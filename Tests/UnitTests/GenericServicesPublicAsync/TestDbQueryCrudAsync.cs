@@ -36,9 +36,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-#if NETCOREAPP3_0
                 context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
-#endif
+
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -66,9 +65,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-#if NETCOREAPP3_0
                 context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
-#endif
+
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -96,9 +94,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-#if NETCOREAPP3_0
                 context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
-#endif
+
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
@@ -126,9 +123,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-#if NETCOREAPP3_0
                 context.ExecuteScriptFileInTransaction(TestData.GetFilePath("ReplaceTableWithView.sql"));
-#endif
+
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using GenericServices;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
+using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -17,7 +18,8 @@ namespace Tests.UnitTests.TestIssues
         [Fact]
         public void Dto_with_no_properties_causes_null_exception()
         {
-            using (var context = new SomeContext(InMemoryOptions.Create<SomeContext>()))
+            var options = SqliteInMemory.CreateOptions<SomeContext>();
+            using (var context = new SomeContext(options))
             {
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SetupSingleDtoAndEntities<ImutableDto>());
@@ -25,14 +27,6 @@ namespace Tests.UnitTests.TestIssues
                 //VERIFY
                 ex.Message.ShouldEqual("The ImutableDto class inherits ILinkToEntity<T> but has no properties in it!");
             }
-        }
-
-        private static class InMemoryOptions
-        {
-            public static DbContextOptions<T> Create<T>(string databaseName = "InMemory") where T : DbContext
-                => new DbContextOptionsBuilder<T>()
-                    .UseInMemoryDatabase(databaseName: databaseName)
-                    .Options;
         }
 
 

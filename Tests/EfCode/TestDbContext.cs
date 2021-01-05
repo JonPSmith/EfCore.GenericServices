@@ -25,11 +25,8 @@ namespace Tests.EfCode
 
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Child> WritableChildren { get; set; }
-#if NETCOREAPP2_1
-        public DbQuery<ChildReadOnly> Children { get; set; }
-#elif NETCOREAPP3_0
         public DbSet<ChildReadOnly> Children { get; set; }
-#endif
+
         public DbSet<ParentOneToOne> ParentOneToOnes { get; set; }
 
 
@@ -42,11 +39,7 @@ namespace Tests.EfCode
 
             modelBuilder.Entity<SoftDelEntity>().HasQueryFilter(x => !x.SoftDeleted);
 
-#if NETCOREAPP2_1
-            modelBuilder.Entity<Child>().ToTable(nameof(Children));
-#elif NETCOREAPP3_0
             modelBuilder.Entity<ChildReadOnly>().ToView("ChildrenView").HasNoKey();
-#endif
         }
     }
 }

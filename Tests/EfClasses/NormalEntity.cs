@@ -2,7 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Tests.EfClasses
 {

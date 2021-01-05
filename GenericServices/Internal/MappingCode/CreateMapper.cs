@@ -98,17 +98,17 @@ namespace GenericServices.Internal.MappingCode
             public IQueryable<TDto> GetViaKeysWithProject(params object[] keys)
             {
                 var predicate = _entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
-                return _entityInfo.GetReadableEntity<TEntity>(_context).Where(predicate).ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
+                return _context.Set<TEntity>().Where(predicate).ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
             }
 
             public IQueryable<TDto> ProjectAndThenApplyWhereExpression(Expression<Func<TDto, bool>> whereExpression)
             {
-                return _entityInfo.GetReadableEntity<TEntity>(_context).ProjectTo<TDto>(_wrappedMapper.MapperReadConfig).Where(whereExpression);
+                return _context.Set<TEntity>().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig).Where(whereExpression);
             }
 
             public IQueryable<TDto> GetManyProjectedNoTracking()
             {
-                return _entityInfo.GetReadableEntity<TEntity>(_context).AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
+                return _context.Set<TEntity>().AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
             }
 
             private IQueryable<TEntity> ApplyAnyIncludeStringsAtDbSetLevel(DbSet<TEntity> dbSet)

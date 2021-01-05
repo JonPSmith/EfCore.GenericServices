@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataLayer.Dtos;
-using GenericServices;
 using StatusGeneric;
 
 namespace DataLayer.EfClasses

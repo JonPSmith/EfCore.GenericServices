@@ -96,7 +96,7 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
-                result = entityInfo.GetReadableEntity<T>(_context).Where(whereExpression).SingleOrDefault();
+                result = _context.Set<T>().Where(whereExpression).SingleOrDefault();
             }
             else
             {
@@ -122,7 +122,7 @@ namespace GenericServices.PublicButHidden
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
             {
-                return entityInfo.GetReadableEntity<T>(_context).AsNoTracking();
+                return _context.Set<T>().AsNoTracking();
             }
 
             //else its a DTO, so we need to project the entity to the DTO 
@@ -134,7 +134,7 @@ namespace GenericServices.PublicButHidden
         public IQueryable<TDto> ProjectFromEntityToDto<TEntity,TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query) where TEntity : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
-            return query(entityInfo.GetReadableEntity<TEntity>(_context))
+            return query(_context.Set<TEntity>())
                 .ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
         }
 
