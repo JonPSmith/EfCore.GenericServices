@@ -4,7 +4,7 @@
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
 
-**NOTE:** *The first number in the version number of this library defines what version of EF Core it works for. e.g. EfCore.GenericServices version 5 is works with to EF Core 5. If are using the older versions of EF Core you need [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2).*
+**NOTE:** *The first number in the version number of this library defines what version of EF Core it works for. e.g. EfCore.GenericServices version 5 is works with to EF Core 5. If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2).*
 
 Please don't add a pull request without first contacting me via an issue containing the reason/idea first. 
 
@@ -38,9 +38,9 @@ So, you create one set of update code for your specific application and then cut
 I personally work with ASP.NET Core, so my examples are from that, but it will work with any NET Core type of application
 *(I do know one person have used this libary with WPF).*
 
-[NuGet link](https://www.nuget.org/packages/EfCore.GenericServices/) and [link to documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
+## Limitations with EF Core 5
 
-MIT license.
+- The `ILinkToEntity<TEntity>` interface can't handle an entity class mapped to a multple tables.
 
 ## Code examples of using EfCore.GenericServices
 

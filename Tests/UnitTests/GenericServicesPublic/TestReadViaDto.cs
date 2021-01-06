@@ -158,7 +158,7 @@ namespace Tests.UnitTests.GenericServicesPublic
         }
 
         [Fact]
-        public void TestReadSingleCollectionTags()
+        public void TestReadSingleCollectionTagsWithConfig()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -176,7 +176,7 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 dto.BookId.ShouldEqual(1);
-                dto.TagIds.ShouldEqual(new []{ "Editor's Choice", "Refactoring" });
+                dto.TagIds.ShouldEqual(new[] { "Editor's Choice", "Refactoring" });
             }
         }
 

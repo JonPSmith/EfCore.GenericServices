@@ -2,11 +2,13 @@
 
 ## TODO
 
+- Nothing at the moment
+
 ## 5.0.0
 
 - Updated to work with EF Core 5
 
-*NOTE:It is no longer possible to detect the EF Core version via the netstandard so now it is done via the first number in the library's version. For instance EfCore.GenericServices, version 5.?.? works with EF Core 5.?.?.*
+*NOTE: It is no longer possible to detect the EF Core version via the netstandard so now it is done via the first number in the library's version. For instance EfCore.GenericServices, version 5.?.? works with EF Core 5.?.?.*
 
 ---
 
