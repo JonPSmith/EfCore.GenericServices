@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>5.0.0-preview001</PackageVersion>
+    <PackageVersion>5.0.0</PackageVersion>
     <Version>5.0.0</Version>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <FileVersion>5.0.0.0</FileVersion>
@@ -22,7 +22,7 @@
     <PackageId>EfCore.GenericServices</PackageId>
     <Product>EfCore.GenericServices</Product>
     <Description>Library to help you quickly code Create, Read, Update and Delete (CRUD) accesses in web/mobile/desktop applications using Entity Framework Core.</Description>
-    <Copyright>Copyright (c) 2018 Jon P Smith</Copyright>
+    <Copyright>Copyright (c) 2020 Jon P Smith</Copyright>
     <PackageProjectUrl>https://github.com/JonPSmith/EfCore.GenericServices</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JonPSmith/EfCore.GenericServices</RepositoryUrl>
     <RepositoryType>GuHub</RepositoryType>
