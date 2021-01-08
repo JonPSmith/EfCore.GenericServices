@@ -6,19 +6,18 @@ This library helps you quickly code Create, Read, Update and Delete (CRUD) acces
 
 **NOTE:** *The first number in the version number of this library defines what version of EF Core it works for. e.g. EfCore.GenericServices version 5 is works with to EF Core 5. If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2).*
 
-Please don't add a pull request without first contacting me via an issue containing the reason/idea first. 
+If you have an idea for a pull request, then I recommend you first contact me via an issue containing the reason/idea. I get some pull requests for features that the library can already do.
 
 The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/) and is an open-source library under the MIT licence. See [ReleaseNotes](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/ReleaseNotes.md) for details of changes and information on versions before EF Core 5.
 
-## Useful articles
+## Documentation and useful articles
 
-This readme provides a good overview, but here are some articles that give you a detailed description of what the libraray does.
+The documentaion can be found in the [GitHub wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki). but the rest of this README file provides a good overview of what the library can do, but here are some articles that give you a detailed description of what the libraray does.
 
 * [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
 * [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/).
 * [GenericServices Design Philosophy + tips and techniques](https://www.thereformedprogrammer.net/genericservices-design-philosophy-tips-and-techniques/).
 * [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/) - version 3.1.0 and above
-* [GenericServices documentation](https://github.com/JonPSmith/EfCore.GenericServices/wiki).
 
 
 ## What the library does
@@ -168,10 +167,3 @@ It also works well with with dependancy injection (DI), such as ASP.NET Core's D
 *NOTE: I created a [similar library](https://github.com/JonPSmith/GenericServices)
 for EF6.x back in 2014, which has saved my many months of (boring) coding - on one project alone I think it saved 2 months out of 12.
 This new version contains the learning from that library, and the new DDD-enabling feature of EF Core to reimagine that library, but in a very different (hopefully simpler) way.*
-
-## Documentation and examples
-* The [GenericServices Wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki) has lots of documentation.
-
-* The public methods in the library are all commented for intellisense feedback.
-* This repo contains a runnable example Razor Page application, with the database in the DataLayer.
-* This [intoductory article](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/) provides a longer introduction to EfCore.GenericServices.
