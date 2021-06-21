@@ -2,6 +2,11 @@
 
 ## TODO
 
+## 3.3.0
+
+- Update to AutoMapper 10.1.1 tp fix weird bug when an new version of AutoMapper overrides a old version of AutoMapper fix. Issue #56
+- Removed EF Core 2.1 version as 2.1 no longer supported
+
 ## 3.2.2
 
 - Stops exception if matched parameter is null. This is an attempt to fix issue #47
