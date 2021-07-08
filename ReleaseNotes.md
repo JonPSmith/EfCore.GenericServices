@@ -4,6 +4,10 @@
 
 - Nothing at the moment
 
+## 5.0.1
+
+- Added the documentaion file to the NuGet package
+
 ## 5.0.0
 
 - Updated to work with EF Core 5
