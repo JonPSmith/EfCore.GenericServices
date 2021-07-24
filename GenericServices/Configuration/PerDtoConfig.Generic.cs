@@ -7,7 +7,7 @@ using AutoMapper;
 namespace GenericServices.Configuration
 {
     /// <summary>
-    /// This provides a per-DTO/ViewModel configuation source
+    /// This provides a per-DTO/ViewModel configuration source
     /// </summary>
     /// <typeparam name="TDto"></typeparam>
     /// <typeparam name="TEntity"></typeparam>
@@ -15,11 +15,11 @@ namespace GenericServices.Configuration
         where TDto : class where TEntity : class
     {
         //-------------------------------------------------
-        //Properies to alter the AutoMapper Read and Save mappings
+        //Properties to alter the AutoMapper Read and Save mappings
 
         /// <summary>
         /// This allows you to add to the AutoMapper's read mapping, i.e. from Entity class to DTO/ViewModel
-        /// For instance you can use .ForMember(...) to set a specific LINQ for certain properies - see BookListDto example
+        /// For instance you can use .ForMember(...) to set a specific LINQ for certain properties - see BookListDto example
         /// </summary>
         public virtual Action<IMappingExpression<TEntity, TDto>> AlterReadMapping { get { return null; } }
 
