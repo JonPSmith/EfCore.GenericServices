@@ -1,8 +1,8 @@
 # Release Notes
 
-## TODO
+## 6.0.0-preview
 
-- Nothing at the moment
+- Updated to .NET 6.0 preview RC.2
 
 ## 5.0.1
 

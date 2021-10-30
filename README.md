@@ -4,9 +4,12 @@
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
 
-**NOTE:** *The first number in the version number of this library defines what version of EF Core it works for. e.g. EfCore.GenericServices version 5 is works with to EF Core 5. If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2).*
+**NOTE:** The first number in the version number of this library defines what version of EF Core it works for. e.g. 
 
-If you have an idea for a pull request, then I recommend you first contact me via an issue containing the reason/idea. I get some pull requests for features that the library can already do.
+- EfCore.GenericServices version 5 is works with to EF Core 5.
+- EfCore.GenericServices version 6 is works with to EF Core 6... and so on.
+
+_If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2)._
 
 The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/) and is an open-source library under the MIT licence. See [ReleaseNotes](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/ReleaseNotes.md) for details of changes and information on versions before EF Core 5.
 
@@ -15,9 +18,8 @@ The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServi
 The documentaion can be found in the [GitHub wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki). but the rest of this README file provides a good overview of what the library can do, but here are some articles that give you a detailed description of what the libraray does.
 
 * [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
-* [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/).
+* [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/) - version 3.1.0 and above.
 * [GenericServices Design Philosophy + tips and techniques](https://www.thereformedprogrammer.net/genericservices-design-philosophy-tips-and-techniques/).
-* [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/) - version 3.1.0 and above
 
 
 ## What the library does
@@ -37,7 +39,7 @@ So, you create one set of update code for your specific application and then cut
 I personally work with ASP.NET Core, so my examples are from that, but it will work with any NET Core type of application
 *(I do know one person have used this libary with WPF).*
 
-## Limitations with EF Core 5
+## Limitations with EF Core 5 and beyond
 
 - The `ILinkToEntity<TEntity>` interface can't handle an entity class mapped to a multple tables.
 

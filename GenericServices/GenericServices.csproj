@@ -2,10 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +14,10 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>5.0.1</PackageVersion>
-    <Version>5.0.1</Version>
-    <AssemblyVersion>5.0.1.0</AssemblyVersion>
-    <FileVersion>5.0.1.0</FileVersion>
+    <PackageVersion>6.0.0-preview001</PackageVersion>
+    <Version>6.0.0</Version>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -32,8 +29,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-      - Added the documentaion file to the NuGet package
-    </PackageReleaseNotes>
+		Updated to .NET 6.0 preview RC.2
+	</PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

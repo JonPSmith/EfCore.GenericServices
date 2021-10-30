@@ -31,7 +31,7 @@ namespace Benchmarking
         [GlobalSetup]
         public void Setup()
         {
-            _options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            _options = SqliteHelper.GetSqliteInMemoryOptions();
             using (var context = new EfCoreContext(_options))
             {
                 context.Database.EnsureCreated();

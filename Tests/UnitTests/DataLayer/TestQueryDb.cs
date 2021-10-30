@@ -26,7 +26,7 @@ namespace Tests.UnitTests.DataLayer
         public void TestDbQueryChildReadOnlyOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptionsWithLogging<TestDbContext>(log => _output.WriteLine(log.ToString()));
+            var options = SqliteInMemory.CreateOptionsWithLogTo<TestDbContext>(log => _output.WriteLine(log.ToString()));
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
