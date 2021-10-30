@@ -90,10 +90,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.Include(x => x.Reviews).First();
                 book.AddReview(5, "comment", "user");
@@ -115,10 +114,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.First();
                 book.AddReview(5, "comment", "user", context);
@@ -139,10 +137,8 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
                 //ATTEMPT
                 var book = context.Books.First();
                 var ex = Assert.Throws<ArgumentNullException>(() => book.AddReview(5, "comment", "user"));
@@ -161,10 +157,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.Reviews.Count() == 2);
                 book.RemoveReview(book.Reviews.LastOrDefault());
@@ -185,10 +180,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.Single(x => x.Reviews.Count() == 2);
                 book.RemoveReview(context.Set<Review>().First(), context);
@@ -208,10 +202,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.First(x => !x.Reviews.Any());
                 var ex = Assert.Throws<InvalidOperationException>(() => 
@@ -231,10 +224,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.First();
                 var status = book.AddPromotion(book.OrgPrice / 2, "Half price today");
@@ -255,10 +247,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.First();
                 var status = book.AddPromotion(book.OrgPrice / 2, "");
@@ -278,10 +269,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.OrderByDescending(x => x.BookId).First();
                 book.RemovePromotion();

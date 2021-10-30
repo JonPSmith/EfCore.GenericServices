@@ -154,9 +154,9 @@ namespace Tests.UnitTests.GenericServicesSetup
                     new List<OrderBooksDto> { new OrderBooksDto(firstBook.BookId, firstBook, 1) });
                 context.Add(status.Result);
                 context.SaveChanges();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<BookTitle>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -183,9 +183,9 @@ namespace Tests.UnitTests.GenericServicesSetup
                     new List<OrderBooksDto> {new OrderBooksDto(firstBook.BookId, firstBook, 1)});
                 context.Add(status.Result);
                 context.SaveChanges();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new GenericServicesConfig()
                 {
                     SaveChangesExceptionHandler = CatchUniqueError19

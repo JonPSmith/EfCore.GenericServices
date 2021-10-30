@@ -28,10 +28,9 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 var bookSeeded = context.SeedDatabaseFourBooks();
                 bookId = bookSeeded.Last().BookId;
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddReviewWithIncludeDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -53,19 +52,16 @@ namespace Tests.UnitTests.GenericServicesPublic
         public void TestCallUpdateBookWithExistingAuthorWithTwoIncludes()
         {
             //SETUP
-            int bookId;
-            int authorId;
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 var bookSeeded = context.SeedDatabaseFourBooks();
-                bookId = bookSeeded.First().BookId;
-                authorId = bookSeeded.Last().AuthorsLink.First().AuthorId;
-            }
+                var bookId = bookSeeded.First().BookId;
+                var authorId = bookSeeded.Last().AuthorsLink.First().AuthorId;
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddNewAuthorToBookUsingIncludesDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -96,17 +92,15 @@ namespace Tests.UnitTests.GenericServicesPublic
         public async Task TestCallAddReviewWithIncludeWithIncludedReviewsAsync()
         {
             //SETUP
-            int bookId;
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 var bookSeeded = context.SeedDatabaseFourBooks();
-                bookId = bookSeeded.Last().BookId;
-            }
+                var bookId = bookSeeded.Last().BookId;
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddReviewWithIncludeDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -128,19 +122,16 @@ namespace Tests.UnitTests.GenericServicesPublic
         public async Task TestCallUpdateBookWithExistingAuthorWithTwoIncludesAsync()
         {
             //SETUP
-            int bookId;
-            int authorId;
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 var bookSeeded = context.SeedDatabaseFourBooks();
-                bookId = bookSeeded.First().BookId;
-                authorId = bookSeeded.Last().AuthorsLink.First().AuthorId;
-            }
+                var bookId = bookSeeded.First().BookId;
+                var authorId = bookSeeded.Last().AuthorsLink.First().AuthorId;
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddNewAuthorToBookUsingIncludesDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 

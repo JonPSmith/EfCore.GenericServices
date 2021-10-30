@@ -27,9 +27,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -55,9 +55,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -86,9 +86,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -114,9 +114,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 

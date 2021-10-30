@@ -163,9 +163,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -175,9 +173,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
@@ -193,9 +190,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -206,9 +203,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully updated the Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
         }
@@ -223,9 +219,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -236,9 +232,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully updated the Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
         }
@@ -253,9 +248,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -277,9 +272,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -289,9 +284,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully deleted a Book");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Books.Count().ShouldEqual(3);
             }
         }
@@ -307,9 +301,9 @@ namespace Tests.UnitTests.GenericServicesPublic
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -330,9 +324,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                     service.IsValid.ShouldBeTrue(service.GetAllErrors());
                     service.Message.ShouldEqual("Successfully deleted a Book");
                 }
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Books.Count().ShouldEqual(stopDelete ? 4 : 3);
             }
         }

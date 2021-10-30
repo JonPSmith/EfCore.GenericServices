@@ -40,10 +40,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -69,10 +68,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -98,10 +96,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -127,10 +124,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 context.Add(new Parent
                     { Children = new List<Child> { new Child { MyString = "Hello" }, new Child { MyString = "Goodbye" } } });
                 context.SaveChanges();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<ChildDbQueryDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 

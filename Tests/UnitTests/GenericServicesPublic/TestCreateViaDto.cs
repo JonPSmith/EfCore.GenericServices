@@ -50,9 +50,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
@@ -101,9 +100,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
@@ -117,9 +115,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {              
+            
                 var utData = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
@@ -131,9 +127,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Single().Name.ShouldEqual("New Name");
                 context.Authors.Single().Email.ShouldBeNull();
@@ -171,9 +166,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -187,9 +180,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Ddd Ctor Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.DddCtorEntities.Count().ShouldEqual(1);
                 context.DddCtorEntities.Find(1).MyInt.ShouldEqual(123);
                 context.DddCtorEntities.Find(1).MyString.ShouldEqual("Hello");
@@ -204,9 +196,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreate>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -217,9 +207,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Ddd Ctor Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.DddCtorEntities.Count().ShouldEqual(1);
                 context.DddCtorEntities.Find(1).MyInt.ShouldEqual(123);
                 context.DddCtorEntities.Find(1).MyString.ShouldEqual("1 param ctor");
@@ -234,9 +223,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DddCompositeIntStringCreateDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -282,9 +269,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoCtorCreateBad>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -297,7 +282,6 @@ namespace Tests.UnitTests.GenericServicesPublic
                     "Could not find a ctor/static method that matches the DTO. The ctor/static method that fit the properties in the DTO/VM are:\n" +
                     "Matched 2 params out of 2. Score 50% Ctor(Name not match, but type is Match, wrong name)\n" +
                     "Matched 1 params out of 1. Score 30% Ctor(Name not match, but type is Match)");
-
             }
         }
 
@@ -309,9 +293,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -322,9 +304,8 @@ namespace Tests.UnitTests.GenericServicesPublic
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Ddd Static Create Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.DddStaticFactEntities.Count().ShouldEqual(1);
                 context.DddStaticFactEntities.Single().MyString.ShouldEqual("Hello");
                 context.DddStaticFactEntities.Single().MyInt.ShouldEqual(1);
@@ -339,9 +320,7 @@ namespace Tests.UnitTests.GenericServicesPublic
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 

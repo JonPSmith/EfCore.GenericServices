@@ -40,9 +40,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
@@ -67,9 +66,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Find(1).Email.ShouldEqual(unique);
             }
@@ -83,9 +81,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {              
+
                 var utData = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
@@ -97,9 +93,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Single().Name.ShouldEqual("New Name");
                 context.Authors.Single().Email.ShouldBeNull();
@@ -114,9 +109,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<AuthorNameDto>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -127,9 +120,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Author");
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Authors.Count().ShouldEqual(1);
                 context.Authors.Single().Name.ShouldEqual("New Name");
                 context.Authors.Single().Email.ShouldBeNull();
@@ -167,9 +159,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -180,9 +170,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully created a Ddd Static Create Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.DddStaticFactEntities.Count().ShouldEqual(1);
                 context.DddStaticFactEntities.Single().MyString.ShouldEqual("Hello");
                 context.DddStaticFactEntities.Single().MyInt.ShouldEqual(1);
@@ -197,9 +186,7 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
                 var utData = context.SetupSingleDtoAndEntities<DtoStaticCreate>();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 

@@ -72,10 +72,9 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
 
@@ -116,10 +115,9 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseDummyBooks(100);
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<BookTitleAndCount>();
                 var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
 
@@ -168,8 +166,8 @@ namespace Tests.UnitTests.Performance
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-                var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
+                var utData1 = context.SetupEntitiesDirect();
+                var service1 = new CrudServices<TestDbContext>(context, utData1.ConfigAndMapper);
 
                 using (new TimeThings(_output, "RunHandCoded Create", 1))
                 {
@@ -179,27 +177,25 @@ namespace Tests.UnitTests.Performance
 
                 using (new TimeThings(_output, "RunGenericService Create", 1))
                 {
-                    service.CreateAndSave(new DddCtorEntity( 1, "hello"));
+                    service1.CreateAndSave(new DddCtorEntity( 1, "hello"));
                 }
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 context.WipeAllDataFromDatabase();
-                var utData = context.SetupEntitiesDirect();
-                var service = new CrudServices<TestDbContext>(context, utData.ConfigAndMapper);
+                var utData2 = context.SetupEntitiesDirect();
+                var service2 = new CrudServices<TestDbContext>(context, utData2.ConfigAndMapper);
 
                 using (new TimeThings(_output, "RunGenericService Create", 100))
                 {
                     for (int i = 0; i < 100; i++)
                     {
-                        service.CreateAndSave(new DddCtorEntity(1, "hello"));
+                        service2.CreateAndSave(new DddCtorEntity(1, "hello"));
                     }
                 }
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 context.WipeAllDataFromDatabase();
                 using (new TimeThings(_output, "RunHandCoded Create", 100))
                 {
@@ -220,10 +216,9 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options1))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
                 var service = new CrudServices<EfCoreContext>(context, utData.ConfigAndMapper);
                 using (new TimeThings(_output, "RunHandCoded AddReview", 1))
@@ -249,9 +244,9 @@ namespace Tests.UnitTests.Performance
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options2))
-            {
+
+                context.ChangeTracker.Clear();
+
                 using (new TimeThings(_output, "RunHandCoded AddReview", 100))
                 {
                     for (int i = 0; i < 100; i++)

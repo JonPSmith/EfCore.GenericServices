@@ -165,9 +165,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddReviewDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -191,10 +191,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -219,10 +218,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 
@@ -245,9 +243,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
-            using (var context = new EfCoreContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<AddRemovePromotionDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 

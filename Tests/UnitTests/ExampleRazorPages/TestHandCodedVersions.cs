@@ -24,10 +24,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var service = new AddReviewService(context);
 
                 //ATTEMPT
@@ -52,10 +51,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var service = new AddRemovePromotionService(context);
 
                 //ATTEMPT
@@ -80,10 +78,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var service = new AddRemovePromotionService(context);
 
                 //ATTEMPT
@@ -107,10 +104,9 @@ namespace Tests.UnitTests.ExampleRazorPages
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var service = new AddRemovePromotionService(context);
                 var dto = service.GetOriginal(1);
                 dto.ActualPrice = dto.OrgPrice / 2;

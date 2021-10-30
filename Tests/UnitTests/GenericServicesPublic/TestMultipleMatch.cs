@@ -25,9 +25,9 @@ namespace Tests.UnitTests.GenericServicesPublic
                 context.Database.EnsureCreated();
                 context.Add(new DddCtorAndFactEntity(0, 1, "hello"));
                 context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<MultiMatchTestDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 

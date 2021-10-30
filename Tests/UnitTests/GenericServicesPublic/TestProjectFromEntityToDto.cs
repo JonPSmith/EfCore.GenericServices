@@ -61,9 +61,9 @@ namespace Tests.UnitTests.GenericServicesPublic
                 var author = new SoftDelEntity { SoftDeleted = true };
                 context.Add(author);
                 context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupSingleDtoAndEntities<SoftDelEntityDto>();
                 var service = new CrudServices(context, utData.ConfigAndMapper);
 

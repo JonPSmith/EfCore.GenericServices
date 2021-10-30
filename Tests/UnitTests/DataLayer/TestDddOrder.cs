@@ -90,10 +90,9 @@ namespace Tests.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
-            }
 
-            using (var context = new EfCoreContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var book = context.Books.First();
                 var lineItems = new List<OrderBooksDto> { new OrderBooksDto(book.BookId, book, 1) };

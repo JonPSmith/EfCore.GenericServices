@@ -36,9 +36,8 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
             }
         }
@@ -64,9 +63,8 @@ namespace Tests.UnitTests.GenericServicesSetup
 
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
             }
         }
@@ -93,9 +91,8 @@ namespace Tests.UnitTests.GenericServicesSetup
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
                 service.GetAllErrors().ShouldEqual("The NormalEntity class contained a bad word.");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(0);
             }
         }

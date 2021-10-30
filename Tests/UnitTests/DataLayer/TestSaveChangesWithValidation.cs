@@ -30,9 +30,8 @@ namespace Tests.UnitTests.DataLayer
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
@@ -46,12 +45,11 @@ namespace Tests.UnitTests.DataLayer
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new NormalEntity { MyInt = 1 };
-                context.Add(entity);
+                context.Add(new NormalEntity { MyInt = 1 });
                 context.SaveChangesWithValidation();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 context.NormalEntities.Count().ShouldEqual(1);
                 var entity = context.NormalEntities.Single();
@@ -61,9 +59,8 @@ namespace Tests.UnitTests.DataLayer
                 //VERIFY
                 status.IsValid.ShouldBeFalse();
                 status.GetAllErrors().ShouldEqual("Normal Entity: The field MyInt must be between 0 and 100.");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
@@ -89,9 +86,8 @@ namespace Tests.UnitTests.DataLayer
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }
@@ -105,13 +101,11 @@ namespace Tests.UnitTests.DataLayer
             using (var context = new TestDbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new NormalEntity {MyInt = 1};
-                context.Add(entity);
+                context.Add(new NormalEntity { MyInt = 1 });
                 await context.SaveChangesWithValidationAsync();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 context.NormalEntities.Count().ShouldEqual(1);
                 var entity = context.NormalEntities.Single();
@@ -121,9 +115,8 @@ namespace Tests.UnitTests.DataLayer
                 //VERIFY
                 status.IsValid.ShouldBeFalse();
                 status.GetAllErrors().ShouldEqual("Normal Entity: The field MyInt must be between 0 and 100.");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.NormalEntities.Count().ShouldEqual(1);
                 context.NormalEntities.Single().MyInt.ShouldEqual(1);
             }

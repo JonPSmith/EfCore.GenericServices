@@ -36,9 +36,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var author = new SoftDelEntity { SoftDeleted = true };
                 context.Add(author);
                 context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -51,9 +51,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
                 service.GetAllErrors().ShouldEqual("Sorry, I could not find the Soft Del Entity you wanted to delete.");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }
@@ -69,9 +68,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var author = new SoftDelEntity { SoftDeleted = true };
                 context.Add(author);
                 context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -84,9 +83,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeTrue(service.GetAllErrors());
                 service.Message.ShouldEqual("Successfully deleted a Soft Del Entity");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(0);
             }
         }
@@ -102,9 +100,9 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 var author = new SoftDelEntity { SoftDeleted = false };
                 context.Add(author);
                 context.SaveChanges();
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var utData = context.SetupEntitiesDirect();
                 var service = new CrudServicesAsync(context, utData.ConfigAndMapper);
 
@@ -117,9 +115,8 @@ namespace Tests.UnitTests.GenericServicesPublicAsync
                 //VERIFY
                 service.IsValid.ShouldBeFalse();
                 service.GetAllErrors().ShouldEqual("Can't delete if not already soft deleted.");
-            }
-            using (var context = new TestDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.SoftDelEntities.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }

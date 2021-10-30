@@ -35,10 +35,9 @@ namespace Tests.UnitTests.DataLayer
                 context.Add(new Parent
                     {Children = new List<Child> {new Child {MyString = "Hello"}, new Child {MyString = "Goodbye"}}});
                 context.SaveChanges();
-            }
 
-            using (var context = new TestDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var children = context.Children.ToList();
 
