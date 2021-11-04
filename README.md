@@ -4,14 +4,13 @@
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
 
-**NOTE:** The first number in the version number of this library defines what version of EF Core it works for. e.g. 
+_NOTE: Version 5.1.0 and above of this library supports multiple versions of EF Core 5._
 
-- EfCore.GenericServices version 5 is works with to EF Core 5.
-- EfCore.GenericServices version 6 is works with to EF Core 6... and so on.
+- _Version 5.1.0 supports EF Core 5.10 and EF Core 6._
+
+The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/) and is an open-source library under the MIT licence. See [ReleaseNotes](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/ReleaseNotes.md) for details of changes and information on each version of EfCore.GenericServices.
 
 _If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2)._
-
-The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServices](https://www.nuget.org/packages/EfCore.GenericServices/) and is an open-source library under the MIT licence. See [ReleaseNotes](https://github.com/JonPSmith/EfCore.GenericServices/blob/master/ReleaseNotes.md) for details of changes and information on versions before EF Core 5.
 
 ## Documentation and useful articles
 

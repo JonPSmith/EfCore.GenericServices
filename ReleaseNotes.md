@@ -1,8 +1,8 @@
 # Release Notes
 
-## 6.0.0-preview
+## 5.1.0-preview
 
-- Updated to .NET 6.0 preview RC.2
+- Updated to support both EF Core 5 and EF Core 6-rc.2 preview
 
 ## 5.0.1
 

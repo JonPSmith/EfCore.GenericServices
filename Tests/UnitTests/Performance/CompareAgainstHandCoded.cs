@@ -182,7 +182,7 @@ namespace Tests.UnitTests.Performance
 
                 context.ChangeTracker.Clear();
 
-                context.WipeAllDataFromDatabase();
+                context.Database.EnsureCreated();
                 var utData2 = context.SetupEntitiesDirect();
                 var service2 = new CrudServices<TestDbContext>(context, utData2.ConfigAndMapper);
 
@@ -196,7 +196,7 @@ namespace Tests.UnitTests.Performance
 
                 context.ChangeTracker.Clear();
 
-                context.WipeAllDataFromDatabase();
+                context.Database.EnsureCreated();
                 using (new TimeThings(_output, "RunHandCoded Create", 100))
                 {
                     for (int i = 0; i < 100; i++)
