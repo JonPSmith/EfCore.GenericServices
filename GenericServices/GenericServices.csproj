@@ -14,14 +14,14 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.0-rc.2.21480.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="GenericServices.StatusGeneric" Version="1.1.0" />
   </ItemGroup>
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>5.1.0-preview001</PackageVersion>
+    <PackageVersion>5.1.0</PackageVersion>
     <Version>5.1.0</Version>
     <AssemblyVersion>5.1.0.0</AssemblyVersion>
     <FileVersion>5.1.0.0</FileVersion>
@@ -36,7 +36,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-		Updated to support both EF Core 5 and EF Core 6-rc.2 preview
+		Updated to support both EF Core 5 and EF Core 6
 	</PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
