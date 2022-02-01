@@ -1,6 +1,6 @@
 # Release Notes
 
-## 5.1.0-preview
+## 5.1.0
 
 - Updated to support both EF Core 5 and EF Core 6
 
