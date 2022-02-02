@@ -2,11 +2,13 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
 using TestSupport.EfHelpers;
 using Xunit;
+using Xunit.Extensions.AssertExtensions;
 
 namespace Tests.UnitTests.TestIssues
 {
@@ -49,5 +51,21 @@ namespace Tests.UnitTests.TestIssues
                 var service = new CrudServices(context, utData.ConfigAndMapper);
             }
         }
+
+
+        [Fact]
+        public void TestGetEntityTypes()
+        {
+            var options = SqliteInMemory.CreateOptions<Context>();
+            using var context = new Context(options);
+
+            //ATTEMPT
+            var ownedTypes = context.Model.GetEntityTypes(typeof(Reference));
+
+            //VERIFY
+            ownedTypes.Count().ShouldEqual(2);
+            ownedTypes.Select(x => x.ClrType.ShouldBeType<Reference>());
+        }
+
     }
 }

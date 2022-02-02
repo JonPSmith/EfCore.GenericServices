@@ -1,5 +1,9 @@
 # Release Notes
 
+## 5.1.1
+
+- Bug fix: EF Core 6 version failed on owned type because defintion changed  - see issue #60
+
 ## 5.1.0
 
 - Updated to support both EF Core 5 and EF Core 6
