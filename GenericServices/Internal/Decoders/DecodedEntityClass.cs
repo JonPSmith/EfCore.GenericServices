@@ -35,6 +35,11 @@ namespace GenericServices.Internal.Decoders
 
     }
 
+    /// <summary>
+    /// This defines lots of information on an entity class around the properties and any methods
+    /// Using this data it works what type of <see cref="EntityStyle"/> the entity class is - see <see cref="EntityStyles"/>.
+    /// The <see cref="EntityStyle"/> is used to work out what way the developer can access the entity class.
+    /// </summary>
     internal class DecodedEntityClass
     {
         private readonly string[] _methodNamesToIgnore;
@@ -47,8 +52,12 @@ namespace GenericServices.Internal.Decoders
                 EntityStyle = EntityStyles.PropertyBag;
                 return;
             }
-                
-            var efType = context.Model.FindEntityType(entityType);
+
+            // This replaces 'context.Model.FindEntityType(entityType)' because that didn't provide Owned Types
+            var efType = context.Model.GetEntityTypes(entityType)
+                //You can multiple Owned types
+                .FirstOrDefault();
+
             if (efType == null)
             {
                 throw new InvalidOperationException($"The class {entityType.Name} was not found in the {context.GetType().Name} DbContext."+

@@ -11,8 +11,7 @@ namespace GenericServices.Setup.Internal
     {
         public static void RegisterEntityClasses(this DbContext context)
         {
-            foreach (var entityType in context.Model.GetEntityTypes()
-                .Where(x => x.DefiningEntityType == null)) // this removes owned classes
+            foreach (var entityType in context.Model.GetEntityTypes())
             {
                 context.RegisterDecodedEntityClass(entityType.ClrType);
             }
