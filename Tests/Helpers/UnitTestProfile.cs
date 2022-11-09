@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using AutoMapper;
+using AutoMapper.Internal;
 
 namespace Tests.Helpers
 {
@@ -13,7 +14,7 @@ namespace Tests.Helpers
         public UnitTestProfile(bool addIgnoreParts)
         {
             if (addIgnoreParts)
-                ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
+                this.Internal().ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
         }
 
         public void AddReadMap<TIn, TOut>(Action<IMappingExpression<TIn, TOut>> alterMapping = null)

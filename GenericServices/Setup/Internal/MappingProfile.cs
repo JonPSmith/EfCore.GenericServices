@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
+using AutoMapper.Internal;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -15,7 +16,7 @@ namespace GenericServices.Setup.Internal
         public MappingProfile(bool addIgnoreParts)
         {
             if (addIgnoreParts)
-                ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
+                this.Internal().ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
         }
 
         /// <summary>
