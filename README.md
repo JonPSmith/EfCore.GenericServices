@@ -1,5 +1,3 @@
-
-
 # EfCore.GenericServices
 
 This library helps you quickly code Create, Read, Update and Delete (CRUD) accesses for a web/mobile/desktop application. It acts as a adapter and command pattern between a database accessed by Entity Framework Core (EF Core) and the needs of the front-end system. 
@@ -8,14 +6,14 @@ The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServi
 
 NOTE: Version 5.1.0 and above of this library supports multiple versions of EF Core 5.
 
-    Version 5.1.0 and above supports EF Core 5.10 and EF Core 6.0
-    Version 5.2.0 and above supports EF Core 5.10, EF Core 6.0 and EF Core 7.0
+- Version 5.1.0 and above supports EF Core 5.10 and EF Core 6.0
+- Version 5.2.0 and above supports EF Core 5.10, EF Core 6.0 and EF Core 7.0
 
 _If are using the older versions of EF Core you should use [EfCore.GenericServices, version 3.2.2](https://www.nuget.org/packages/EfCore.GenericServices/3.2.2)._
 
 ## Documentation and useful articles
 
-The documentaion can be found in the [GitHub wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki). but the rest of this README file provides a good overview of what the library can do, but here are some articles that give you a detailed description of what the libraray does.
+The documentation can be found in the [GitHub wiki](https://github.com/JonPSmith/EfCore.GenericServices/wiki). but the rest of this README file provides a good overview of what the library can do, but here are some articles that give you a detailed description of what the libraray does.
 
 * [GenericServices: A library to provide CRUD front-end services from a EF Core database](https://www.thereformedprogrammer.net/genericservices-a-library-to-provide-crud-front-end-services-from-a-ef-core-database/).
 * [Improving Domain-Driven Design updates in EfCore.GenericServices](https://www.thereformedprogrammer.net/improving-domain-driven-design-updates-in-efcore-genericservices/) - version 3.1.0 and above.
