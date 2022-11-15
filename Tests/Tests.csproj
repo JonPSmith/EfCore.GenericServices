@@ -25,9 +25,9 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="EfCore.TestSupport" Version="5.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0-preview3.21293.2" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
     <PackageReference Include="GenericServices.StatusGeneric" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
