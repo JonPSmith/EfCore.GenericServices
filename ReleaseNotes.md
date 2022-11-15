@@ -1,5 +1,10 @@
 # Release Notes
 
+## 5.2.0
+
+- Updated to support NET 7 - thanks to GitHub user @Jerrill - see PR #66
+- Updates AutoMapper to version 12.0.0 - thanks to GitHub user @Jerrill - see PR #66
+
 ## 5.1.1
 
 - Bug fix: EF Core 6 version failed on owned type because defintion changed  - see issue #60

@@ -7,7 +7,7 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
 		<PackageReference Include="AutoMapper" Version="12.0.0" />
-		<PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
+		<PackageReference Include="EfCore.TestSupport" Version="5.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="5.0.11" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
@@ -23,10 +23,10 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="AutoMapper" Version="12.0.0" />
-		<PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0-preview3.21293.2" />
+		<PackageReference Include="EfCore.TestSupport" Version="5.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
 		<PackageReference Include="GenericServices.StatusGeneric" Version="1.2.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
 		<PackageReference Include="xunit" Version="2.4.2" />
@@ -39,7 +39,7 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
 		<PackageReference Include="AutoMapper" Version="12.0.0" />
-		<PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
+		<PackageReference Include="EfCore.TestSupport" Version="5.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />

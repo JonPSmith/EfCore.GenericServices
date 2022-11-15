@@ -14,8 +14,8 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
     <PackageReference Include="GenericServices.StatusGeneric" Version="1.2.0" />
   </ItemGroup>
 
@@ -28,10 +28,10 @@
 
 	<PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>5.1.1</PackageVersion>
-    <Version>5.1.1</Version>
-    <AssemblyVersion>5.1.1.0</AssemblyVersion>
-    <FileVersion>5.1.1.0</FileVersion>
+    <PackageVersion>5.2.0</PackageVersion>
+    <Version>5.2.0</Version>
+    <AssemblyVersion>5.2.0.0</AssemblyVersion>
+    <FileVersion>5.2.0.0</FileVersion>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -43,7 +43,8 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-	    Bug fix: EF Core 6 version failed on owned type because defintion changed - see issue #60
+		- Updated to support NET 7 - thanks to GitHub user @Jerrill - see PR #66
+		- Updates AutoMapper to version 12.0.0 - thanks to GitHub user @Jerrill - see PR #66
 	</PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
