@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
 using Tests.Configs;
@@ -120,7 +121,7 @@ namespace Tests.UnitTests.Libraries
             var config = new MapperConfiguration(cfg =>
             {
                 //see https://github.com/AutoMapper/AutoMapper/issues/2571#issuecomment-374159340
-                cfg.ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
+                cfg.Internal().ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
                 cfg.CreateMap<WriteAuthorReadOnlyDto, Author>();
             });
 
