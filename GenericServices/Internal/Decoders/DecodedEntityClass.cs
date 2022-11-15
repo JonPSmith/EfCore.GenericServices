@@ -10,6 +10,7 @@ using System.Reflection;
 using GenericServices.Configuration.Internal;
 using Microsoft.EntityFrameworkCore;
 using StatusGeneric;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GenericServices.Internal.Decoders
 {
@@ -53,10 +54,13 @@ namespace GenericServices.Internal.Decoders
                 return;
             }
 
-            // This replaces 'context.Model.FindEntityType(entityType)' because that didn't provide Owned Types
-            var efType = context.Model.GetEntityTypes(entityType)
-                //You can multiple Owned types
-                .FirstOrDefault();
+            //// This replaces 'context.Model.FindEntityType(entityType)' because that didn't provide Owned Types
+            //var efType = context.Model.GetEntityTypes(entityType)
+            //    //You can multiple Owned types
+            //    .FirstOrDefault();
+            var efEntityTypes = context.Model.GetEntityTypes();
+            var efType = efEntityTypes.Where(x => x.ClrType.Name == entityType.Name)
+                                      .FirstOrDefault();
 
             if (efType == null)
             {
@@ -78,7 +82,7 @@ namespace GenericServices.Internal.Decoders
                 return;
             }
 
-            var primaryKeys = efType.GetKeys().Where(x => x.IsPrimaryKey()).ToImmutableList();
+            var primaryKeys = efType.GetKeys().Where(x => (x == x.DeclaringEntityType.FindPrimaryKey())).ToImmutableList();
             if (primaryKeys.Count != 1)
             {
                 throw new InvalidOperationException($"The class {entityType.Name} has {primaryKeys.Count} primary keys. I can't handle that.");

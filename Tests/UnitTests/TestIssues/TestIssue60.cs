@@ -6,6 +6,7 @@ using System.Linq;
 using GenericServices.PublicButHidden;
 using GenericServices.Setup;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -60,7 +61,8 @@ namespace Tests.UnitTests.TestIssues
             using var context = new Context(options);
 
             //ATTEMPT
-            var ownedTypes = context.Model.GetEntityTypes(typeof(Reference));
+            var ownedTypes = context.Model.GetEntityTypes()
+                                          .Where(x => x.ClrType.Name == typeof(Reference).Name);
 
             //VERIFY
             ownedTypes.Count().ShouldEqual(2);
