@@ -17,7 +17,7 @@ namespace GenericServices.Setup.Internal
             if (contextTypes == null || contextTypes.Length <= 0)
                 throw new ArgumentException(nameof(contextTypes));
 
-            var serviceProvider = services.BuildServiceProvider();
+            using var serviceProvider = services.BuildServiceProvider();
             var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
             using (var serviceScope = serviceScopeFactory.CreateScope())
             {
