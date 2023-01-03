@@ -1,5 +1,9 @@
 # Release Notes
 
+## 5.2.1
+
+- Fixed problem caused by building the services early. Fix provided by @JonathanQuinth PR #67
+
 ## 5.2.0
 
 - Updated to support NET 7 - thanks to GitHub user @Jerrill - see PR #66

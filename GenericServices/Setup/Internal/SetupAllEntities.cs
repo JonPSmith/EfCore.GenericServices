@@ -19,16 +19,14 @@ namespace GenericServices.Setup.Internal
 
             using var serviceProvider = services.BuildServiceProvider();
             var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            using (var serviceScope = serviceScopeFactory.CreateScope())
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            foreach (var contextType in contextTypes)
             {
-                foreach (var contextType in contextTypes)
+                using (var context = serviceScope.ServiceProvider.GetService(contextType) as DbContext)
                 {
-                    using (var context = serviceScope.ServiceProvider.GetService(contextType) as DbContext)
-                    {
-                        if (context == null)
-                            throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered, or is a DbContext. Have you forgotten to register it?");
-                        context.RegisterEntityClasses();
-                    }
+                    if (context == null)
+                        throw new InvalidOperationException($"You provided the a DbContext called {contextType.Name}, but it doesn't seem to be registered, or is a DbContext. Have you forgotten to register it?");
+                    context.RegisterEntityClasses();
                 }
             }
         }
