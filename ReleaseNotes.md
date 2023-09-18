@@ -1,5 +1,9 @@
 # Release Notes
 
+## 8.0.0-rc1-0001
+
+- First build using NET 8-rc1
+
 ## 5.2.1
 
 - Fixed problem caused by building the services early. Fix provided by @JonathanQuinth PR #67
