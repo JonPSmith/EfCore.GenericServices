@@ -6,12 +6,10 @@ The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServi
 
 ## List of versions and which .NET framework they support
 
-The versions of this library has changed to make it easier to create a new version when a new release of .NET farmework. Now the first number defines the .NET version, e.g EfCore.TestSupport version 8.?.? only runs on .NET 8. 
+- Version 6.?.?: Supports NET 6, 7 and 8
+- Version 5.2.?: Supports NET 5, 6 and 7
 
-- Version 8.?.?: Supports NET 8
-- Version 5.1.?: Supports NET 5, 6 and 7
-
-_There are older versions of the EfCore.TestSupport library, but .NET lower than .NET 5 are not supported by Microsoft._
+_There are older versions of the EfCore.GenericServices library, but .NET lower than .NET 5 are not supported by Microsoft._
 
 ## Documentation and useful articles
 
