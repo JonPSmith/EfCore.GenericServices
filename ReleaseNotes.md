@@ -1,5 +1,9 @@
 # Release Notes
 
+## 6.0.0
+
+- New version to support NET 8 - now supports NET 6, 7, and 8
+
 ## 8.0.0-rc1-0001
 
 - First build using NET 8-rc1

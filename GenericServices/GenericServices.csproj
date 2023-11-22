@@ -7,8 +7,8 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0-rc.2.23480.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.2.23480.1" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="GenericServices.StatusGeneric" Version="1.2.0" />
 	</ItemGroup>
 
@@ -28,7 +28,7 @@
 
 	<PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>6.0.0-rc2-0001</PackageVersion>
+    <PackageVersion>6.0.0</PackageVersion>
     <Version>6.0.0</Version>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <FileVersion>6.0.0.0</FileVersion>
@@ -43,7 +43,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-	    Fixed problem caused by building the services early. Fix provided by @JonathanQuinth PR #67
+	    New version to support NET 8 - now supports NET 6, 7, and 8
 	</PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
