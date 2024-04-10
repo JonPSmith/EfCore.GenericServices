@@ -10,7 +10,6 @@ using DataLayer.EfCode;
 using GenericServices;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
-using Microsoft.AspNetCore.Mvc;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -139,7 +138,6 @@ namespace Tests.UnitTests.GenericServicesInternal
 
         public class ExtraParamsDto : ILinkToEntity<Book>
         {
-            [HiddenInput]
             public int BookId { get; set; }
 
             public string Title { get; set; }

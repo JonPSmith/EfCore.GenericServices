@@ -3,14 +3,12 @@
 
 using DataLayer.EfClasses;
 using GenericServices;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.Dtos
 {
     [IncludeThen(nameof(Book.AuthorsLink), nameof(BookAuthor.Author))]
     public class AddNewAuthorToBookUsingIncludesDto : ILinkToEntity<Book>
     {
-        [HiddenInput]
         public int BookId { get; set; }
 
         public Author AddThisAuthor { get; set; }

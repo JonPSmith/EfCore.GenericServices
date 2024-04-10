@@ -5,13 +5,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DataLayer.EfClasses;
 using GenericServices;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.Dtos
 {
     public class AddReviewByNameExtendedDto : ILinkToEntity<Book>
     {
-        [HiddenInput]
         public int BookId { get; set; }
 
         [ReadOnly(true)]
