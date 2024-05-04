@@ -1,5 +1,9 @@
 # Release Notes
 
+## 8.1.0 
+
+- Updated to AutoMapper to version="13.0.1" from PR by @aaron-kruse
+
 ## 8.0.0
 
 - Only supports .NET 8 - This makes it easier to update for future NET releases
