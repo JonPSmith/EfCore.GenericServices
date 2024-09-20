@@ -71,6 +71,11 @@ namespace GenericServices.Internal.MappingCode
                 _wrappedMapper.MapperSaveConfig.CreateMapper().Map(dto, entity);
             }
 
+            public void MapEntityToDto(TEntity entity, TDto dto)
+            {
+                _wrappedMapper.MapperReadConfig.CreateMapper().Map(entity, dto);
+            }
+
             /// <summary>
             /// This returns the existing entity with any includes applied from the IncludeThenAttribute
             /// </summary>

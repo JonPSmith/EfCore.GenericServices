@@ -60,6 +60,15 @@ namespace GenericServices
             where TEntity : class;
 
         /// <summary>
+        /// This maps an existing entity instance that has already been retrieved to a DTO.
+        /// </summary>
+        /// <typeparam name="TEntity">This must be a entity or query class in the current DbContext</typeparam>
+        /// <typeparam name="TDto">This should be a class with an <see cref="ILinkToEntity{TEntity}"/></typeparam>
+        /// <param name="entity">The entity instance to be mapped to a DTO.</param>
+        /// <returns></returns>
+        TDto MapEntityToDto<TEntity, TDto>(TEntity entity) where TEntity : class;
+
+        /// <summary>
         /// This will create a new entity in the database. If you provide class which is an entity class (i.e. in your EF Core database) then
         /// the method will add, and then call SaveChanges. If the class you provide is a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface
         /// it will use that to create the entity by matching the DTOs properties to either, a) a public static method, b) a public ctor, or 

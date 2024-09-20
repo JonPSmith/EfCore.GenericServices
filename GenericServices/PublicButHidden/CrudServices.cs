@@ -139,6 +139,18 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
+        public TDto MapEntityToDto<TEntity, TDto>(TEntity entity) where TEntity : class
+        {
+            var dtoInstance = (TDto)Activator.CreateInstance(typeof(TDto));
+            
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
+            var projector = new CreateMapper(_context, _configAndMapper, typeof(TDto), entityInfo);
+            projector.Accessor.MapEntityToDto(entity, dtoInstance);
+
+            return dtoInstance;
+        }
+
+        /// <inheritdoc />
         public T CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
