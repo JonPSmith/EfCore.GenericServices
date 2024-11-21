@@ -2,20 +2,21 @@
 
   <PropertyGroup>
 	  <TargetFramework>net8.0</TargetFramework>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="GenericServices.StatusGeneric" Version="1.2.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>8.1.0</PackageVersion>
-    <Version>8.1.0</Version>
+    <PackageVersion>9.0.0</PackageVersion>
+    <Version>9.0.0</Version>
     <Company>Selective Analytics</Company>
     <Authors>Jon P Smith</Authors>
     <PackageId>EfCore.GenericServices</PackageId>
@@ -27,7 +28,7 @@
     <RepositoryType>GuHub</RepositoryType>
     <PackageTags>Entity Framework Core, ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
-		- Updated to AutoMapper to version="13.0.1" from PR by @aaron-kruse
+		- .NET 9 version
 	</PackageReleaseNotes>
     <PackageIcon>GenericServicesNuGetIcon128.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -35,6 +36,7 @@
 
   <ItemGroup>
     <None Include="GenericServicesNuGetIcon128.png" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

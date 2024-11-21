@@ -1,5 +1,9 @@
 # Release Notes
 
+## 9.0.0
+
+.NET 9 version
+
 ## 8.1.0 
 
 - Updated to AutoMapper to version="13.0.1" from PR by @aaron-kruse
