@@ -34,13 +34,13 @@ namespace GenericServices.Internal.Decoders
             }
 
             NameType = DecodedNameTypes.Method;
-            if (Name.Equals(DecodedNameTypes.Ctor.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (Name.Equals(DecodedNameTypes.Ctor.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 NameType = DecodedNameTypes.Ctor;
                 //I do this because the DecodedDto methods use exact match of name. MethodCtorMatch sets the name of a ctor in this way too
                 Name = DecodedNameTypes.Ctor.ToString();      
             }
-            else if (Name.Equals(CrudValues.UseAutoMapper, StringComparison.InvariantCultureIgnoreCase))
+            else if (Name.Equals(CrudValues.UseAutoMapper, StringComparison.OrdinalIgnoreCase))
                 NameType = DecodedNameTypes.AutoMapper;
         }
 

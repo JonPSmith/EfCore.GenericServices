@@ -7,5 +7,7 @@ namespace GenericServices
     /// This allows you to link a class to an entity class. GenericServices then uses that to map your dto class to the entity class
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
+#pragma warning disable CA1040 // Avoid empty interfaces: although this could probably be implemented differently, this is kind of critical to how GenericServices works.
     public interface ILinkToEntity<TEntity> where TEntity : class {}
+#pragma warning restore CA1040 // Avoid empty interfaces
 }

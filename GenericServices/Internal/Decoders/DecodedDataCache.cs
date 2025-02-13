@@ -44,7 +44,7 @@ namespace GenericServices.Internal.Decoders
         public static DecodedDto GetDtoInfoThrowExceptionIfNotThere(this Type dtoType)
         {
             if (!DecodedDtoCache.TryGetValue(dtoType, out var result))
-                   throw new NullReferenceException(
+                   throw new InvalidOperationException(
                        $"The class {dtoType} is not registered as a valid CrudServices DTO/ViewModel." +
                        $" Have you left off the {DecodedDtoExtensions.HumanReadableILinkToEntity} interface?");
             return result;

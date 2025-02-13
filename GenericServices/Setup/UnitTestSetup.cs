@@ -25,6 +25,8 @@ namespace GenericServices.Setup
         public static SpecificUseData SetupEntitiesDirect(this DbContext context,
             IGenericServicesConfig publicConfig = null)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             context.RegisterEntityClasses();
             var utData = new SpecificUseData(publicConfig);
             return utData;
@@ -40,6 +42,8 @@ namespace GenericServices.Setup
         public static SpecificUseData SetupSingleDtoAndEntities<TDto>(this DbContext context,
             IGenericServicesConfig publicConfig = null)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             context.RegisterEntityClasses();
             var utData = new SpecificUseData(publicConfig);
             utData.AddSingleDto<TDto>();
@@ -54,6 +58,8 @@ namespace GenericServices.Setup
         /// <returns></returns>
         public static SpecificUseData AddSingleDto<TDto>(this SpecificUseData utData)
         {
+            ArgumentNullException.ThrowIfNull(utData);
+
             var status = new StatusGenericHandler();
             var typesInAssembly = typeof(TDto).Assembly.GetTypes();
             var dtoRegister = new RegisterOneDtoType(typeof(TDto), typesInAssembly, utData.PublicConfig);

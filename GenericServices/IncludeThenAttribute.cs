@@ -14,7 +14,7 @@ namespace GenericServices
     /// You can add multiple IncludeThen attributes to a DTO/ViewModel
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class IncludeThenAttribute : Attribute
+    public sealed class IncludeThenAttribute : Attribute
     {
         /// <summary>
         /// This will cause a Include to be added to the database query in an UpdateAndSave call
@@ -24,7 +24,9 @@ namespace GenericServices
         /// <param name="includeName">The names of the relationships you want to include. Can have multiple names, e.g. "AuthorLink.Author"
         /// but we recommend using nameof(EntityType.RelationalPropertyName), e.g. nameof(Book.Reviews)</param>
         /// <param name="thenIncludeNames">Optional: If using nameof approach then you can provide a series of ThenInclude names</param>
+#pragma warning disable CA1019 // Define accessors for attribute arguments: not sure what Jonp has going on here but I don't want to be the one to break it.
         public IncludeThenAttribute(string includeName, params string[] thenIncludeNames)
+#pragma warning restore CA1019 // Define accessors for attribute arguments
         {
             IncludeNames = includeName;
             if (thenIncludeNames.Any())

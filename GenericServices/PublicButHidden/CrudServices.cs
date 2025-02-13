@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using AutoMapper.QueryableExtensions;
 using GenericServices.Configuration.Internal;
 using GenericServices.Internal;
@@ -30,7 +31,8 @@ namespace GenericServices.PublicButHidden
         public CrudServices(DbContext context, IWrappedConfigAndMapper configAndMapper) : base(context, configAndMapper)
         {
             if (context == null)
-                throw new ArgumentNullException("The DbContext class is null. Either you haven't registered GenericServices, " +
+                throw new ArgumentNullException(nameof(context),
+                    "The DbContext class is null. Either you haven't registered GenericServices, " +
                      "or you are using the multi-DbContext version, in which case you need to use the CrudServices<TContext> and specify which DbContext to use.");
         }
     }
@@ -55,7 +57,7 @@ namespace GenericServices.PublicButHidden
         public CrudServices(TContext context, IWrappedConfigAndMapper configAndMapper)
         {
             _context = context;
-            _configAndMapper = configAndMapper ?? throw new ArgumentException(nameof(configAndMapper));
+            _configAndMapper = configAndMapper ?? throw new ArgumentNullException(nameof(configAndMapper));
         }
 
         /// <inheritdoc />
@@ -133,6 +135,7 @@ namespace GenericServices.PublicButHidden
         /// <inheritdoc />
         public IQueryable<TDto> ProjectFromEntityToDto<TEntity,TDto>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query) where TEntity : class
         {
+            ArgumentNullException.ThrowIfNull(query);
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             return query(_context.Set<TEntity>())
                 .ProjectTo<TDto>(_configAndMapper.MapperReadConfig);
@@ -195,19 +198,23 @@ namespace GenericServices.PublicButHidden
 
         /// <inheritdoc />
         public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
-        {         
+        {
+            ArgumentNullException.ThrowIfNull(patch);
             return LocalUpdateAndSave(patch, () => _context.Find<TEntity>(keys));
         }
 
         /// <inheritdoc />
         public TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
         {
+            ArgumentNullException.ThrowIfNull(patch);
             return LocalUpdateAndSave(patch, () => _context.Set<TEntity>().SingleOrDefault(whereExpression));
         }
 
         /// <inheritdoc />
         public void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class
         {
+            ArgumentNullException.ThrowIfNull(keys);
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             entityInfo.CheckCanDoOperation(CrudTypes.Delete);
             Message = $"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}";
@@ -232,6 +239,9 @@ namespace GenericServices.PublicButHidden
         public void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
+            ArgumentNullException.ThrowIfNull(runBeforeDelete);
+            ArgumentNullException.ThrowIfNull(keys);
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             entityInfo.CheckCanDoOperation(CrudTypes.Delete);
             Message = $"Successfully deleted a {entityInfo.EntityType.GetNameForClass()}";

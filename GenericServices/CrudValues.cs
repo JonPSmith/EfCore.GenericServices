@@ -6,7 +6,7 @@ namespace GenericServices
     /// <summary>
     /// This is a small class to contain settings to set 
     /// </summary>
-    public class CrudValues
+    public static class CrudValues
     {
         /// <summary>
         /// Use this to force the use of AutoMapper for a create or update method

@@ -15,7 +15,7 @@ namespace GenericServices.Setup.Internal
             Services = services ?? throw new ArgumentNullException(nameof(services));
             PublicConfig = publicConfig ?? new GenericServicesConfig();
             if (contextTypes == null || contextTypes.Length <= 0)
-                throw new ArgumentException(nameof(contextTypes));
+                throw new ArgumentException($"The {nameof(contextTypes)} provided is null or empty.", nameof(contextTypes));
 
             using var serviceProvider = services.BuildServiceProvider();
             var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();

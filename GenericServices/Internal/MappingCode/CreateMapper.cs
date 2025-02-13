@@ -111,7 +111,7 @@ namespace GenericServices.Internal.MappingCode
                 return _context.Set<TEntity>().AsNoTracking().ProjectTo<TDto>(_wrappedMapper.MapperReadConfig);
             }
 
-            private IQueryable<TEntity> ApplyAnyIncludeStringsAtDbSetLevel(DbSet<TEntity> dbSet)
+            private static IQueryable<TEntity> ApplyAnyIncludeStringsAtDbSetLevel(DbSet<TEntity> dbSet)
             {
                 var attributes = typeof(TDto).GetCustomAttributes(typeof(IncludeThenAttribute), true)
                     .Cast<IncludeThenAttribute>().ToList();

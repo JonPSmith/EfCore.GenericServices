@@ -85,6 +85,8 @@ namespace GenericServices.Setup
         public static IGenericServicesSetupPart2 ScanAssemblesForDtos(this IGenericServicesSetupPart1 setupPart1,
             params Assembly[] assembliesToScan)
         {
+            ArgumentNullException.ThrowIfNull(setupPart1);
+
             var dtosRegister = new SetupDtosAndMappings(setupPart1.PublicConfig);
             var wrappedMapping = dtosRegister.ScanAllAssemblies(assembliesToScan, setupPart1.PublicConfig);
             if (!dtosRegister.IsValid)
@@ -106,6 +108,8 @@ namespace GenericServices.Setup
         public static IServiceCollection RegisterGenericServices(this IGenericServicesSetupPart2 setupPart2, 
             Type singleContextToRegister = null)
         {
+            ArgumentNullException.ThrowIfNull(setupPart2);
+
             setupPart2.Services.AddTransient(typeof(ICrudServices<>), typeof(CrudServices<>));
             setupPart2.Services.AddTransient(typeof(ICrudServicesAsync<>), typeof(CrudServicesAsync<>));
 

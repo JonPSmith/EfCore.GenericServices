@@ -101,7 +101,7 @@ namespace GenericServices.Internal.Decoders
                 PublicStaticCreatorMethods = (from method in staticMethods
                     let genericArgs = (method.ReturnType.IsGenericType
                         ? method.ReturnType.GetGenericArguments()
-                        : new Type[0])
+                        : [])
                     where genericArgs.Length == 1 && genericArgs[0] == entityType &&
                           method.ReturnType.GetInterface(nameof(IStatusGeneric)) != null
                     select method).ToArray();
@@ -134,7 +134,7 @@ namespace GenericServices.Internal.Decoders
         public ImmutableList<PropertyInfo> PrimaryKeyProperties { get; private set; }
 
         public ConstructorInfo[] PublicCtors { get; }
-        public MethodInfo[] PublicStaticCreatorMethods { get; } = new MethodInfo[0];
+        public MethodInfo[] PublicStaticCreatorMethods { get; } = [];
         public MethodInfo[] PublicSetterMethods { get; }
         public PropertyInfo[] PropertiesWithPublicSetter { get; }
 

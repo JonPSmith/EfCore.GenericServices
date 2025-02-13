@@ -25,6 +25,8 @@ namespace GenericServices.Configuration
         /// <returns></returns>
         public static PropertyMatch MatchCamelAndPascalName(string name, Type type, PropertyInfo propertyInfo)
         {
+            ArgumentNullException.ThrowIfNull(propertyInfo);
+
             //The first item could be a method name, which starts with a lower case
             var nameMatched = name.FirstCharToUpper() == propertyInfo.Name;
             //I have only done a simple match - someone can do a better match for collections etc.
@@ -39,7 +41,7 @@ namespace GenericServices.Configuration
         {
             if (string.IsNullOrEmpty(input))
                 throw new ArgumentNullException(nameof(input));
-            return input.First().ToString().ToUpper() + input.Substring(1);
+            return input.First().ToString().ToUpperInvariant() + input.Substring(1);
         }
     }
 }
