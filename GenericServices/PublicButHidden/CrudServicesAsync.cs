@@ -43,7 +43,7 @@ namespace GenericServices.PublicButHidden
     /// You should use this with dependency injection to get an instance of the sync CrudServices
     /// </summary>
     public class CrudServicesAsync<TContext> :
-        StatusGenericHandler,
+        //StatusGenericHandler,
         ICrudServicesAsync<TContext> where TContext : DbContext
     {
         private readonly IWrappedConfigAndMapper _configAndMapper;
@@ -64,8 +64,10 @@ namespace GenericServices.PublicButHidden
         public DbContext Context => _context;
 
         /// <inheritdoc />
-        public async Task<T> ReadSingleAsync<T>(params object[] keys) where T : class
+        public async Task<IStatusGeneric<T>> ReadSingleAsync<T>(params object[] keys) where T : class
         {
+            var status = new StatusGenericHandler<T>();
+
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityStyle == EntityStyles.HasNoKey)
@@ -78,23 +80,25 @@ namespace GenericServices.PublicButHidden
             {
                 //else its a DTO, so we need to project the entity to the DTO and select the single element
                 var projector = new CreateMapper(_context, _configAndMapper, typeof(T), entityInfo);
-                result = await ((IQueryable<T>) projector.Accessor.GetViaKeysWithProject(keys))
+                result = await ((IQueryable<T>)projector.Accessor.GetViaKeysWithProject(keys))
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
 
-            if (result != null) return result;
+            if (result != null) return status.SetResult(result);
 
             if (_configAndMapper.Config.NoErrorOnReadSingleNull)
-                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+                status.Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
             else
-                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
+                status.AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
 
-            return null;
+            return status.SetResult(null);
         }
 
         /// <inheritdoc />
-        public async Task<T> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class
+        public async Task<IStatusGeneric<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class
         {
+            var status = new StatusGenericHandler<T>();
+
             T result;
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             if (entityInfo.EntityType == typeof(T))
@@ -109,14 +113,14 @@ namespace GenericServices.PublicButHidden
                     .SingleOrDefaultAsync().ConfigureAwait(false);
             }
 
-            if (result != null) return result;
+            if (result != null) return status.SetResult(result);
 
             if (_configAndMapper.Config.NoErrorOnReadSingleNull)
-                Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
+                status.Message = $"The {entityInfo.EntityType.GetNameForClass()} was not found.";
             else
-                AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
+                status.AddError($"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were looking for.");
 
-            return null;
+            return status.SetResult(null);
         }
 
         /// <inheritdoc />
@@ -143,15 +147,17 @@ namespace GenericServices.PublicButHidden
         }
 
         /// <inheritdoc />
-        public async Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
+        public async Task<IStatusGeneric<T>> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class
         {
+            var status = new StatusGenericHandler<T>();
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Create);
-            Message = $"Successfully created a {entityInfo.EntityType.GetNameForClass()}";
+            status.Message = $"Successfully created a {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 _context.Add(entityOrDto);
-                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                     _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
             else
@@ -159,105 +165,117 @@ namespace GenericServices.PublicButHidden
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var creator = new EntityCreateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 var entity = creator.CreateEntityAndFillFromDto(entityOrDto, ctorOrStaticMethodName);
-                CombineStatuses(creator);
-                if (IsValid)
+                status.CombineStatuses(creator);
+                if (status.IsValid)
                 {
                     _context.Add(entity);
-                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                    status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
-                    if (IsValid)
+                    if (status.IsValid)
                         entity.CopyBackKeysFromEntityToDtoIfPresent(entityOrDto, entityInfo);
                 }
             }
-            return IsValid ? entityOrDto : null;
+            return status.SetResult(status.IsValid ? entityOrDto : null);
         }
 
         /// <inheritdoc />
-        public async Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
+        public async Task<IStatusGeneric> UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class
         {
+            var status = new StatusGenericHandler();
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
-            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            status.Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType == typeof(T))
             {
                 if (!_context.Entry(entityOrDto).IsKeySet)
                     throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
                 if (_context.Entry(entityOrDto).State == EntityState.Detached)
                     _context.Update(entityOrDto);
-                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                     _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
             }
             else
             {
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
-                CombineStatuses(await updater.ReadEntityAndUpdateViaDtoAsync(entityOrDto, methodName).ConfigureAwait(false));
-                if (IsValid)
-                    CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                status.CombineStatuses(await updater.ReadEntityAndUpdateViaDtoAsync(entityOrDto, methodName).ConfigureAwait(false));
+                if (status.IsValid)
+                    status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
             }
+
+            return status;
         }
 
         /// <inheritdoc />
-        public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
+        public async Task<IStatusGeneric<TEntity>> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(patch);
             return await LocalUpdateAndSaveAsync(patch, async () => await _context.FindAsync<TEntity>(keys).ConfigureAwait(false));
         }
 
         /// <inheritdoc />
-        public async Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        public async Task<IStatusGeneric<TEntity>> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(patch);
             return await LocalUpdateAndSaveAsync(patch, () => _context.Set<TEntity>().SingleOrDefaultAsync(whereExpression)).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
+        public async Task<IStatusGeneric> DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(keys);
 
+            var status = new StatusGenericHandler();
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             entityInfo.CheckCanDoOperation(CrudTypes.Delete);
-            Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
+            status.Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
             var entity = await _context.Set<TEntity>().SingleOrDefaultAsync(whereWithKeys);
             if (entity == null)
             {
-                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
-                return;
+                status.AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
+                return status;
             }
             _context.Remove(entity);
-            CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+            status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                 _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+
+            return status;
         }
 
         /// <inheritdoc />
-        public async Task DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
+        public async Task<IStatusGeneric> DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
             params object[] keys) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(runBeforeDelete);
             ArgumentNullException.ThrowIfNull(keys);
 
+            var status = new StatusGenericHandler();
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             entityInfo.CheckCanDoOperation(CrudTypes.Delete);
-            Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
+            status.Message = $"Successfully deleted a {ExtractDisplayHelpers.GetNameForClass<TEntity>()}";
 
             var whereWithKeys = entityInfo.PrimaryKeyProperties.CreateFilter<TEntity>(keys);
             var entity = await _context.Set<TEntity>().IgnoreQueryFilters().SingleOrDefaultAsync(whereWithKeys);
             if (entity == null)
             {
-                AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
-                return;
+                status.AddError($"Sorry, I could not find the {ExtractDisplayHelpers.GetNameForClass<TEntity>()} you wanted to delete.");
+                return status;
             }
 
-            CombineStatuses(await runBeforeDelete(_context, entity).ConfigureAwait(false));
-            if (!IsValid) return;
+            status.CombineStatuses(await runBeforeDelete(_context, entity).ConfigureAwait(false));
+            if (!status.IsValid) return status;
 
             _context.Remove(entity);
-            CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+            status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                 _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+
+            return status;
         }
 
         /// <summary>
@@ -267,27 +285,29 @@ namespace GenericServices.PublicButHidden
         /// <param name="patch"></param>
         /// <param name="getEntity"></param>
         /// <returns></returns>
-        private async Task<TEntity> LocalUpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Func<Task<TEntity>> getEntity)
+        private async Task<IStatusGeneric<TEntity>> LocalUpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Func<Task<TEntity>> getEntity)
             where TEntity : class
         {
+            var status = new StatusGenericHandler<TEntity>();
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(TEntity));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
-            Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            status.Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
             if (entityInfo.EntityType != typeof(TEntity))
                 throw new NotImplementedException(
                     $"I could not find the entity class {typeof(TEntity).Name}. JsonPatch only works on entity classes.");
 
             var entity = await getEntity().ConfigureAwait(false);
             if (entity != null)
-                patch.ApplyTo(entity, error => AddError(error.ErrorMessage));
+                patch.ApplyTo(entity, error => status.AddError(error.ErrorMessage));
             else
-                AddError(
+                status.AddError(
                     $"Sorry, I could not find the {entityInfo.EntityType.GetNameForClass()} you were trying to update.");
-            if (IsValid)
-                CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+            if (status.IsValid)
+                status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                     _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
 
-            return entity;
+            return status.SetResult(entity);
         }
     }
 }

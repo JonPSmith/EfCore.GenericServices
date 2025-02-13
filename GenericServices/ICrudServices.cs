@@ -14,7 +14,7 @@ namespace GenericServices
     /// This is the sync interface to CrudServices, which assumes you have one DbContext which the CrudServices setup code will register to the DbContext type
     /// You should use this with dependency injection to get an instance of the sync CrudServices
     /// </summary>
-    public interface ICrudServices : IStatusGeneric
+    public interface ICrudServices // : IStatusGeneric
     {
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the CrudServices is using.
@@ -29,7 +29,7 @@ namespace GenericServices
         /// <typeparam name="T">This should either be an entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         /// <returns>The single entity or DTO that was found by the keys. If its an entity class then it is tracked</returns>
-        T ReadSingle<T>(params object[] keys) where T : class;
+        IStatusGeneric<T> ReadSingle<T>(params object[] keys) where T : class;
 
         /// <summary>
         /// This reads a single entity or DTO using a where clause
@@ -37,7 +37,7 @@ namespace GenericServices
         /// <typeparam name="T">This should either be an entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
         /// <param name="whereExpression">The where expression should return a single instance, otherwise you get a </param>
         /// <returns>The single entity or DTO that was found by the where clause. If its an entity class then it is tracked</returns>
-        T ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class;
+        IStatusGeneric<T> ReadSingle<T>(Expression<Func<T, bool>> whereExpression) where T : class;
 
         /// <summary>
         /// This returns an <see cref="IQueryable{T}"/> result, where T can be either an actual entity class,
@@ -70,7 +70,7 @@ namespace GenericServices
         /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or CrudValues.UseAutoMapper to use</param>
         /// <returns>It returns the class you provided. It will contain the primary key defined after the database. 
         /// If its a DTO then GenericServices will have copied the keys from the entity added back into the DTO</returns>
-        T CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
+        IStatusGeneric<T> CreateAndSave<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
 
         /// <summary>
         /// This will update the entity referred to by the keys in the given class instance.
@@ -83,7 +83,7 @@ namespace GenericServices
         /// <typeparam name="T">This type is found from the input instance</typeparam>
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
-        void UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;
+        IStatusGeneric UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
@@ -93,7 +93,7 @@ namespace GenericServices
         /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
         /// <param name="keys">These are the primary key(s) to access the entity</param>
         /// <returns></returns>
-        TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class;
+        IStatusGeneric<TEntity> UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
@@ -103,14 +103,14 @@ namespace GenericServices
         /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
         /// <param name="whereExpression">This is a filter command that will return a single entity (or no entity)</param>
         /// <returns></returns>
-        TEntity UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
+        IStatusGeneric<TEntity> UpdateAndSave<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
 
         /// <summary>
         /// This will delete the entity class with the given primary key
         /// </summary>
         /// <typeparam name="TEntity">The entity class you want to delete. It should be an entity in the DbContext you are referring to.</typeparam>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
-        void DeleteAndSave<TEntity>(params object[] keys) where TEntity : class;
+        IStatusGeneric DeleteAndSave<TEntity>(params object[] keys) where TEntity : class;
 
         /// <summary>
         /// This will find entity class with the given primary key, then call the method you provide before calling the Remove method + SaveChanges.
@@ -124,7 +124,7 @@ namespace GenericServices
         /// Your method has access to the database and can handle any relationships, and returns an <see cref="IStatusGeneric"/>. The Remove will 
         /// only go ahead if the status your method returns is Valid, i.e. no errors</param>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
-        void DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
+        IStatusGeneric DeleteWithActionAndSave<TEntity>(Func<DbContext, TEntity, IStatusGeneric> runBeforeDelete,
             params object[] keys) where TEntity : class;
     }
 }

@@ -15,7 +15,7 @@ namespace GenericServices
     /// This is the sync interface to CrudServicesAsync, which assumes you have one DbContext which the CrudServices setup code will register to the DbContext type
     /// You should use this with dependency injection to get an instance of the sync CrudServices
     /// </summary>
-    public interface ICrudServicesAsync : IStatusGeneric
+    public interface ICrudServicesAsync // : IStatusGeneric
     {
         /// <summary>
         /// This allows you to access the current DbContext that this instance of the CrudServices is using.
@@ -30,7 +30,7 @@ namespace GenericServices
         /// <typeparam name="T">This should either be an entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         /// <returns>A task with a single entity or DTO that was found by the keys. If its an entity class then it is tracked</returns>
-        Task<T> ReadSingleAsync<T>(params object[] keys) where T : class;
+        Task<IStatusGeneric<T>> ReadSingleAsync<T>(params object[] keys) where T : class;
 
         /// <summary>
         /// This reads async a single entity or DTO using a where clause
@@ -38,7 +38,7 @@ namespace GenericServices
         /// <typeparam name="T">This should either be an entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</typeparam>
         /// <param name="whereExpression">The where expression should return a single instance, otherwise you get a </param>
         /// <returns>A task with a single entity or DTO that was found by the where clause. If its an entity class then it is tracked</returns>
-        Task<T> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class;
+        Task<IStatusGeneric<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> whereExpression) where T : class;
 
         /// <summary>
         /// This returns an <see cref="IQueryable{T}"/> result, where T can be either an actual entity class,
@@ -72,7 +72,7 @@ namespace GenericServices
         /// <param name="ctorOrStaticMethodName">Optional: you can tell GenericServices which static method, ctor or CrudValues.UseAutoMapper to use</param>
         /// <returns>It returns a task with the class you provided. It will contain the primary key defined after the database. 
         /// If its a DTO then GenericServices will have copied the keys from the entity added back into the DTO</returns>
-        Task<T> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
+        Task<IStatusGeneric<T>> CreateAndSaveAsync<T>(T entityOrDto, string ctorOrStaticMethodName = null) where T : class;
 
         /// <summary>
         /// This will update the entity referred to by the keys in the given class instance.
@@ -86,7 +86,7 @@ namespace GenericServices
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
         /// <returns>Task, async</returns>
-        Task UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class;
+        Task<IStatusGeneric> UpdateAndSaveAsync<T>(T entityOrDto, string methodName = null) where T : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
@@ -96,7 +96,7 @@ namespace GenericServices
         /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
         /// <param name="keys">These are the primary key(s) to access the entity</param>
         /// <returns></returns>
-        Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class;
+        Task<IStatusGeneric<TEntity>> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, params object[] keys) where TEntity : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>
@@ -106,7 +106,7 @@ namespace GenericServices
         /// <param name="patch">this is a JsonPatch containing "replace" operations</param>
         /// <param name="whereExpression">This is a filter command that will return a single entity (or no entity)</param>
         /// <returns></returns>
-        Task<TEntity> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
+        Task<IStatusGeneric<TEntity>> UpdateAndSaveAsync<TEntity>(JsonPatchDocument<TEntity> patch, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
 
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace GenericServices
         /// <typeparam name="TEntity">The entity class you want to delete. It should be an entity in the DbContext you are referring to.</typeparam>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         /// <returns>Task, async</returns>
-        Task DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class;
+        Task<IStatusGeneric> DeleteAndSaveAsync<TEntity>(params object[] keys) where TEntity : class;
 
         /// <summary>
         /// This will find entity class async with the given primary key, then call the method you provide before calling the Remove method + SaveChanges.
@@ -130,7 +130,7 @@ namespace GenericServices
         /// only go ahead if the status your method returns is Valid, i.e. no errors</param>
         /// <param name="keys">The key(s) value. If there are multiple keys they must be in the correct order as defined by EF Core</param>
         /// <returns>Task, async</returns>
-        Task DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
+        Task<IStatusGeneric> DeleteWithActionAndSaveAsync<TEntity>(Func<DbContext, TEntity, Task<IStatusGeneric>> runBeforeDelete,
             params object[] keys) where TEntity : class;
     }
 }
