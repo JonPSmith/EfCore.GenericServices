@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
+using GenericServices.Configuration;
+using GenericServices.Internal;
+using Microsoft.EntityFrameworkCore;
+using StatusGeneric;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using GenericServices.Configuration;
-using GenericServices.Internal;
-using Microsoft.EntityFrameworkCore;
-using StatusGeneric;
 
 namespace GenericServices
 {
@@ -52,12 +52,12 @@ namespace GenericServices
 
             return shouldValidate
                 ? context.SaveChangesWithValidation(config)
-                : context.SaveChangesWithExtras( config);
+                : context.SaveChangesWithExtras(config);
         }
 
         /// <summary>
         /// This will validate any entity classes that will be added or updated
-        /// If the validation does not produce any errors then SaveChangesAsync will be called 
+        /// If the validation does not produce any errors then SaveChangesAsync will be called
         /// </summary>
         /// <param name="context"></param>
         /// <param name="config"></param>
@@ -77,7 +77,7 @@ namespace GenericServices
 
         /// <summary>
         /// This will validate any entity classes that will be added or updated
-        /// If the validation does not produce any errors then SaveChanges will be called 
+        /// If the validation does not produce any errors then SaveChanges will be called
         /// </summary>
         /// <param name="context"></param>
         /// <param name="config"></param>
@@ -87,15 +87,15 @@ namespace GenericServices
             ArgumentNullException.ThrowIfNull(context);
 
             var status = context.ExecuteValidation();
-            return !status.IsValid 
-                ? status 
+            return !status.IsValid
+                ? status
                 : context.SaveChangesWithExtras(config, true);
         }
 
         //-----------------------------------------------------------------
         //private methods
 
-        private static IStatusGeneric SaveChangesWithExtras(this DbContext context, 
+        private static IStatusGeneric SaveChangesWithExtras(this DbContext context,
             IGenericServicesConfig config, bool turnOffChangeTracker = false)
         {
             var status = config?.BeforeSaveChanges != null
@@ -119,8 +119,10 @@ namespace GenericServices
                     catch (Exception e)
                     {
                         var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                        if (exStatus == null)
+                        // If we did not flag any "handled" errors in the last step, then we have an unhandled exception to throw
+                        if (!exStatus.HasErrors)
                             throw;       //error wasn't handled, so rethrow
+                        // Otherwise, we have a handled error that will get added to our status and IsValid is no longer true
                         status.CombineStatuses(exStatus);
                     }
                 } while (status.IsValid);
@@ -133,7 +135,7 @@ namespace GenericServices
             return status;
         }
 
-        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, 
+        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context,
             IGenericServicesConfig config, bool turnOffChangeTracker = false)
         {
             var status = config?.BeforeSaveChanges != null
@@ -144,7 +146,7 @@ namespace GenericServices
 
             if (turnOffChangeTracker)
                 context.ChangeTracker.AutoDetectChangesEnabled = false;
-            
+
             try
             {
                 //This handles SaveChangesExceptionHandlers that can fix the exception, and the SaveChanges i tried again
@@ -158,7 +160,7 @@ namespace GenericServices
                     catch (Exception e)
                     {
                         var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                        if (exStatus == null) 
+                        if (exStatus == null)
                             throw;       //error wasn't handled, so rethrow
                         status.CombineStatuses(exStatus);
                     }
