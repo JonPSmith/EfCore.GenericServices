@@ -119,10 +119,8 @@ namespace GenericServices
                     catch (Exception e)
                     {
                         var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                        // If we did not flag any "handled" errors in the last step, then we have an unhandled exception to throw
-                        if (!exStatus.HasErrors)
+                        if (exStatus == null)
                             throw;       //error wasn't handled, so rethrow
-                        // Otherwise, we have a handled error that will get added to our status and IsValid is no longer true
                         status.CombineStatuses(exStatus);
                     }
                 } while (status.IsValid);
@@ -160,10 +158,8 @@ namespace GenericServices
                     catch (Exception e)
                     {
                         var exStatus = config?.SaveChangesExceptionHandler(e, context);
-                        // If we did not flag any "handled" errors in the last step, then we have an unhandled exception to throw
-                        if (!exStatus.HasErrors)
+                        if (exStatus == null)
                             throw;       //error wasn't handled, so rethrow
-                        // Otherwise, we have a handled error that will get added to our status and IsValid is no longer true
                         status.CombineStatuses(exStatus);
                     }
                 } while (status.IsValid);
