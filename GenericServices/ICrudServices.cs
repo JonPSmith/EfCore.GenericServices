@@ -1,12 +1,13 @@
 ﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using System;
-using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using StatusGeneric;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace GenericServices
 {
@@ -84,6 +85,18 @@ namespace GenericServices
         /// <param name="entityOrDto">This should either be an instance of a entity class or a CrudServices DTO which has a <see cref="ILinkToEntity{TEntity}"/> interface</param>
         /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
         IStatusGeneric UpdateAndSave<T>(T entityOrDto, string methodName = null) where T : class;
+
+        /// <summary>
+        /// Updates multiple entities of the same type from a DTO or an entity. Same as <see cref="UpdateAndSave{T}(T, string)"/>, but allows you to pass in a collection of entities or DTOs.
+        /// </summary>
+        /// <remarks>
+        /// The generic type parameter MUST be specified to ensure this overload is used, as otherwise it will default to the <see cref="UpdateAndSave{T}(T, string)"/> overload.
+        /// </remarks>
+        /// <typeparam name="T">This type is found from the input instance</typeparam>
+        /// <param name="entitiesOrDtos">This should be a collection of either instances of a entity class or CrudServices DTOs which have a <see cref="ILinkToEntity{TEntity}"/> interface</param>
+        /// <param name="methodName">Optional: you can give the method name to be used for the update, or CrudValues.UseAutoMapper to make it use AutoMapper to update the entity.</param>
+        /// <returns></returns>
+        IStatusGeneric UpdateAndSave<T>(IEnumerable<T> entitiesOrDtos, string methodName = null) where T : class;
 
         /// <summary>
         /// This allows you to update properties with public setters using a JsonPatch <cref>http://jsonpatch.com/</cref>

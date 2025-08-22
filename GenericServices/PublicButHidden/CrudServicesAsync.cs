@@ -2,6 +2,8 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -183,6 +185,9 @@ namespace GenericServices.PublicButHidden
         {
             var status = new StatusGenericHandler();
 
+            if (entityOrDto is IEnumerable)
+                throw new NotSupportedException($"When passing a collection to {nameof(UpdateAndSaveAsync)}, the entity/DTO type must be specified in the generic type parameter to ensure the correct overload is invoked.");
+
             var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
             entityInfo.CheckCanDoOperation(CrudTypes.Update);
             status.Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
@@ -200,6 +205,46 @@ namespace GenericServices.PublicButHidden
                 var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
                 var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
                 status.CombineStatuses(await updater.ReadEntityAndUpdateViaDtoAsync(entityOrDto, methodName).ConfigureAwait(false));
+                if (status.IsValid)
+                    status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                        dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
+            }
+
+            return status;
+        }
+
+        /// <inheritdoc />
+        public async Task<IStatusGeneric> UpdateAndSaveAsync<T>(IEnumerable<T> entitiesOrDtos, string methodName = null) where T : class
+        {
+            ArgumentNullException.ThrowIfNull(entitiesOrDtos);
+
+            var status = new StatusGenericHandler();
+
+            var entityInfo = _context.GetEntityInfoThrowExceptionIfNotThere(typeof(T));
+            entityInfo.CheckCanDoOperation(CrudTypes.Update);
+            status.Message = $"Successfully updated the {entityInfo.EntityType.GetNameForClass()}";
+            if (entityInfo.EntityType == typeof(T))
+            {
+                foreach (var entityOrDto in entitiesOrDtos)
+                {
+                    if (!_context.Entry(entityOrDto).IsKeySet)
+                        throw new InvalidOperationException($"The primary key was not set on the entity class {typeof(T).Name}. For an update we expect the key(s) to be set (otherwise it does a create).");
+                    if (_context.Entry(entityOrDto).State == EntityState.Detached)
+                        _context.Update(entityOrDto);
+                }
+                status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
+                    _configAndMapper.Config.DirectAccessValidateOnSave, _configAndMapper.Config).ConfigureAwait(false));
+            }
+            else
+            {
+                var dtoInfo = typeof(T).GetDtoInfoThrowExceptionIfNotThere();
+                var updater = new EntityUpdateHandler<T>(dtoInfo, entityInfo, _configAndMapper, _context);
+                foreach (var entityOrDto in entitiesOrDtos)
+                {
+                    status.CombineStatuses(await updater.ReadEntityAndUpdateViaDtoAsync(entityOrDto, methodName).ConfigureAwait(false));
+                    if (!status.IsValid)
+                        break;
+                }
                 if (status.IsValid)
                     status.CombineStatuses(await _context.SaveChangesWithOptionalValidationAsync(
                         dtoInfo.ShouldValidateOnSave(_configAndMapper.Config), _configAndMapper.Config));
