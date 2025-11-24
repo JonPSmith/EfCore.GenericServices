@@ -6,10 +6,11 @@ The EfCore.GenericServices library is available on [NuGet as EfCore.GenericServi
 
 ## List of versions and which .NET framework they support
 
-- Version 8.0.0: Supports NET 9 only (simpler to update to next NET release)
-- Version 8.0.0: Supports NET 8 only (simpler to update to next NET release)
-- Version 6.?.?: Supports NET 6, 7 and 8
-- Version 5.2.?: Supports NET 5, 6 and 7
+- Version 10.0.0: Supports NET 10 only (simpler to update to next NET release)
+- Version  9.0.0: Supports NET 9 only (simpler to update to next NET release)
+- Version  8.0.0: Supports NET 8 only (simpler to update to next NET release)
+- Version  6.?.?: Supports NET 6, 7 and 8
+- Version  5.2.?: Supports NET 5, 6 and 7
 
 _There are older versions of the EfCore.GenericServices library, but .NET lower than .NET 5 are not supported by Microsoft._
 
