@@ -8,6 +8,7 @@ using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using GenericServices.Internal.Decoders;
 using GenericServices.Setup.Internal;
+using Microsoft.Extensions.Logging.Abstractions;
 using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -41,7 +42,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             //ATTEMPT
             var mapCreator = new CreateConfigGenerator(typeof(AuthorNameDto), _authorInfo, null);
             mapCreator.Accessor.AddReadMappingToProfile(maps);
-            var config = new MapperConfiguration(maps);
+            var config = new MapperConfiguration(maps, NullLoggerFactory.Instance);
 
             //VERIFY
             var entity = new Author {AuthorId = 1, Name = "Author", Email = "me@nospam.com"};
@@ -60,7 +61,7 @@ namespace Tests.UnitTests.GenericServicesInternal
             mapCreator.Accessor.AddReadMappingToProfile(maps);
 
             //VERIFY
-            var config = new MapperConfiguration(maps);
+            var config = new MapperConfiguration(maps, NullLoggerFactory.Instance);
             var entity = DddEfTestData.CreateFourBooks().Last();
             var dto = config.CreateMapper().Map<BookTitleAndCount>(entity);
             dto.Title.ShouldEqual("Quantum Networking");

@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="AutoMapper" Version="16.1.1" />
 		<PackageReference Include="EfCore.TestSupport" Version="10.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />

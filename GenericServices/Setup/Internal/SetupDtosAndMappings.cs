@@ -8,6 +8,8 @@ using AutoMapper;
 using GenericServices.Configuration;
 using GenericServices.Internal.Decoders;
 using GenericServices.PublicButHidden;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using StatusGeneric;
 
 namespace GenericServices.Setup.Internal
@@ -40,16 +42,22 @@ namespace GenericServices.Setup.Internal
             return CreateConfigAndMapper(config, _readProfile, _saveProfile);
         }
 
-        public static IWrappedConfigAndMapper CreateConfigAndMapper(IGenericServicesConfig config, MappingProfile readProfile, MappingProfile saveProfile)
+        public static IWrappedConfigAndMapper CreateConfigAndMapper(IGenericServicesConfig config, MappingProfile readProfile, MappingProfile saveProfile, ILoggerFactory loggerFactory = null)
         {
+            // Mapper Configuration needs a logger factory parameter
+            // Obtain the logger factory from method parameters, or use the NullLoggerFactory instance if no logger factory is obtained
+            loggerFactory ??= NullLoggerFactory.Instance;
+
             var mapperReadConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(readProfile);
-            });
+            },
+            loggerFactory);
             var mapperSaveConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(saveProfile);
-            });
+            },
+            loggerFactory);
             return new WrappedAndMapper(config, mapperReadConfig, mapperSaveConfig);
         }
 

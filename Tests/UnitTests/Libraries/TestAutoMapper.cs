@@ -1,13 +1,14 @@
 ﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using AutoMapper;
 using AutoMapper.Internal;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using Tests.Configs;
 using Tests.Dtos;
 using Tests.Helpers;
@@ -123,7 +124,7 @@ namespace Tests.UnitTests.Libraries
                 //see https://github.com/AutoMapper/AutoMapper/issues/2571#issuecomment-374159340
                 cfg.Internal().ForAllPropertyMaps(pm => Filter(pm.SourceMember), (pm, opt) => opt.Ignore());
                 cfg.CreateMap<WriteAuthorReadOnlyDto, Author>();
-            });
+            }, NullLoggerFactory.Instance);
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com"};
@@ -143,7 +144,7 @@ namespace Tests.UnitTests.Libraries
             var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
             var profile = new UnitTestProfile(false);
             profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile), NullLoggerFactory.Instance);
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
@@ -163,7 +164,7 @@ namespace Tests.UnitTests.Libraries
             var entity = new Author { AuthorId = 1, Name = "Start Name", Email = "me@nospam.com" };
             var profile = new UnitTestProfile(true);
             profile.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile), NullLoggerFactory.Instance);
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
@@ -182,10 +183,10 @@ namespace Tests.UnitTests.Libraries
             //SETUP
             var profile1 = new UnitTestProfile(true);
             profile1.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
-            var config1 = new MapperConfiguration(cfg => cfg.AddProfile(profile1));
+            var config1 = new MapperConfiguration(cfg => cfg.AddProfile(profile1), NullLoggerFactory.Instance);
             var profile2 = new UnitTestProfile(false);
             profile2.AddWriteMap<WriteAuthorReadOnlyDto, Author>();
-            var config2 = new MapperConfiguration(cfg => cfg.AddProfile(profile2));
+            var config2 = new MapperConfiguration(cfg => cfg.AddProfile(profile2), NullLoggerFactory.Instance);
 
             //ATTEMPT
             var dto = new WriteAuthorReadOnlyDto { AuthorId = 123, Name = "New Name", Email = "youhavechanged@gmail.com" };
